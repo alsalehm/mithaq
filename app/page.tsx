@@ -1,68 +1,52 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main dir="rtl" className="min-h-screen bg-[#F5E9DC] text-[#362008]">
-<nav className="sticky top-0 z-50 border-b border-[#B59676]/20 bg-[#F5E9DC]/90 backdrop-blur">
-  <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <nav className="sticky top-0 z-50 border-b border-[#B59676]/20 bg-[#F5E9DC]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#75532F] text-xl font-bold text-white">
+              م
+            </div>
+            <span className="text-2xl font-bold">ميثاق</span>
+          </div>
 
-    <div className="flex items-center gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#75532F] text-xl font-bold text-white">
-        م
-      </div>
+          <div className="hidden items-center gap-8 md:flex">
+            <a href="#features" className="hover:text-[#75532F]">المميزات</a>
+            <a href="#pricing" className="hover:text-[#75532F]">الأسعار</a>
+            <a href="#how" className="hover:text-[#75532F]">كيف يعمل</a>
+          </div>
 
-      <span className="text-2xl font-bold">
-        ميثاق
-      </span>
-    </div>
-
-    <div className="hidden items-center gap-8 md:flex">
-      <a href="#" className="hover:text-[#75532F]">
-        المميزات
-      </a>
-
-      <a href="#" className="hover:text-[#75532F]">
-        الأسعار
-      </a>
-
-      <a href="#" className="hover:text-[#75532F]">
-        كيف يعمل
-      </a>
-    </div>
-
-    <div className="flex items-center gap-3">
-      <button className="rounded-xl border border-[#75532F] px-4 py-2 text-[#75532F]">
-        تسجيل الدخول
-      </button>
-
-      <button className="rounded-xl bg-[#75532F] px-4 py-2 text-white">
-        إنشاء حساب
-      </button>
-    </div>
-
-  </div>
-</nav>
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="rounded-xl border border-[#75532F] px-4 py-2 text-[#75532F]">
+              تسجيل الدخول
+            </Link>
+            <Link href="/signup" className="rounded-xl bg-[#75532F] px-4 py-2 text-white">
+              إنشاء حساب
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 md:grid-cols-2">
         <div>
-          <p className="mb-4 text-sm font-bold text-[#75532F]">
-            للمصورين وأصحاب الأعمال الإبداعية
-          </p>
-
+          <p className="mb-4 text-sm font-bold text-[#75532F]">للمصورين وأصحاب الأعمال الإبداعية</p>
           <h1 className="mb-6 text-5xl font-bold leading-tight md:text-6xl">
             عقود وفواتير احترافية خلال دقائق
           </h1>
-
           <p className="mb-8 text-lg leading-8 text-[#75532F]">
             ميثاق يساعدك على إنشاء العقود، إرسالها للعميل، توقيعها إلكترونيًا،
             ثم تحويلها إلى PDF رسمي قابل للمشاركة.
           </p>
 
           <div className="flex flex-wrap gap-3">
-            <button className="rounded-xl bg-[#75532F] px-7 py-3 text-white">
+            <Link href="/signup" className="rounded-xl bg-[#75532F] px-7 py-3 text-white">
               ابدأ الآن
-            </button>
-            <button className="rounded-xl border border-[#75532F] px-7 py-3 text-[#75532F]">
+            </Link>
+            <a href="#how" className="rounded-xl border border-[#75532F] px-7 py-3 text-[#75532F]">
               شاهد كيف يعمل
-            </button>
+            </a>
           </div>
         </div>
 
@@ -97,7 +81,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-10">
+      <section id="features" className="mx-auto max-w-6xl px-6 py-10">
         <h2 className="mb-8 text-center text-3xl font-bold">
           كل ما يحتاجه المصور لإدارة الاتفاقات
         </h2>
@@ -116,15 +100,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section id="how" className="mx-auto max-w-6xl px-6 py-16">
         <div className="rounded-3xl bg-[#362008] p-8 text-center text-white">
           <h2 className="mb-3 text-3xl font-bold">ابدأ ببناء عمل أكثر احترافية</h2>
           <p className="mb-6 text-[#F5E9DC]">
             ميثاق يحفظ حقك، وينظم عقودك، ويجعل تجربة العميل أسهل.
           </p>
-          <button className="rounded-xl bg-[#F5E9DC] px-7 py-3 font-bold text-[#362008]">
+          <Link href="/signup" className="rounded-xl bg-[#F5E9DC] px-7 py-3 font-bold text-[#362008]">
             إنشاء حساب مجاني
-          </button>
+          </Link>
         </div>
       </section>
     </main>
