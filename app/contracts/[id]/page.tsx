@@ -229,6 +229,26 @@ window.open(
 </div>
         </div>
       </div>
+      <style jsx global>{`
+  @media print {
+    body {
+      background: white !important;
+    }
+
+    .print\\:hidden {
+      display: none !important;
+    }
+
+    main {
+      background: white !important;
+      padding: 0 !important;
+    }
+
+    .shadow-lg {
+      box-shadow: none !important;
+    }
+  }
+`}</style>
     </main>
     );
 }
