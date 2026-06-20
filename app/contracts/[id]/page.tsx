@@ -106,14 +106,19 @@ export default function ContractDetailsPage() {
     } else if (phone.startsWith("9660")) {
       phone = "966" + phone.substring(4);
     }
+const signUrl =
+  window.location.origin + "/sign/" + contract.id;
 
-    const message = `مرحباً ${contract.client_name}
+const message = `مرحباً ${contract.client_name}
 
 تم تجهيز عقدك.
 
 نوع المناسبة: ${contract.event_type}
 تاريخ المناسبة: ${contract.event_date}
 قيمة العقد: ${contract.contract_value} ر.س
+
+للتوقيع على العقد:
+${signUrl}
 
 شكراً لك 🌷`;
 
