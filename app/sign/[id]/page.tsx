@@ -48,7 +48,7 @@ async function signContract() {
   const { error } = await supabase
     .from("contracts")
     .update({
-      status: "completed",
+      status: "signed",
     })
     .eq("id", contract.id);
 
@@ -61,7 +61,7 @@ async function signContract() {
 
   setContract({
     ...contract,
-    status: "completed",
+    status: "signed",
   });
 
   setSigned(true);

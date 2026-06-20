@@ -15,6 +15,8 @@ type Contract = {
 };
 
 function statusArabic(status: string) {
+    if (status === "signed") return "موقّع";
+
   if (status === "draft") return "مسودة";
   if (status === "sent") return "تم الإرسال";
   if (status === "completed") return "مكتمل";
@@ -25,6 +27,7 @@ function statusArabic(status: string) {
 function statusColor(status: string) {
   if (status === "draft") return "bg-yellow-100 text-yellow-800";
   if (status === "sent") return "bg-blue-100 text-blue-800";
+  if (status === "signed") return "bg-emerald-100 text-emerald-800";
   if (status === "completed") return "bg-green-100 text-green-800";
   if (status === "cancelled") return "bg-red-100 text-red-800";
   return "bg-gray-100 text-gray-800";
@@ -71,6 +74,7 @@ export default function ContractsPage() {
 
   const draftCount = contracts.filter((c) => c.status === "draft").length;
   const sentCount = contracts.filter((c) => c.status === "sent").length;
+  const signedCount = contracts.filter((c) => c.status === "signed").length;
   const completedCount = contracts.filter((c) => c.status === "completed").length;
 
   return (
@@ -92,7 +96,7 @@ export default function ContractsPage() {
           </Link>
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-4">
+        <div className="mb-6 grid gap-4 md:grid-cols-5">
           <div className="rounded-2xl bg-white p-4 shadow-sm">
             <p className="text-sm text-gray-500">إجمالي العقود</p>
             <p className="text-2xl font-bold">{contracts.length}</p>
@@ -107,7 +111,10 @@ export default function ContractsPage() {
             <p className="text-sm text-gray-500">تم الإرسال</p>
             <p className="text-2xl font-bold">{sentCount}</p>
           </div>
-
+<div className="rounded-2xl bg-white p-4 shadow-sm">
+  <p className="text-sm text-gray-500">موقّع</p>
+  <p className="text-2xl font-bold">{signedCount}</p>
+</div>
           <div className="rounded-2xl bg-white p-4 shadow-sm">
             <p className="text-sm text-gray-500">مكتمل</p>
             <p className="text-2xl font-bold">{completedCount}</p>
@@ -119,6 +126,7 @@ export default function ContractsPage() {
             ["all", "الكل"],
             ["draft", "مسودة"],
             ["sent", "تم الإرسال"],
+            ["signed", "موقّع"],
             ["completed", "مكتمل"],
           ].map(([value, label]) => (
             <button
