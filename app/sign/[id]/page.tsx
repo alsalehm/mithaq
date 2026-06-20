@@ -20,7 +20,8 @@ export default function SignPage() {
 
   const [contract, setContract] = useState<Contract | null>(null);
   const [signed, setSigned] = useState(false);
-
+const [signing, setSigning] = useState(false);
+const [message, setMessage] = useState("");
   useEffect(() => {
     async function loadContract() {
       const { data } = await supabase
@@ -38,19 +39,35 @@ export default function SignPage() {
       loadContract();
     }
   }, [id]);
+async function signContract() {
+  if (!contract || signing) return;
 
-  async function signContract() {
-    if (!contract) return;
+  setSigning(true);
+  setMessage("");
 
-    await supabase
-      .from("contracts")
-      .update({
-        status: "completed",
-      })
-      .eq("id", contract.id);
+  const { error } = await supabase
+    .from("contracts")
+    .update({
+      status: "completed",
+    })
+    .eq("id", contract.id);
 
-    setSigned(true);
+  setSigning(false);
+
+  if (error) {
+    setMessage("حدث خطأ أثناء توقيع العقد");
+    return;
   }
+
+  setContract({
+    ...contract,
+    status: "completed",
+  });
+
+  setSigned(true);
+  setMessage("تم توقيع العقد بنجاح ✅");
+}
+  
 
   if (!contract) {
     return (
