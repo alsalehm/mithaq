@@ -158,7 +158,21 @@ ${signUrl}
           <p><strong>تاريخ المناسبة:</strong> {contract.event_date}</p>
           <p><strong>قيمة العقد:</strong> {contract.contract_value} ر.س</p>
           <p><strong>العربون:</strong> {contract.deposit} ر.س</p>
-          <p><strong>الحالة:</strong> {contract.status}</p>
+      <p>
+  <strong>الحالة:</strong>{" "}
+  {
+    contract.status === "draft"
+      ? "مسودة"
+      : contract.status === "sent"
+      ? "تم الإرسال"
+      : contract.status === "signed"
+      ? "موقع"
+      : contract.status === "completed"
+      ? "مكتمل"
+      : contract.status
+  }
+</p>
+
 
           <div className="mt-10 border-t pt-6">
             <h2 className="mb-4 text-xl font-bold text-[#75532F]">بنود العقد</h2>
