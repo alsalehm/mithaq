@@ -141,22 +141,24 @@ window.open(
 >
   إرسال للعميل
 </button>
-<button
-  onClick={async () => {
-    await supabase
-      .from("contracts")
-      .update({ status: "completed" })
-      .eq("id", contract.id);
+{contract.status === "signed" && (
+  <button
+    onClick={async () => {
+      await supabase
+        .from("contracts")
+        .update({ status: "completed" })
+        .eq("id", contract.id);
 
-    setContract({
-      ...contract,
-      status: "completed",
-    });
-  }}
-  className="rounded-xl bg-green-600 px-5 py-3 font-bold text-white"
->
-  تم التسليم
-</button>
+      setContract({
+        ...contract,
+        status: "completed",
+      });
+    }}
+    className="rounded-xl bg-green-600 px-5 py-3 font-bold text-white"
+  >
+    إنهاء العقد
+  </button>
+)}
 </div>
         <div className="space-y-4 text-lg">
           <p>
