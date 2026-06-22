@@ -13,6 +13,7 @@ type Contract = {
   contract_value: number;
   deposit: number;
   status: string;
+  signature_image: string | null
 };
 
 export default function ContractDetailsPage() {
@@ -30,8 +31,12 @@ export default function ContractDetailsPage() {
         .eq("id", id)
         .single();
 
-      if (!error) setContract(data);
-      setLoading(false);
+      if (!error) {
+  console.log("CONTRACT DATA:", data);
+  setContract(data);
+}
+
+setLoading(false);
     }
 
     if (id) loadContract();
@@ -172,7 +177,17 @@ ${signUrl}
       : contract.status
   }
 </p>
+{contract.signature_image && (
+  <div className="mt-6 rounded-lg border bg-white p-4 print:border print:p-3">
+    <h2 className="mb-3 text-lg font-semibold">توقيع العميل</h2>
 
+    <img
+      src={contract.signature_image}
+      alt="توقيع العميل"
+      className="max-h-32 rounded border bg-white p-2 print:max-h-24"
+    />
+  </div>
+)}
 
           <div className="mt-10 border-t pt-6">
             <h2 className="mb-4 text-xl font-bold text-[#75532F]">بنود العقد</h2>
