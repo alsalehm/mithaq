@@ -6,6 +6,7 @@ import { supabase } from "../../lib/supabase";
 
 type Contract = {
   id: string;
+  user_id: string;
   client_name: string;
   client_phone: string;
   event_type: string;
@@ -13,7 +14,7 @@ type Contract = {
   contract_value: number;
   deposit: number;
   status: string;
-  signature_image: string | null
+  signature_image: string | null;
   photographer_signature_image: string | null;
 };
 
@@ -22,6 +23,7 @@ export default function ContractDetailsPage() {
   const id = params.id as string;
 
   const [contract, setContract] = useState<Contract | null>(null);
+  const [profileSignature, setProfileSignature] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,12 +34,21 @@ export default function ContractDetailsPage() {
         .eq("id", id)
         .single();
 
-      if (!error) {
-  console.log("CONTRACT DATA:", data);
-  setContract(data);
-}
+      if (!error && data) {
+        setContract(data);
 
-setLoading(false);
+        if (!data.photographer_signature_image && data.user_id) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("signature_image")
+            .eq("id", data.user_id)
+            .single();
+
+          setProfileSignature(profile?.signature_image || null);
+        }
+      }
+
+      setLoading(false);
     }
 
     if (id) loadContract();
@@ -58,6 +69,9 @@ setLoading(false);
       </main>
     );
   }
+
+  const photographerSignature =
+    contract.photographer_signature_image || profileSignature;
 
   async function sendToClient() {
     if (!contract) return;
@@ -164,31 +178,18 @@ ${signUrl}
           <p><strong>تاريخ المناسبة:</strong> {contract.event_date}</p>
           <p><strong>قيمة العقد:</strong> {contract.contract_value} ر.س</p>
           <p><strong>العربون:</strong> {contract.deposit} ر.س</p>
-      <p>
-  <strong>الحالة:</strong>{" "}
-  {
-    contract.status === "draft"
-      ? "مسودة"
-      : contract.status === "sent"
-      ? "تم الإرسال"
-      : contract.status === "signed"
-      ? "موقع"
-      : contract.status === "completed"
-      ? "مكتمل"
-      : contract.status
-  }
-</p>
-{contract.signature_image && (
-  <div className="mt-4 rounded-lg border bg-white p-2 print:mt-2 print:p-1">
-    <h2 className="mb-3 text-lg font-semibold">توقيع العميل</h2>
-
-    <img
-      src={contract.signature_image}
-      alt="توقيع العميل"
-      className="max-h-24 rounded border bg-white p-1 print:max-h-16"
-    />
-  </div>
-)}
+          <p>
+            <strong>الحالة:</strong>{" "}
+            {contract.status === "draft"
+              ? "مسودة"
+              : contract.status === "sent"
+              ? "تم الإرسال"
+              : contract.status === "signed"
+              ? "موقع"
+              : contract.status === "completed"
+              ? "مكتمل"
+              : contract.status}
+          </p>
 
           <div className="mt-10 border-t pt-6">
             <h2 className="mb-4 text-xl font-bold text-[#75532F]">بنود العقد</h2>
@@ -200,28 +201,36 @@ ${signUrl}
               <li>مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.</li>
               <li>لا يحق للعميل إعادة بيع أو تعديل الصور التجارية دون موافقة المصور.</li>
             </ul>
-{!contract.signature_image && (
-  <div className="mt-12 grid grid-cols-2 gap-10">
-   <div>
-  <p className="font-bold">توقيع المصور</p>
 
-  {contract.photographer_signature_image ? (
-    <img
-      src={contract.photographer_signature_image}
-      alt="توقيع المصور"
-      className="mt-2 max-h-24"
-    />
-  ) : (
-    <div className="mt-6 border-b border-gray-400"></div>
-  )}
-</div>
+            <div className="mt-12 grid grid-cols-2 gap-10">
+              <div>
+                <p className="font-bold">توقيع العميل</p>
 
-    <div>
-      <p className="font-bold">توقيع المصور</p>
-      <div className="mt-6 border-b border-gray-400"></div>
-    </div>
-  </div>
-)}
+                {contract.signature_image ? (
+                  <img
+                    src={contract.signature_image}
+                    alt="توقيع العميل"
+                    className="mt-2 max-h-20 rounded border bg-white p-1"
+                  />
+                ) : (
+                  <div className="mt-6 border-b border-gray-400"></div>
+                )}
+              </div>
+
+              <div>
+                <p className="font-bold">توقيع المصور</p>
+
+                {photographerSignature ? (
+                  <img
+                    src={photographerSignature}
+                    alt="توقيع المصور"
+                    className="mt-2 max-h-20 rounded border bg-white p-1"
+                  />
+                ) : (
+                  <div className="mt-6 border-b border-gray-400"></div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

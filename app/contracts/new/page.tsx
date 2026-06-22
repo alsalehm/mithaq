@@ -28,7 +28,7 @@ export default function NewContractPage() {
   .select("signature_image")
   .eq("id", user.id)
   .single();
-
+console.log("PROFILE DATA:", profile);
 const { error } = await supabase.from("contracts").insert({
   user_id: user.id,
   client_name: clientName,
