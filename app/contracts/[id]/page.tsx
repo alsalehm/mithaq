@@ -199,18 +199,19 @@ ${signUrl}
               <li>مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.</li>
               <li>لا يحق للعميل إعادة بيع أو تعديل الصور التجارية دون موافقة المصور.</li>
             </ul>
+{!contract.signature_image && (
+  <div className="mt-12 grid grid-cols-2 gap-10">
+    <div>
+      <p className="font-bold">توقيع العميل</p>
+      <div className="mt-6 border-b border-gray-400"></div>
+    </div>
 
-            <div className="mt-12 grid grid-cols-2 gap-10">
-              <div>
-                <p className="font-bold">توقيع العميل</p>
-                <div className="mt-6 border-b border-gray-400"></div>
-              </div>
-
-              <div>
-                <p className="font-bold">توقيع المصور</p>
-                <div className="mt-6 border-b border-gray-400"></div>
-              </div>
-            </div>
+    <div>
+      <p className="font-bold">توقيع المصور</p>
+      <div className="mt-6 border-b border-gray-400"></div>
+    </div>
+  </div>
+)}
           </div>
         </div>
       </div>
