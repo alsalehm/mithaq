@@ -23,16 +23,23 @@ export default function NewContractPage() {
       return;
     }
 
-    const { error } = await supabase.from("contracts").insert({
-      user_id: user.id,
-      client_name: clientName,
-      client_phone: clientPhone,
-      event_type: eventType,
-      event_date: eventDate,
-      contract_value: Number(contractValue),
-      deposit: Number(deposit),
-      status: "draft",
-    });
+  const { data: profile } = await supabase
+  .from("profiles")
+  .select("signature_image")
+  .eq("id", user.id)
+  .single();
+
+const { error } = await supabase.from("contracts").insert({
+  user_id: user.id,
+  client_name: clientName,
+  client_phone: clientPhone,
+  event_type: eventType,
+  event_date: eventDate,
+  contract_value: Number(contractValue),
+  deposit: Number(deposit),
+  status: "draft",
+  photographer_signature_image: profile?.signature_image || null,
+});
 
     if (error) {
       setMessage("حدث خطأ أثناء حفظ العقد: " + error.message);

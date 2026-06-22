@@ -14,6 +14,7 @@ type Contract = {
   deposit: number;
   status: string;
   signature_image: string | null
+  photographer_signature_image: string | null;
 };
 
 export default function ContractDetailsPage() {
@@ -201,10 +202,19 @@ ${signUrl}
             </ul>
 {!contract.signature_image && (
   <div className="mt-12 grid grid-cols-2 gap-10">
-    <div>
-      <p className="font-bold">توقيع العميل</p>
-      <div className="mt-6 border-b border-gray-400"></div>
-    </div>
+   <div>
+  <p className="font-bold">توقيع المصور</p>
+
+  {contract.photographer_signature_image ? (
+    <img
+      src={contract.photographer_signature_image}
+      alt="توقيع المصور"
+      className="mt-2 max-h-24"
+    />
+  ) : (
+    <div className="mt-6 border-b border-gray-400"></div>
+  )}
+</div>
 
     <div>
       <p className="font-bold">توقيع المصور</p>
