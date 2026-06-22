@@ -16,6 +16,9 @@ type Contract = {
   status: string;
   signature_image: string | null;
   photographer_signature_image: string | null;
+  amount_paid: number;
+remaining_amount: number;
+payment_status: string;
 };
 
 export default function ContractDetailsPage() {
@@ -178,6 +181,20 @@ ${signUrl}
           <p><strong>تاريخ المناسبة:</strong> {contract.event_date}</p>
           <p><strong>قيمة العقد:</strong> {contract.contract_value} ر.س</p>
           <p><strong>العربون:</strong> {contract.deposit} ر.س</p>
+          <p><strong>المدفوع:</strong> {contract.amount_paid} ر.س</p>
+
+<p><strong>المتبقي:</strong> {contract.remaining_amount} ر.س</p>
+
+<p>
+  <strong>الحالة المالية:</strong>{" "}
+  {contract.payment_status === "unpaid"
+    ? "غير مدفوع"
+    : contract.payment_status === "partial"
+    ? "مدفوع جزئياً"
+    : contract.payment_status === "paid"
+    ? "مدفوع بالكامل"
+    : contract.payment_status}
+</p>
           <p>
             <strong>الحالة:</strong>{" "}
             {contract.status === "draft"
