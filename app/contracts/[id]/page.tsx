@@ -178,13 +178,13 @@ ${signUrl}
   }
 </p>
 {contract.signature_image && (
-  <div className="mt-6 rounded-lg border bg-white p-4 print:border print:p-3">
+  <div className="mt-4 rounded-lg border bg-white p-2 print:mt-2 print:p-1">
     <h2 className="mb-3 text-lg font-semibold">توقيع العميل</h2>
 
     <img
       src={contract.signature_image}
       alt="توقيع العميل"
-      className="max-h-32 rounded border bg-white p-2 print:max-h-24"
+      className="max-h-24 rounded border bg-white p-1 print:max-h-16"
     />
   </div>
 )}
