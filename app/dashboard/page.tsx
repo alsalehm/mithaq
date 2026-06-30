@@ -5,84 +5,96 @@ import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
 type Contract = {
+  id: string;
+  client_name: string;
+  event_type: string;
+  event_date: string;
   status: string;
   contract_value: number;
   amount_paid: number | null;
   remaining_amount: number | null;
   payment_status: string | null;
+  created_at?: string;
+};
+
+type Invoice = {
+  id: string;
+  amount: number;
+  amount_paid: number | null;
+  remaining_amount: number | null;
+  payment_status: string | null;
+  status: string;
 };
 
 export default function DashboardPage() {
-  const [totalContracts, setTotalContracts] = useState(0);
-  const [draftContracts, setDraftContracts] = useState(0);
-  const [sentContracts, setSentContracts] = useState(0);
-  const [signedContracts, setSignedContracts] = useState(0);
-  const [completedContracts, setCompletedContracts] = useState(0);
-
-  const [totalValue, setTotalValue] = useState(0);
-  const [totalPaid, setTotalPaid] = useState(0);
-  const [totalRemaining, setTotalRemaining] = useState(0);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
 
   useEffect(() => {
-    async function loadStats() {
-      const { data, error } = await supabase
+    async function loadDashboard() {
+      const { data: contractsData } = await supabase
         .from("contracts")
-        .select("status, contract_value, amount_paid, remaining_amount, payment_status");
+        .select("*")
+        .order("created_at", { ascending: false });
 
-      if (error || !data) return;
+      const { data: invoicesData } = await supabase
+        .from("invoices")
+        .select("*");
 
-      const contracts = data as Contract[];
-
-      setTotalContracts(contracts.length);
-
-      setDraftContracts(
-        contracts.filter((item) => item.status === "draft").length
-      );
-
-      setSentContracts(
-        contracts.filter((item) => item.status === "sent").length
-      );
-
-      setSignedContracts(
-        contracts.filter((item) => item.status === "signed").length
-      );
-
-      setCompletedContracts(
-        contracts.filter((item) => item.status === "completed").length
-      );
-
-      const value = contracts.reduce(
-        (sum, item) => sum + (Number(item.contract_value) || 0),
-        0
-      );
-
-      const paid = contracts.reduce(
-        (sum, item) => sum + (Number(item.amount_paid) || 0),
-        0
-      );
-
-      const remaining = contracts.reduce(
-        (sum, item) => sum + (Number(item.remaining_amount) || 0),
-        0
-      );
-
-      setTotalValue(value);
-      setTotalPaid(paid);
-      setTotalRemaining(remaining);
+      setContracts((contractsData || []) as Contract[]);
+      setInvoices((invoicesData || []) as Invoice[]);
     }
 
-    loadStats();
+    loadDashboard();
   }, []);
 
+  const totalContracts = contracts.length;
+  const totalInvoices = invoices.length;
+
+  const totalValue = contracts.reduce(
+    (sum, item) => sum + (Number(item.contract_value) || 0),
+    0
+  );
+
+  const totalPaid = contracts.reduce(
+    (sum, item) => sum + (Number(item.amount_paid) || 0),
+    0
+  );
+
+  const totalRemaining = contracts.reduce(
+    (sum, item) => sum + (Number(item.remaining_amount) || 0),
+    0
+  );
+
+  const draftContracts = contracts.filter((item) => item.status === "draft").length;
+  const sentContracts = contracts.filter((item) => item.status === "sent").length;
+  const signedContracts = contracts.filter((item) => item.status === "signed").length;
+  const completedContracts = contracts.filter((item) => item.status === "completed").length;
+
+  const unpaidInvoices = invoices.filter(
+    (item) => item.payment_status !== "paid" && item.status !== "paid"
+  ).length;
+
+  const latestContracts = contracts.slice(0, 5);
+
+  function contractStatusArabic(status: string) {
+    if (status === "draft") return "مسودة";
+    if (status === "sent") return "تم الإرسال";
+    if (status === "signed") return "موقع";
+    if (status === "completed") return "مكتمل";
+    return status;
+  }
+
+  function paymentStatusArabic(status: string | null) {
+    if (status === "paid") return "مدفوع بالكامل";
+    if (status === "partial") return "مدفوع جزئياً";
+    return "غير مدفوع";
+  }
+
   return (
-    <main
-      dir="rtl"
-      className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]"
-    >
+    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
       <div className="mx-auto max-w-6xl">
-        <h1 className="mb-2 text-center text-4xl font-bold">
-          لوحة التحكم
-        </h1>
+        <h1 className="mb-2 text-center text-4xl font-bold">لوحة التحكم</h1>
 
         <p className="mb-10 text-center text-gray-600">
           نظرة مالية وتشغيلية سريعة على نشاط أعمالك
@@ -95,18 +107,39 @@ export default function DashboardPage() {
           </div>
 
           <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">إجمالي الفواتير</p>
+            <p className="mt-2 text-3xl font-bold">{totalInvoices}</p>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">الفواتير غير المسددة</p>
+            <p className="mt-2 text-3xl font-bold">{unpaidInvoices}</p>
+          </div>
+
+          <div className="rounded-3xl bg-white p-6 shadow-md">
+            <p className="text-sm text-gray-500">العقود المكتملة</p>
+            <p className="mt-2 text-3xl font-bold">{completedContracts}</p>
+          </div>
+        </div>
+
+        <div className="mb-8 grid gap-6 md:grid-cols-3">
+          <div className="rounded-3xl bg-white p-6 shadow-md">
             <p className="text-sm text-gray-500">إجمالي قيمة العقود</p>
             <p className="mt-2 text-3xl font-bold">{totalValue} ر.س</p>
           </div>
 
           <div className="rounded-3xl bg-white p-6 shadow-md">
             <p className="text-sm text-gray-500">إجمالي المدفوع</p>
-            <p className="mt-2 text-3xl font-bold">{totalPaid} ر.س</p>
+            <p className="mt-2 text-3xl font-bold text-green-700">
+              {totalPaid} ر.س
+            </p>
           </div>
 
           <div className="rounded-3xl bg-white p-6 shadow-md">
             <p className="text-sm text-gray-500">إجمالي المتبقي</p>
-            <p className="mt-2 text-3xl font-bold">{totalRemaining} ر.س</p>
+            <p className="mt-2 text-3xl font-bold text-red-700">
+              {totalRemaining} ر.س
+            </p>
           </div>
         </div>
 
@@ -132,32 +165,64 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="mb-8 grid gap-6 md:grid-cols-3">
           <Link
             href="/contracts/new"
-            className="rounded-3xl bg-white p-8 text-center shadow-md"
+            className="rounded-3xl bg-[#75532F] p-6 text-center font-bold text-white shadow-md"
           >
-            <h2 className="mb-3 text-2xl font-bold">
-              إنشاء عقد جديد
-            </h2>
-
-            <p className="text-gray-600">
-              إنشاء عقد جديد وحفظ بيانات العميل والدفعات
-            </p>
+            إنشاء عقد جديد
           </Link>
 
           <Link
             href="/contracts"
-            className="rounded-3xl bg-white p-8 text-center shadow-md"
+            className="rounded-3xl bg-white p-6 text-center font-bold shadow-md"
           >
-            <h2 className="mb-3 text-2xl font-bold">
-              إدارة العقود
-            </h2>
-
-            <p className="text-gray-600">
-              عرض العقود، متابعة التواقيع، ومراجعة المدفوعات
-            </p>
+            إدارة العقود
           </Link>
+
+          <Link
+            href="/invoices"
+            className="rounded-3xl bg-white p-6 text-center font-bold shadow-md"
+          >
+            إدارة الفواتير
+          </Link>
+        </div>
+
+        <div className="rounded-3xl bg-white p-6 shadow-md">
+          <h2 className="mb-5 text-2xl font-bold text-[#75532F]">
+            آخر العقود
+          </h2>
+
+          {latestContracts.length === 0 ? (
+            <p className="text-gray-500">لا توجد عقود حتى الآن</p>
+          ) : (
+            <div className="space-y-4">
+              {latestContracts.map((contract) => (
+                <Link
+                  key={contract.id}
+                  href={`/contracts/${contract.id}`}
+                  className="block rounded-2xl bg-[#F5E9DC] p-4"
+                >
+                  <div className="flex flex-wrap justify-between gap-3">
+                    <div>
+                      <p className="font-bold">{contract.client_name}</p>
+                      <p className="text-sm text-gray-600">
+                        {contract.event_type} - {contract.event_date}
+                      </p>
+                    </div>
+
+                    <div className="text-left">
+                      <p className="font-bold">{contract.contract_value} ر.س</p>
+                      <p className="text-sm text-gray-600">
+                        {contractStatusArabic(contract.status)} /{" "}
+                        {paymentStatusArabic(contract.payment_status)}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>

@@ -17,8 +17,8 @@ type Contract = {
   signature_image: string | null;
   photographer_signature_image: string | null;
   amount_paid: number;
-remaining_amount: number;
-payment_status: string;
+  remaining_amount: number;
+  payment_status: string;
 };
 
 export default function ContractDetailsPage() {
@@ -28,6 +28,7 @@ export default function ContractDetailsPage() {
   const [contract, setContract] = useState<Contract | null>(null);
   const [profileSignature, setProfileSignature] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [creatingInvoice, setCreatingInvoice] = useState(false);
 
   useEffect(() => {
     async function loadContract() {
@@ -56,25 +57,6 @@ export default function ContractDetailsPage() {
 
     if (id) loadContract();
   }, [id]);
-
-  if (loading) {
-    return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        جاري تحميل العقد...
-      </main>
-    );
-  }
-
-  if (!contract) {
-    return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        لم يتم العثور على العقد
-      </main>
-    );
-  }
-
-  const photographerSignature =
-    contract.photographer_signature_image || profileSignature;
 
   async function sendToClient() {
     if (!contract) return;
@@ -131,6 +113,71 @@ ${signUrl}
     setContract({ ...contract, status: "completed" });
   }
 
+  async function createInvoiceFromContract() {
+    if (!contract || creatingInvoice) return;
+const { data: existingInvoice } = await supabase
+  .from("invoices")
+  .select("id")
+  .eq("contract_id", contract.id)
+  .maybeSingle();
+
+if (existingInvoice) {
+  window.location.href = `/invoices/${existingInvoice.id}`;
+  return;
+}
+    setCreatingInvoice(true);
+
+    const invoiceAmount =
+      Number(contract.remaining_amount) > 0
+        ? Number(contract.remaining_amount)
+        : Number(contract.contract_value);
+
+    const invoiceNumber = "INV-" + Date.now();
+
+    const { data, error } = await supabase
+      .from("invoices")
+      .insert({
+        user_id: contract.user_id,
+        contract_id: contract.id,
+        invoice_number: invoiceNumber,
+        client_name: contract.client_name,
+        amount: invoiceAmount,
+        due_date: contract.event_date,
+        notes: `فاتورة مرتبطة بعقد: ${contract.event_type}`,
+        status: "unpaid",
+      })
+      .select("id")
+      .single();
+
+    setCreatingInvoice(false);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    window.location.href = `/invoices/${data.id}`;
+  }
+
+  if (loading) {
+    return (
+      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
+        جاري تحميل العقد...
+      </main>
+    );
+  }
+
+  if (!contract) {
+    return (
+      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
+        لم يتم العثور على العقد
+      </main>
+    );
+  }
+
+  const photographerSignature =
+    contract.photographer_signature_image || profileSignature;
+
   return (
     <main dir="rtl" className="min-h-screen bg-[#F5E9DC] px-6 py-10 text-[#362008]">
       <div className="mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-lg">
@@ -164,6 +211,15 @@ ${signUrl}
             إرسال للعميل
           </button>
 
+          <button
+            type="button"
+            onClick={createInvoiceFromContract}
+            disabled={creatingInvoice}
+            className="rounded-xl bg-blue-700 px-5 py-3 font-bold text-white disabled:opacity-60"
+          >
+            {creatingInvoice ? "جاري إنشاء الفاتورة..." : "إنشاء فاتورة"}
+          </button>
+
           {contract.status === "signed" && (
             <button
               onClick={completeContract}
@@ -182,19 +238,19 @@ ${signUrl}
           <p><strong>قيمة العقد:</strong> {contract.contract_value} ر.س</p>
           <p><strong>العربون:</strong> {contract.deposit} ر.س</p>
           <p><strong>المدفوع:</strong> {contract.amount_paid} ر.س</p>
+          <p><strong>المتبقي:</strong> {contract.remaining_amount} ر.س</p>
 
-<p><strong>المتبقي:</strong> {contract.remaining_amount} ر.س</p>
+          <p>
+            <strong>الحالة المالية:</strong>{" "}
+            {contract.payment_status === "unpaid"
+              ? "غير مدفوع"
+              : contract.payment_status === "partial"
+              ? "مدفوع جزئياً"
+              : contract.payment_status === "paid"
+              ? "مدفوع بالكامل"
+              : contract.payment_status}
+          </p>
 
-<p>
-  <strong>الحالة المالية:</strong>{" "}
-  {contract.payment_status === "unpaid"
-    ? "غير مدفوع"
-    : contract.payment_status === "partial"
-    ? "مدفوع جزئياً"
-    : contract.payment_status === "paid"
-    ? "مدفوع بالكامل"
-    : contract.payment_status}
-</p>
           <p>
             <strong>الحالة:</strong>{" "}
             {contract.status === "draft"
