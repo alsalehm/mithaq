@@ -51,21 +51,31 @@ export default function ContractsPage() {
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    async function fetchContracts() {
-      const { data, error } = await supabase
-        .from("contracts")
-        .select("id, client_name, event_type, event_date, contract_value, status, created_at")
-        .order("created_at", { ascending: false });
+  async function fetchContracts() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-      if (!error) {
-        setContracts(data ?? []);
-      }
-
-      setLoading(false);
+    if (!user) {
+      window.location.href = "/login";
+      return;
     }
 
-    fetchContracts();
-  }, []);
+    const { data, error } = await supabase
+      .from("contracts")
+      .select("id, client_name, event_type, event_date, contract_value, status, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (!error) {
+      setContracts((data ?? []) as Contract[]);
+    }
+
+    setLoading(false);
+  }
+
+  fetchContracts();
+}, []);
 
   const filteredContracts =
     filter === "all"

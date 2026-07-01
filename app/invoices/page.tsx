@@ -19,18 +19,28 @@ export default function InvoicesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadInvoices() {
-      const { data, error } = await supabase
-        .from("invoices")
-        .select("*")
-        .order("created_at", { ascending: false });
+   async function loadInvoices() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-      if (!error && data) {
-        setInvoices(data);
-      }
+  if (!user) {
+    window.location.href = "/login";
+    return;
+  }
 
-      setLoading(false);
-    }
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (!error && data) {
+    setInvoices(data);
+  }
+
+  setLoading(false);
+}
 
     loadInvoices();
   }, []);

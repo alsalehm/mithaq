@@ -37,22 +37,45 @@ export default function ConsultationDetailsPage() {
   const [loading, setLoading] = useState(true);
 const [notes, setNotes] = useState("");
 const [savingNotes, setSavingNotes] = useState(false);
-  async function loadConsultation() {
-    const { data, error } = await supabase
-      .from("legal_consultations")
-      .select("*")
-      .eq("id", id)
-      .single();
+ async function loadConsultation() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error(error);
-    } else {
-      setConsultation(data);
-setNotes(data.lawyer_notes ?? "");
-    }
-
-    setLoading(false);
+  if (!user) {
+    window.location.href = "/login";
+    return;
   }
+
+  const { data: profileData } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isLawyer =
+    profileData?.role === "lawyer" || profileData?.role === "admin";
+
+  const query = supabase
+    .from("legal_consultations")
+    .select("*")
+    .eq("id", id);
+
+  if (!isLawyer) {
+    query.eq("user_id", user.id);
+  }
+
+  const { data, error } = await query.single();
+
+  if (error || !data) {
+    setConsultation(null);
+  } else {
+    setConsultation(data);
+    setNotes(data.lawyer_notes ?? "");
+  }
+
+  setLoading(false);
+}
 
   useEffect(() => {
     loadConsultation();

@@ -62,27 +62,51 @@ export default function LawyerLegalConsultationsPage() {
     fetchConsultations();
   }, []);
 
-  async function fetchConsultations() {
-    setLoading(true);
-    setMessage("");
+async function fetchConsultations() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    const { data, error } = await supabase
-      .from("legal_consultations")
-      .select(
-        "id, user_id, client_name, client_phone, client_national_id, city, consultation_type, description, preferred_contact_method, preferred_time, status, created_at"
-      )
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error(error);
-      setMessage("حدث خطأ أثناء تحميل طلبات الاستشارات.");
-      setLoading(false);
-      return;
-    }
-
-    setConsultations((data || []) as LegalConsultation[]);
-    setLoading(false);
+  if (!user) {
+    window.location.href = "/login";
+    return;
   }
+
+  const { data: profileData, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profileData) {
+    setMessage("لا يمكن التحقق من صلاحيات الحساب.");
+    setLoading(false);
+    return;
+  }
+
+  if (profileData.role !== "lawyer" && profileData.role !== "admin") {
+    setMessage("ليس لديك صلاحية دخول لوحة المحامية.");
+    setLoading(false);
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("legal_consultations")
+    .select(
+      "id, user_id, client_name, client_phone, client_national_id, city, consultation_type, description, preferred_contact_method, preferred_time, status, created_at"
+    )
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    setMessage("حدث خطأ أثناء تحميل طلبات الاستشارة.");
+    setLoading(false);
+    return;
+  }
+
+  setConsultations((data || []) as LegalConsultation[]);
+  setLoading(false);
+}
 
   async function updateStatus(id: string, status: ConsultationStatus) {
     const { error } = await supabase

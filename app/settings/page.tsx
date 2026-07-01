@@ -1,27 +1,71 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function SettingsPage() {
   const [signature, setSignature] = useState<string | null>(null);
-const [businessName, setBusinessName] = useState("");
-const [fullName, setFullName] = useState("");
-const [phone, setPhone] = useState("");
-const [city, setCity] = useState("");
-async function saveProfile() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [businessName, setBusinessName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
 
-  if (!user) {
-    alert("يجب تسجيل الدخول");
-    return;
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  async function loadProfile() {
+    setLoading(true);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("business_name, full_name, phone, city, signature_image")
+      .eq("id", user.id)
+      .single();
+
+    if (error && error.code !== "PGRST116") {
+      alert("حدث خطأ أثناء تحميل بيانات الحساب: " + error.message);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      setBusinessName(data.business_name || "");
+      setFullName(data.full_name || "");
+      setPhone(data.phone || "");
+      setCity(data.city || "");
+      setSignature(data.signature_image || null);
+    }
+
+    setLoading(false);
   }
 
-  const { error } = await supabase
-    .from("profiles")
-    .upsert({
+  async function saveProfile() {
+    setSaving(true);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("يجب تسجيل الدخول");
+      setSaving(false);
+      return;
+    }
+
+    const { error } = await supabase.from("profiles").upsert({
       id: user.id,
       business_name: businessName,
       full_name: fullName,
@@ -30,13 +74,16 @@ async function saveProfile() {
       signature_image: signature,
     });
 
-  if (error) {
-    alert(error.message);
-    return;
+    setSaving(false);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert("تم حفظ البيانات بنجاح");
   }
 
-  alert("تم حفظ البيانات بنجاح");
-}
   function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
@@ -51,6 +98,14 @@ async function saveProfile() {
     reader.readAsDataURL(file);
   }
 
+  if (loading) {
+    return (
+      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
+        جاري تحميل الإعدادات...
+      </main>
+    );
+  }
+
   return (
     <main
       dir="rtl"
@@ -63,78 +118,72 @@ async function saveProfile() {
 
         <div className="space-y-6">
           <div>
-            <label className="mb-2 block font-bold">
-              اسم النشاط
-            </label>
-
-            <input
-  type="text"
-  value={businessName}
-  onChange={(e) => setBusinessName(e.target.value)}
-  className="w-full rounded-xl border p-3"
-/>
-          </div>
-
-          <div>
-            <label className="mb-2 block font-bold">
-              الاسم الكامل
-            </label>
-
+            <label className="mb-2 block font-bold">اسم النشاط</label>
             <input
               type="text"
-              className="w-full rounded-xl border p-3"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              className="w-full rounded-xl border p-3 outline-none"
             />
           </div>
 
           <div>
-            <label className="mb-2 block font-bold">
-              رقم الجوال
-            </label>
-
+            <label className="mb-2 block font-bold">الاسم الكامل</label>
             <input
               type="text"
-              className="w-full rounded-xl border p-3"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full rounded-xl border p-3 outline-none"
             />
           </div>
 
           <div>
-            <label className="mb-2 block font-bold">
-              المدينة
-            </label>
-
+            <label className="mb-2 block font-bold">رقم الجوال</label>
             <input
               type="text"
-              className="w-full rounded-xl border p-3"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full rounded-xl border p-3 outline-none"
             />
           </div>
 
           <div>
-            <label className="mb-2 block font-bold">
-              توقيع المصور
-            </label>
-
+            <label className="mb-2 block font-bold">المدينة</label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleUpload}
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full rounded-xl border p-3 outline-none"
             />
+          </div>
+
+          <div>
+            <label className="mb-2 block font-bold">توقيع المصور</label>
+
+            <input type="file" accept="image/*" onChange={handleUpload} />
 
             {signature && (
-              <img
-                src={signature}
-                alt="signature"
-                className="mt-4 max-h-32 rounded border p-2"
-              />
+              <div className="mt-4">
+                <p className="mb-2 text-sm font-bold text-[#75532F]">
+                  التوقيع الحالي:
+                </p>
+                <img
+                  src={signature}
+                  alt="توقيع المصور"
+                  className="max-h-32 rounded border bg-white p-2"
+                />
+              </div>
             )}
           </div>
 
           <button
-  type="button"
-  onClick={saveProfile}
-  className="rounded-xl bg-[#75532F] px-6 py-3 font-bold text-white"
->
-  حفظ البيانات
-</button>
+            type="button"
+            onClick={saveProfile}
+            disabled={saving}
+            className="rounded-xl bg-[#75532F] px-6 py-3 font-bold text-white disabled:opacity-60"
+          >
+            {saving ? "جاري الحفظ..." : "حفظ البيانات"}
+          </button>
         </div>
       </div>
     </main>
