@@ -32,3 +32,29 @@
 هدف النسخة الأولى:
 
 إطلاق منصة مستقرة يستطيع المستقل الاشتراك فيها واستخدامها بشكل يومي.
+# Changelog
+
+## Sprint 1 - Lawyer Portal Foundation
+
+### Added
+
+- Lawyer Portal Dashboard
+- Legal Consultations Dashboard
+- Consultation Details Page
+- Consultation Status Management
+- Lawyer Notes
+- WhatsApp Contact Button
+- Search & Filters
+- Statistics Cards
+- Project Roadmap
+- Updated Project Status
+
+### Database
+
+- Connected Lawyer Portal to Supabase
+- Consultation status updates
+- Lawyer notes persistence
+
+### Result
+
+Sprint 1 completed successfully.
