@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [signature, setSignature] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
-
+const [defaultTerms, setDefaultTerms] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -31,7 +33,9 @@ export default function SettingsPage() {
 
     const { data, error } = await supabase
       .from("profiles")
-      .select("business_name, full_name, phone, city, signature_image")
+      .select(
+  "business_name, full_name, phone, city, signature_image, default_contract_terms"
+)
       .eq("id", user.id)
       .single();
 
@@ -47,6 +51,7 @@ export default function SettingsPage() {
       setPhone(data.phone || "");
       setCity(data.city || "");
       setSignature(data.signature_image || null);
+      setDefaultTerms(data.default_contract_terms || "");
     }
 
     setLoading(false);
@@ -72,6 +77,7 @@ export default function SettingsPage() {
       phone,
       city,
       signature_image: signature,
+default_contract_terms: defaultTerms,
     });
 
     setSaving(false);
@@ -82,6 +88,9 @@ export default function SettingsPage() {
     }
 
     alert("تم حفظ البيانات بنجاح");
+    setTimeout(() => {
+  router.push("/dashboard");
+}, 1000);
   }
 
   function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -175,7 +184,19 @@ export default function SettingsPage() {
               </div>
             )}
           </div>
+<div>
+  <label className="mb-2 block font-bold">
+    الشروط الافتراضية للعقود
+  </label>
 
+  <textarea
+    rows={10}
+    value={defaultTerms}
+    onChange={(e) => setDefaultTerms(e.target.value)}
+    className="w-full rounded-xl border p-4 outline-none"
+    placeholder="اكتب الشروط التي تريد ظهورها تلقائياً في جميع العقود الجديدة..."
+  />
+</div>
           <button
             type="button"
             onClick={saveProfile}

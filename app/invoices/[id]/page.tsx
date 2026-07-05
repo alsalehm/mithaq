@@ -240,7 +240,7 @@ ${invoiceUrl}
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-      <div className="mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-md">
+      <div className="print-area mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-md">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">تفاصيل الفاتورة</h1>

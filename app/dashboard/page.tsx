@@ -116,7 +116,10 @@ export default function DashboardPage() {
   const newConsultations = consultations.filter((item) => item.status === "new").length;
 
   const latestContracts = contracts.slice(0, 5);
-
+async function handleLogout() {
+  await supabase.auth.signOut();
+  window.location.href = "/login";
+}
   function contractStatusArabic(status: string | null) {
     if (status === "draft") return "مسودة";
     if (status === "sent") return "تم الإرسال";
@@ -143,12 +146,24 @@ export default function DashboardPage() {
   return (
     <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
       <div className="mx-auto max-w-6xl">
-        <h1 className="mb-2 text-center text-4xl font-bold">لوحة التحكم</h1>
+      <div className="mb-6 flex items-center justify-between">
+  <button
+    onClick={handleLogout}
+    className="rounded-xl bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
+  >
+    تسجيل الخروج
+  </button>
 
-        <p className="mb-10 text-center text-gray-600">
-          نظرة مالية وتشغيلية سريعة على نشاط أعمالك
-        </p>
+  <div className="flex-1 text-center">
+    <h1 className="text-4xl font-bold">لوحة التحكم</h1>
 
+    <p className="mt-2 text-gray-600">
+      نظرة مالية وتشغيلية سريعة على نشاط أعمالك
+    </p>
+  </div>
+
+  <div className="w-28"></div>
+</div>
         <div className="mb-8 grid gap-6 md:grid-cols-4">
           <Stat title="العملاء" value={totalCustomers} />
           <Stat title="العقود" value={totalContracts} />

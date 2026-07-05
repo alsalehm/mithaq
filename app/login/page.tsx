@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -17,8 +19,12 @@ export default function LoginPage() {
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage("تم تسجيل الدخول بنجاح 🎉");
-    }
+  setMessage("تم تسجيل الدخول بنجاح 🎉");
+
+  setTimeout(() => {
+    router.push("/dashboard");
+  }, 500);
+}
   };
 
   return (

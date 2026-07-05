@@ -19,6 +19,7 @@ type Contract = {
   amount_paid: number;
   remaining_amount: number;
   payment_status: string;
+  contract_terms: string | null;
 };
 
 export default function ContractDetailsPage() {
@@ -177,9 +178,26 @@ if (existingInvoice) {
 
   const photographerSignature =
     contract.photographer_signature_image || profileSignature;
+    const contractTerms = (
+  contract.contract_terms ||
+  `يلتزم المصور بتنفيذ جلسة التصوير في التاريخ المتفق عليه.
+
+يلتزم العميل بسداد كامل قيمة العقد قبل تسليم الملفات النهائية.
+
+العربون المدفوع غير مسترد في حال إلغاء المناسبة من قبل العميل.
+
+مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.
+
+لا يحق للعميل إعادة بيع أو تعديل الصور التجارية دون موافقة المصور.`
+)
+  .split("\n")
+  .filter((line) => line.trim() !== "");
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] px-6 py-10 text-[#362008]">
+    <main
+  dir="rtl"
+  className="print-area min-h-screen bg-[#F5E9DC] px-6 py-10 text-[#362008]"
+>
       <div className="mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-lg">
         <div className="mb-8 border-b border-[#D9C3A6] pb-6">
           <h1 className="text-3xl font-bold text-[#75532F]">عقد تصوير</h1>
@@ -267,13 +285,11 @@ if (existingInvoice) {
           <div className="mt-10 border-t pt-6">
             <h2 className="mb-4 text-xl font-bold text-[#75532F]">بنود العقد</h2>
 
-            <ul className="space-y-3 text-gray-700 leading-8">
-              <li>يلتزم المصور بتنفيذ جلسة التصوير في التاريخ المتفق عليه.</li>
-              <li>يلتزم العميل بسداد كامل قيمة العقد قبل تسليم الملفات النهائية.</li>
-              <li>العربون المدفوع غير مسترد في حال إلغاء المناسبة من قبل العميل.</li>
-              <li>مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.</li>
-              <li>لا يحق للعميل إعادة بيع أو تعديل الصور التجارية دون موافقة المصور.</li>
-            </ul>
+           <ul className="space-y-3 text-gray-700 leading-8">
+  {contractTerms.map((term, index) => (
+    <li key={index}>{term}</li>
+  ))}
+</ul>
 
             <div className="mt-12 grid grid-cols-2 gap-10">
               <div>

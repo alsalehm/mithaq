@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
+import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
 
 type Customer = {
   id: string;
@@ -10,6 +12,7 @@ type Customer = {
 };
 
 export default function NewContractPage() {
+  const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
 
@@ -19,10 +22,13 @@ export default function NewContractPage() {
   const [eventDate, setEventDate] = useState("");
   const [contractValue, setContractValue] = useState("");
   const [deposit, setDeposit] = useState("");
+  const [contractTerms, setContractTerms] = useState(DEFAULT_CONTRACT_TERMS);
+  const [defaultTerms, setDefaultTerms] = useState(DEFAULT_CONTRACT_TERMS);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     loadCustomers();
+    loadDefaultTerms();
   }, []);
 
   async function loadCustomers() {
@@ -41,6 +47,30 @@ export default function NewContractPage() {
     setCustomers((data || []) as Customer[]);
   }
 
+  async function loadDefaultTerms() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setContractTerms(DEFAULT_CONTRACT_TERMS);
+      setDefaultTerms(DEFAULT_CONTRACT_TERMS);
+      return;
+    }
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("default_contract_terms")
+      .eq("id", user.id)
+      .single();
+
+    const savedTerms =
+      data?.default_contract_terms?.trim() || DEFAULT_CONTRACT_TERMS;
+
+    setDefaultTerms(savedTerms);
+    setContractTerms(savedTerms);
+  }
+
   function handleSelectCustomer(customerId: string) {
     setSelectedCustomerId(customerId);
 
@@ -50,6 +80,10 @@ export default function NewContractPage() {
       setClientName(customer.full_name);
       setClientPhone(customer.phone || "");
     }
+  }
+
+  function resetTerms() {
+    setContractTerms(defaultTerms);
   }
 
   async function handleSave() {
@@ -81,21 +115,26 @@ export default function NewContractPage() {
         ? "paid"
         : "partial";
 
-    const { error } = await supabase.from("contracts").insert({
-      user_id: user.id,
-      customer_id: selectedCustomerId || null,
-      client_name: clientName,
-      client_phone: clientPhone,
-      event_type: eventType,
-      event_date: eventDate,
-      contract_value: totalValue,
-      deposit: amountPaid,
-      amount_paid: amountPaid,
-      remaining_amount: remainingAmount,
-      payment_status: paymentStatus,
-      status: "draft",
-      photographer_signature_image: profile?.signature_image || null,
-    });
+   const { data, error } = await supabase
+  .from("contracts")
+  .insert({
+    user_id: user.id,
+    customer_id: selectedCustomerId || null,
+    client_name: clientName,
+    client_phone: clientPhone,
+    event_type: eventType,
+    event_date: eventDate,
+    contract_value: totalValue,
+    deposit: amountPaid,
+    amount_paid: amountPaid,
+    remaining_amount: remainingAmount,
+    payment_status: paymentStatus,
+    status: "draft",
+    photographer_signature_image: profile?.signature_image || null,
+    contract_terms: contractTerms,
+  })
+  .select()
+  .single();
 
     if (error) {
       setMessage("حدث خطأ أثناء حفظ العقد: " + error.message);
@@ -103,13 +142,9 @@ export default function NewContractPage() {
     }
 
     setMessage("تم حفظ العقد بنجاح 🎉");
-    setSelectedCustomerId("");
-    setClientName("");
-    setClientPhone("");
-    setEventType("");
-    setEventDate("");
-    setContractValue("");
-    setDeposit("");
+    setTimeout(() => {
+  router.push(`/contracts/${data.id}`);
+}, 800);
   }
 
   return (
@@ -179,6 +214,28 @@ export default function NewContractPage() {
             onChange={(e) => setDeposit(e.target.value)}
             className="w-full rounded-xl border border-[#B59676]/40 p-4 outline-none"
           />
+
+          <div>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <label className="font-bold">شروط العقد</label>
+
+              <button
+                type="button"
+                onClick={resetTerms}
+                className="rounded-xl border border-[#75532F] px-4 py-2 text-sm font-bold text-[#75532F]"
+              >
+                استعادة الشروط الافتراضية
+              </button>
+            </div>
+
+            <textarea
+              value={contractTerms}
+              onChange={(e) => setContractTerms(e.target.value)}
+              rows={10}
+              className="w-full resize-y rounded-xl border border-[#B59676]/40 p-4 leading-8 outline-none"
+              placeholder="اكتب شروط العقد هنا..."
+            />
+          </div>
 
           <button
             onClick={handleSave}

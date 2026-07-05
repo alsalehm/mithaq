@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "../../lib/supabase";
+import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
 import SignatureCanvas from "react-signature-canvas";
 
 type Contract = {
@@ -14,6 +15,7 @@ type Contract = {
   deposit: number;
   status: string;
   signature_image?: string;
+  contract_terms?: string;
 };
 
 export default function SignPage() {
@@ -128,13 +130,14 @@ export default function SignPage() {
           <h2 className="mb-4 text-xl font-bold">بنود العقد</h2>
 
           <ul className="space-y-3 leading-8 text-gray-700">
-            <li>يلتزم المصور بتنفيذ جلسة التصوير في التاريخ المتفق عليه.</li>
-            <li>يلتزم العميل بسداد كامل قيمة العقد قبل تسليم الملفات النهائية.</li>
-            <li>العربون المدفوع غير مسترد في حال إلغاء المناسبة من قبل العميل.</li>
-            <li>مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.</li>
-          </ul>
-        </div>
-
+  {(contract.contract_terms?.trim() || DEFAULT_CONTRACT_TERMS)
+    .split("\n")
+    .filter((term) => term.trim() !== "")
+    .map((term, index) => (
+      <li key={index}>{term}</li>
+    ))}
+</ul>
+</div>
         {!signed ? (
           <div className="mt-10">
             <p className="mb-3 font-bold text-[#75532F]">

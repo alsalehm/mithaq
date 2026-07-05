@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,15 +27,17 @@ export default function SignupPage() {
       setMessage(error.message);
     } else {
       setMessage("تم إنشاء الحساب بنجاح 🎉");
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
     }
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#F5E9DC]">
       <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          إنشاء حساب
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-6">إنشاء حساب</h1>
 
         <input
           type="text"
@@ -65,11 +70,7 @@ export default function SignupPage() {
           إنشاء حساب
         </button>
 
-        {message && (
-          <p className="text-center mt-4">
-            {message}
-          </p>
-        )}
+        {message && <p className="text-center mt-4">{message}</p>}
       </div>
     </main>
   );
