@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../../lib/supabase";
-
+import { toast } from "react-hot-toast";
 type ConsultationStatus = "new" | "contacted" | "completed" | "cancelled";
 
 type LegalConsultation = {

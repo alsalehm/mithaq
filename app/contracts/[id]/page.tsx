@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "../../lib/supabase";
-
+import { toast } from "react-hot-toast";
 type Contract = {
   id: string;
   user_id: string;
@@ -153,7 +153,7 @@ if (existingInvoice) {
     setCreatingInvoice(false);
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
 

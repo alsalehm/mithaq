@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
-
+import { toast } from "react-hot-toast";
 type Customer = {
   id: string;
   full_name: string;
@@ -94,7 +94,7 @@ export default function NewContractPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setMessage("يجب تسجيل الدخول أولًا");
+      toast.error("يجب تسجيل الدخول أولًا");
       return;
     }
 
@@ -137,11 +137,11 @@ export default function NewContractPage() {
   .single();
 
     if (error) {
-      setMessage("حدث خطأ أثناء حفظ العقد: " + error.message);
+      toast.error("حدث خطأ أثناء حفظ العقد: " + error.message);
       return;
     }
 
-    setMessage("تم حفظ العقد بنجاح 🎉");
+    toast.success("تم حفظ العقد بنجاح 🎉");
     setTimeout(() => {
   router.push(`/contracts/${data.id}`);
 }, 800);

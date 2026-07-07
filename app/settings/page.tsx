@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
-
+import { toast } from "react-hot-toast";
 export default function SettingsPage() {
   const router = useRouter();
   const [signature, setSignature] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const [defaultTerms, setDefaultTerms] = useState("");
       .single();
 
     if (error && error.code !== "PGRST116") {
-      alert("حدث خطأ أثناء تحميل بيانات الحساب: " + error.message);
+      toast.error("حدث خطأ أثناء تحميل البيانات");
       setLoading(false);
       return;
     }
@@ -65,7 +65,7 @@ const [defaultTerms, setDefaultTerms] = useState("");
     } = await supabase.auth.getUser();
 
     if (!user) {
-      alert("يجب تسجيل الدخول");
+      toast.error("يجب تسجيل الدخول");
       setSaving(false);
       return;
     }
@@ -83,11 +83,11 @@ default_contract_terms: defaultTerms,
     setSaving(false);
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
 
-    alert("تم حفظ البيانات بنجاح");
+    toast.success("تم حفظ البيانات بنجاح");
     setTimeout(() => {
   router.push("/dashboard");
 }, 1000);

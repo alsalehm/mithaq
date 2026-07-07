@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "../../../lib/supabase";
-
+import { toast } from "react-hot-toast";
 type ConsultationStatus =
   | "new"
   | "contacted"
@@ -92,7 +92,7 @@ const [savingNotes, setSavingNotes] = useState(false);
       .eq("id", consultation.id);
 
     if (error) {
-      alert("حدث خطأ");
+      toast.error("حدث خطأ");
       return;
     }
 
@@ -139,7 +139,7 @@ async function saveNotes() {
   setSavingNotes(false);
 
   if (error) {
-    alert("حدث خطأ أثناء حفظ الملاحظات.");
+    toast.error("حدث خطأ أثناء حفظ الملاحظات.");
     return;
   }
 
@@ -148,7 +148,7 @@ async function saveNotes() {
     lawyer_notes: notes,
   });
 
-  alert("تم حفظ الملاحظات بنجاح.");
+  toast.success("تم حفظ الملاحظات بنجاح");
 }
   if (loading) {
     return (

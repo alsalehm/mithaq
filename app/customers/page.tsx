@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
-
+import { toast } from "react-hot-toast";
 type Customer = {
   id: string;
   full_name: string;
@@ -53,7 +53,7 @@ export default function CustomersPage() {
     if (!user) return;
 
     if (!fullName.trim()) {
-      alert("أدخل اسم العميل");
+      toast.error("أدخل اسم العميل");
       return;
     }
 
@@ -66,7 +66,7 @@ export default function CustomersPage() {
     });
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
 

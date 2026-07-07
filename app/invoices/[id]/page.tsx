@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "../../lib/supabase";
-
+import { toast } from "react-hot-toast";
 type Invoice = {
   id: string;
   user_id: string | null;
@@ -123,7 +123,7 @@ ${invoiceUrl}
       .eq("id", invoice.id);
 
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
 
@@ -137,7 +137,7 @@ ${invoiceUrl}
         });
 
       if (paymentError) {
-        alert(paymentError.message);
+        toast.error(paymentError.message);
         return;
       }
 
@@ -152,7 +152,7 @@ ${invoiceUrl}
         });
 
       if (timelineError) {
-        alert(timelineError.message);
+        toast.error(timelineError.message);
         return;
       }
     }
@@ -185,7 +185,7 @@ ${invoiceUrl}
     const newPayment = Number(paymentAmount);
 
     if (!newPayment || newPayment <= 0) {
-      alert("اكتب مبلغ صحيح للدفعة");
+      toast.error("أدخل مبلغًا صحيحًا للدفع");
       return;
     }
 
