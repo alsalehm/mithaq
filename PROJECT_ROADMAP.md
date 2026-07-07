@@ -1,113 +1,91 @@
-# 🚀 Mithaq (ميثاق) - Project Roadmap
+# MITHAQ ROADMAP
+
+## Phase 1 — MVP (Completed) ✅
+
+### Authentication
+- ✅ Sign Up
+- ✅ Login
+- ✅ Logout
+
+### Dashboard
+- ✅ Statistics
+- ✅ Revenue summary
+
+### Customers
+- ✅ Customer management
+- ✅ Customer timeline
+
+### Contracts
+- ✅ Contract creation
+- ✅ Contract details
+- ✅ WhatsApp sharing
+- ✅ Client signing
+- ✅ Photographer signature
+- ✅ Default contract terms
+- ✅ PDF export
+
+### Invoices
+- ✅ Invoice generation
+- ✅ Payment tracking
+- ✅ Remaining balance
+- ✅ Payment history
+
+### Legal Consultations
+- ✅ Client requests
+- ✅ Lawyer dashboard
+- ✅ Internal notes
+
+### Settings
+- ✅ Business profile
+- ✅ Signature
+- ✅ Default contract terms
+
+### Security
+- ✅ Multi-tenant architecture
+- ✅ User data isolation
+
+### UX
+- ✅ Toast notifications
+- ✅ Consistent interface
 
 ---
 
-# 🎯 الهدف الرئيسي
+# Phase 2 — Launch (Current) 🚀
 
-إطلاق أول نسخة مدفوعة (MVP) بأسرع وقت بشكل احترافي، ثم تطوير المنصة بشكل مستمر بناءً على احتياجات المستخدمين.
+Current priority:
 
----
-
-# حالة المشروع الحالية
-
-## ✅ تم إنجازه
-
-- تسجيل الدخول
-- إنشاء الحساب
-- Dashboard
-- العقود
-- إرسال العقود عبر واتساب
-- التوقيع الإلكتروني
-- PDF
-- الفواتير
-- تسجيل الدفعات
-- حالات الدفع
-- CRM العملاء
-- صفحة العميل
-- Timeline
-- إعدادات المستخدم
-- GitHub
-- Vercel
-- بوابة المحامية (تم البدء)
+- Final QA
+- Production deployment verification
+- Connect custom domain
+- Official commercial launch
 
 ---
 
-# MVP قبل الإطلاق
+# Phase 3 — Growth
 
-## 👤 بوابة المستخدم
+After launch:
 
-- [x] Dashboard
-- [x] العقود
-- [x] الفواتير
-- [x] العملاء
-- [x] الإعدادات
-- [ ] الاستشارات القانونية
-- [ ] الاشتراك المدفوع
-- [ ] الملف الشخصي النهائي
-
----
-
-## ⚖️ بوابة المحامية
-
-- [x] Layout
-- [x] Dashboard
-- [ ] طلبات الاستشارات
-- [ ] تفاصيل الطلب
-- [ ] تغيير حالة الطلب
-- [ ] الملاحظات
-- [ ] الإعدادات
+- Email notifications
+- SMS / WhatsApp automation
+- Search & filters
+- Reports & analytics
+- Better dashboard
+- Client portal
+- Arabic & English polishing
+- Performance improvements
 
 ---
 
-## 👑 بوابة الإدارة
+# Phase 4 — Expansion
 
-- [ ] Dashboard
-- [ ] إدارة المستخدمين
-- [ ] إدارة المحامين
-- [ ] إدارة الاشتراكات
-- [ ] إدارة الخطط
-- [ ] الإحصائيات
-- [ ] إعدادات المنصة
+Future vision:
 
----
-
-# الصلاحيات
-
-## Admin
-
-صلاحية كاملة.
-
-## Lawyer
-
-- مشاهدة طلبات الاستشارات
-- تحديث حالة الطلب
-- كتابة الملاحظات
-
-## User
-
-- العقود
-- الفواتير
-- العملاء
-- طلب استشارة قانونية
-
----
-
-# بعد الإطلاق
-
-- الذكاء الاصطناعي
-- الإشعارات
-- تطبيق الجوال
-- أكثر من محامٍ
-- بوابة المحاسب
-- دعم مباشر
-- API
-- تعدد اللغات
-- التقارير المتقدمة
-
----
-
-# مبدأ العمل
-
-🚀 أي فكرة جديدة لا تؤخر الإطلاق.
-
-إذا لم تكن ضرورية للـ MVP يتم نقلها إلى قسم "بعد الإطلاق".
+- Support all freelancers
+- Subscription plans
+- Team accounts
+- AI assistant
+- Mobile applications
+- Public API
+- Integrations
+- Gulf countries
+- Full Arab world expansion

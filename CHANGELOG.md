@@ -1,60 +1,57 @@
-# 📋 Mithaq (ميثاق) - Changelog
+# CHANGELOG
 
-جميع التحديثات المهمة على مشروع ميثاق يتم تسجيلها هنا.
+## Launch Readiness Update
 
----
+### Authentication
+- Added complete authentication flow
+- Added logout functionality
+- Protected application routes
 
-# إصدار 0.1.0 (مرحلة التطوير)
+### Dashboard
+- Added statistics
+- Added revenue summary
+- Added customer and invoice counters
 
-## 2026-06-30
+### Customers
+- Added customer management
+- Added customer timeline
 
-### تمت إضافته
+### Contracts
+- Added contract creation
+- Added contract details
+- Added WhatsApp sharing
+- Added client signing
+- Added photographer signature
+- Added default contract terms
+- Added printable PDF
 
-- إنشاء بوابة المحامية (Lawyer Portal)
-- إنشاء Layout خاص بالمحامية
-- إنشاء Dashboard للمحامية
-- بدء نظام الصلاحيات (Role System)
-- إضافة صلاحيات:
-  - Admin
-  - Lawyer
-  - User
-- إنشاء جدول طلبات الاستشارات القانونية
-- إنشاء جدول إعدادات المحامية
-- إنشاء ملف PROJECT_ROADMAP.md
-- إنشاء ملف CHANGELOG.md
+### Invoices
+- Added invoice generation from contracts
+- Added payment recording
+- Added payment history
+- Added remaining balance calculation
+- Added payment status tracking
 
----
+### Legal Consultations
+- Added lawyer dashboard
+- Added consultation tracking
+- Added internal notes
 
-## ملاحظات
+### Settings
+- Added profile management
+- Added photographer signature
+- Added default contract terms
 
-ما زال المشروع في مرحلة تطوير النسخة الأولى (MVP).
+### Security
+- Implemented multi-tenant isolation
+- User-specific data protection
 
-هدف النسخة الأولى:
+### UI Improvements
+- Installed react-hot-toast
+- Replaced all alert() dialogs with toast notifications
+- Improved success and error feedback
+- Standardized user notifications
 
-إطلاق منصة مستقرة يستطيع المستقل الاشتراك فيها واستخدامها بشكل يومي.
-# Changelog
-
-## Sprint 1 - Lawyer Portal Foundation
-
-### Added
-
-- Lawyer Portal Dashboard
-- Legal Consultations Dashboard
-- Consultation Details Page
-- Consultation Status Management
-- Lawyer Notes
-- WhatsApp Contact Button
-- Search & Filters
-- Statistics Cards
-- Project Roadmap
-- Updated Project Status
-
-### Database
-
-- Connected Lawyer Portal to Supabase
-- Consultation status updates
-- Lawyer notes persistence
-
-### Result
-
-Sprint 1 completed successfully.
+### Stability
+- Final launch cleanup completed
+- Project ready for Final QA
