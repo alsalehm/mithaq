@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import AppShell from "../components/AppShell";
+import DashboardStats from "../components/DashboardStats";
+import DashboardFinancial from "../components/DashboardFinancial";
+import DashboardContracts from "../components/DashboardContracts";
+import QuickActions from "../components/QuickActions";
 import { supabase } from "../lib/supabase";
+import { LayoutDashboard } from "lucide-react";
 
 type Contract = {
   id: string;
@@ -104,170 +109,70 @@ export default function DashboardPage() {
     0
   );
 
-  const draftContracts = contracts.filter((item) => item.status === "draft").length;
-  const sentContracts = contracts.filter((item) => item.status === "sent").length;
-  const signedContracts = contracts.filter((item) => item.status === "signed").length;
-  const completedContracts = contracts.filter((item) => item.status === "completed").length;
-
-  const unpaidInvoices = invoices.filter(
-    (item) => item.payment_status !== "paid" && item.status !== "paid"
-  ).length;
-
-  const newConsultations = consultations.filter((item) => item.status === "new").length;
-
   const latestContracts = contracts.slice(0, 5);
-async function handleLogout() {
-  await supabase.auth.signOut();
-  window.location.href = "/login";
-}
-  function contractStatusArabic(status: string | null) {
-    if (status === "draft") return "مسودة";
-    if (status === "sent") return "تم الإرسال";
-    if (status === "signed") return "موقّع";
-    if (status === "completed") return "مكتمل";
-    if (status === "cancelled") return "ملغي";
-    return "غير محدد";
-  }
-
-  function paymentStatusArabic(status: string | null) {
-    if (status === "paid") return "مدفوع بالكامل";
-    if (status === "partial") return "مدفوع جزئيًا";
-    return "غير مدفوع";
-  }
 
   if (loading) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        جاري تحميل لوحة التحكم...
+      <main dir="rtl" className="min-h-screen">
+        <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
+          <div className="mithaq-card-premium w-full max-w-md rounded-[32px] p-8 text-center">
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+              <LayoutDashboard size={28} />
+            </div>
+
+            <p className="text-lg font-black text-[var(--mithaq-text)]">
+              جاري تحميل لوحة التحكم
+            </p>
+
+            <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
+              يتم تجهيز بيانات العقود والفواتير والعملاء.
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-      <div className="mx-auto max-w-6xl">
-      <div className="mb-6 flex items-center justify-between">
-  <button
-    onClick={handleLogout}
-    className="rounded-xl bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700"
-  >
-    تسجيل الخروج
-  </button>
-
-  <div className="flex-1 text-center">
-    <h1 className="text-4xl font-bold">لوحة التحكم</h1>
-
-    <p className="mt-2 text-gray-600">
-      نظرة مالية وتشغيلية سريعة على نشاط أعمالك
-    </p>
-  </div>
-
-  <div className="w-28"></div>
-</div>
-        <div className="mb-8 grid gap-6 md:grid-cols-4">
-          <Stat title="العملاء" value={totalCustomers} />
-          <Stat title="العقود" value={totalContracts} />
-          <Stat title="الفواتير" value={totalInvoices} />
-          <Stat title="الاستشارات القانونية" value={totalConsultations} />
-        </div>
-
-        <div className="mb-8 grid gap-6 md:grid-cols-3">
-          <Stat title="إجمالي قيمة العقود" value={`${totalValue} ر.س`} />
-          <Stat title="إجمالي المدفوع" value={`${totalPaid} ر.س`} green />
-          <Stat title="إجمالي المتبقي" value={`${totalRemaining} ر.س`} red />
-        </div>
-
-        <div className="mb-8 grid gap-6 md:grid-cols-5">
-          <Stat title="مسودة" value={draftContracts} />
-          <Stat title="تم الإرسال" value={sentContracts} />
-          <Stat title="موقعة" value={signedContracts} />
-          <Stat title="مكتملة" value={completedContracts} />
-          <Stat title="فواتير غير مدفوعة" value={unpaidInvoices} red />
-        </div>
-
-        <div className="mb-8 grid gap-6 md:grid-cols-4">
-          <Link href="/customers" className="rounded-3xl bg-white p-6 text-center font-bold shadow-md">
-            إدارة العملاء
-          </Link>
-
-          <Link href="/contracts/new" className="rounded-3xl bg-[#75532F] p-6 text-center font-bold text-white shadow-md">
-            إنشاء عقد جديد
-          </Link>
-
-          <Link href="/invoices" className="rounded-3xl bg-white p-6 text-center font-bold shadow-md">
-            إدارة الفواتير
-          </Link>
-
-          <Link href="/legal-consultations" className="rounded-3xl bg-white p-6 text-center font-bold shadow-md">
-            طلب استشارة قانونية
-            {newConsultations > 0 && (
-              <span className="mr-2 rounded-full bg-red-100 px-2 py-1 text-sm text-red-700">
-                {newConsultations} جديد
-              </span>
-            )}
-          </Link>
-        </div>
-
-        <div className="rounded-3xl bg-white p-6 shadow-md">
-          <h2 className="mb-5 text-2xl font-bold text-[#75532F]">آخر العقود</h2>
-
-          {latestContracts.length === 0 ? (
-            <p className="text-gray-500">لا توجد عقود حتى الآن</p>
-          ) : (
-            <div className="space-y-4">
-              {latestContracts.map((contract) => (
-                <Link
-                  key={contract.id}
-                  href={`/contracts/${contract.id}`}
-                  className="block rounded-2xl bg-[#F5E9DC] p-4"
-                >
-                  <div className="flex flex-wrap justify-between gap-3">
-                    <div>
-                      <p className="font-bold">{contract.client_name}</p>
-                      <p className="text-sm text-gray-600">
-                        {contract.event_type || "بدون نوع"} - {contract.event_date || "بدون تاريخ"}
-                      </p>
-                    </div>
-
-                    <div className="text-left">
-                      <p className="font-bold">{contract.contract_value || 0} ر.س</p>
-                      <p className="text-sm text-gray-600">
-                        {contractStatusArabic(contract.status)} /{" "}
-                        {paymentStatusArabic(contract.payment_status)}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+    <AppShell>
+      <div className="space-y-8">
+        <section className="rounded-[32px] border border-[var(--mithaq-border)] bg-white/75 p-6 shadow-[var(--mithaq-shadow-sm)] backdrop-blur">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                لوحة التحكم
+              </p>
+              <h1 className="mt-2 text-4xl font-black tracking-tight text-[var(--mithaq-text)]">
+                نظرة عامة على أعمالك
+              </h1>
+              <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
+                تابع العملاء، العقود، الفواتير والاستشارات من مكان واحد.
+              </p>
             </div>
-          )}
-        </div>
-      </div>
-    </main>
-  );
-}
 
-function Stat({
-  title,
-  value,
-  green,
-  red,
-}: {
-  title: string;
-  value: string | number;
-  green?: boolean;
-  red?: boolean;
-}) {
-  return (
-    <div className="rounded-3xl bg-white p-6 shadow-md">
-      <p className="text-sm text-gray-500">{title}</p>
-      <p
-        className={`mt-2 text-3xl font-bold ${
-          green ? "text-green-700" : red ? "text-red-700" : ""
-        }`}
-      >
-        {value}
-      </p>
-    </div>
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+              <LayoutDashboard size={28} />
+            </div>
+          </div>
+        </section>
+
+        <DashboardStats
+          totalCustomers={totalCustomers}
+          totalContracts={totalContracts}
+          totalInvoices={totalInvoices}
+          totalConsultations={totalConsultations}
+        />
+
+        <DashboardFinancial
+          totalValue={totalValue}
+          totalPaid={totalPaid}
+          totalRemaining={totalRemaining}
+        />
+
+        <QuickActions />
+
+        <DashboardContracts contracts={latestContracts} />
+      </div>
+    </AppShell>
   );
 }

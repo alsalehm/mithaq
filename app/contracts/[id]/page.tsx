@@ -2,8 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "../../lib/supabase";
 import { toast } from "react-hot-toast";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  CalendarDays,
+  CheckCircle2,
+  Download,
+  FileText,
+  MessageCircle,
+  Phone,
+  ReceiptText,
+  UserRound,
+  Wallet,
+} from "lucide-react";
+
 type Contract = {
   id: string;
   user_id: string;
@@ -116,16 +131,18 @@ ${signUrl}
 
   async function createInvoiceFromContract() {
     if (!contract || creatingInvoice) return;
-const { data: existingInvoice } = await supabase
-  .from("invoices")
-  .select("id")
-  .eq("contract_id", contract.id)
-  .maybeSingle();
 
-if (existingInvoice) {
-  window.location.href = `/invoices/${existingInvoice.id}`;
-  return;
-}
+    const { data: existingInvoice } = await supabase
+      .from("invoices")
+      .select("id")
+      .eq("contract_id", contract.id)
+      .maybeSingle();
+
+    if (existingInvoice) {
+      window.location.href = `/invoices/${existingInvoice.id}`;
+      return;
+    }
+
     setCreatingInvoice(true);
 
     const invoiceAmount =
@@ -162,25 +179,50 @@ if (existingInvoice) {
 
   if (loading) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        جاري تحميل العقد...
+      <main dir="rtl" className="min-h-screen px-6 py-8">
+        <div className="mx-auto flex min-h-[70vh] max-w-6xl items-center justify-center">
+          <div className="mithaq-card-premium rounded-[32px] p-8 text-center">
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+              <FileText size={28} />
+            </div>
+            <p className="text-lg font-black text-[var(--mithaq-text)]">
+              جاري تحميل العقد
+            </p>
+            <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
+              يتم تجهيز تفاصيل العقد والتواقيع.
+            </p>
+          </div>
+        </div>
       </main>
     );
   }
 
   if (!contract) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        لم يتم العثور على العقد
+      <main dir="rtl" className="min-h-screen px-6 py-8">
+        <div className="mx-auto flex min-h-[70vh] max-w-6xl items-center justify-center">
+          <div className="mithaq-card-premium rounded-[32px] p-8 text-center">
+            <p className="text-lg font-black text-[var(--mithaq-text)]">
+              لم يتم العثور على العقد
+            </p>
+            <Link
+              href="/contracts"
+              className="mithaq-btn-primary mt-6 inline-flex px-6 py-3 text-sm"
+            >
+              الرجوع للعقود
+            </Link>
+          </div>
+        </div>
       </main>
     );
   }
 
   const photographerSignature =
     contract.photographer_signature_image || profileSignature;
-    const contractTerms = (
-  contract.contract_terms ||
-  `يلتزم المصور بتنفيذ جلسة التصوير في التاريخ المتفق عليه.
+
+  const contractTerms = (
+    contract.contract_terms ||
+    `يلتزم المصور بتنفيذ جلسة التصوير في التاريخ المتفق عليه.
 
 يلتزم العميل بسداد كامل قيمة العقد قبل تسليم الملفات النهائية.
 
@@ -189,145 +231,216 @@ if (existingInvoice) {
 مدة تسليم الصور النهائية من 7 إلى 14 يوم عمل بعد المناسبة.
 
 لا يحق للعميل إعادة بيع أو تعديل الصور التجارية دون موافقة المصور.`
-)
-  .split("\n")
-  .filter((line) => line.trim() !== "");
+  )
+    .split("\n")
+    .filter((line) => line.trim() !== "");
+
+  const statusLabel =
+    contract.status === "draft"
+      ? "مسودة"
+      : contract.status === "sent"
+      ? "تم الإرسال"
+      : contract.status === "signed"
+      ? "موقع"
+      : contract.status === "completed"
+      ? "مكتمل"
+      : contract.status;
+
+  const paymentStatusLabel =
+    contract.payment_status === "unpaid"
+      ? "غير مدفوع"
+      : contract.payment_status === "partial"
+      ? "مدفوع جزئياً"
+      : contract.payment_status === "paid"
+      ? "مدفوع بالكامل"
+      : contract.payment_status;
 
   return (
     <main
-  dir="rtl"
-  className="print-area min-h-screen bg-[#F5E9DC] px-6 py-10 text-[#362008]"
->
-      <div className="mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-lg">
-        <div className="mb-8 border-b border-[#D9C3A6] pb-6">
-          <h1 className="text-3xl font-bold text-[#75532F]">عقد تصوير</h1>
-          <p className="mt-2 text-sm text-[#4F381D]">
-            صادر من منصة ميثاق لإدارة عقود المصورين
-          </p>
-        </div>
+      dir="rtl"
+      className="print-area min-h-screen px-6 py-8 text-[var(--mithaq-text)]"
+    >
+      <div className="mx-auto max-w-6xl space-y-6">
+        <div className="print:hidden mithaq-card-premium rounded-[32px] p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                تفاصيل العقد
+              </p>
+              <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+                عقد {contract.client_name}
+              </h1>
+              <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
+                راجع تفاصيل العقد وأرسله للعميل أو أنشئ فاتورة مرتبطة به.
+              </p>
+            </div>
 
-        <div className="mb-6 flex flex-wrap gap-3 print:hidden">
-          <a
-            href="/contracts"
-            className="rounded-xl bg-[#F0E2D0] px-5 py-3 font-bold text-[#75532F]"
-          >
-            رجوع للعقود
-          </a>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/contracts"
+                className="mithaq-btn-secondary px-5 py-3 text-sm"
+              >
+                رجوع للعقود
+              </Link>
 
-          <button
-            onClick={() => window.print()}
-            className="rounded-xl bg-black px-5 py-3 font-bold text-white"
-          >
-            تحميل PDF
-          </button>
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-text)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
+              >
+                <Download size={18} />
+                تحميل PDF
+              </button>
 
-          <button
-            type="button"
-            onClick={sendToClient}
-            className="rounded-xl bg-[#75532F] px-5 py-3 font-bold text-white"
-          >
-            إرسال للعميل
-          </button>
+              <button
+                type="button"
+                onClick={sendToClient}
+                className="mithaq-btn-primary inline-flex items-center gap-2 px-5 py-3 text-sm"
+              >
+                <MessageCircle size={18} />
+                إرسال للعميل
+              </button>
 
-          <button
-            type="button"
-            onClick={createInvoiceFromContract}
-            disabled={creatingInvoice}
-            className="rounded-xl bg-blue-700 px-5 py-3 font-bold text-white disabled:opacity-60"
-          >
-            {creatingInvoice ? "جاري إنشاء الفاتورة..." : "إنشاء فاتورة"}
-          </button>
+              <button
+                type="button"
+                onClick={createInvoiceFromContract}
+                disabled={creatingInvoice}
+                className="inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-5 py-3 text-sm font-black text-white transition hover:bg-blue-800 disabled:opacity-60"
+              >
+                <ReceiptText size={18} />
+                {creatingInvoice ? "جاري إنشاء الفاتورة..." : "إنشاء فاتورة"}
+              </button>
 
-          {contract.status === "signed" && (
-            <button
-              onClick={completeContract}
-              className="rounded-xl bg-green-600 px-5 py-3 font-bold text-white"
-            >
-              إنهاء العقد
-            </button>
-          )}
-        </div>
-
-        <div className="space-y-4 text-lg">
-          <p><strong>العميل:</strong> {contract.client_name}</p>
-          <p><strong>الجوال:</strong> {contract.client_phone}</p>
-          <p><strong>نوع المناسبة:</strong> {contract.event_type}</p>
-          <p><strong>تاريخ المناسبة:</strong> {contract.event_date}</p>
-          <p><strong>قيمة العقد:</strong> {contract.contract_value} ر.س</p>
-          <p><strong>العربون:</strong> {contract.deposit} ر.س</p>
-          <p><strong>المدفوع:</strong> {contract.amount_paid} ر.س</p>
-          <p><strong>المتبقي:</strong> {contract.remaining_amount} ر.س</p>
-
-          <p>
-            <strong>الحالة المالية:</strong>{" "}
-            {contract.payment_status === "unpaid"
-              ? "غير مدفوع"
-              : contract.payment_status === "partial"
-              ? "مدفوع جزئياً"
-              : contract.payment_status === "paid"
-              ? "مدفوع بالكامل"
-              : contract.payment_status}
-          </p>
-
-          <p>
-            <strong>الحالة:</strong>{" "}
-            {contract.status === "draft"
-              ? "مسودة"
-              : contract.status === "sent"
-              ? "تم الإرسال"
-              : contract.status === "signed"
-              ? "موقع"
-              : contract.status === "completed"
-              ? "مكتمل"
-              : contract.status}
-          </p>
-
-          <div className="mt-10 border-t pt-6">
-            <h2 className="mb-4 text-xl font-bold text-[#75532F]">بنود العقد</h2>
-
-           <ul className="space-y-3 text-gray-700 leading-8">
-  {contractTerms.map((term, index) => (
-    <li key={index}>{term}</li>
-  ))}
-</ul>
-
-            <div className="mt-12 grid grid-cols-2 gap-10">
-              <div>
-                <p className="font-bold">توقيع العميل</p>
-
-                {contract.signature_image ? (
-                  <img
-                    src={contract.signature_image}
-                    alt="توقيع العميل"
-                    className="mt-2 max-h-20 rounded border bg-white p-1"
-                  />
-                ) : (
-                  <div className="mt-6 border-b border-gray-400"></div>
-                )}
-              </div>
-
-              <div>
-                <p className="font-bold">توقيع المصور</p>
-
-                {photographerSignature ? (
-                  <img
-                    src={photographerSignature}
-                    alt="توقيع المصور"
-                    className="mt-2 max-h-20 rounded border bg-white p-1"
-                  />
-                ) : (
-                  <div className="mt-6 border-b border-gray-400"></div>
-                )}
-              </div>
+              {contract.status === "signed" && (
+                <button
+                  onClick={completeContract}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-green-700 px-5 py-3 text-sm font-black text-white transition hover:bg-green-800"
+                >
+                  <CheckCircle2 size={18} />
+                  إنهاء العقد
+                </button>
+              )}
             </div>
           </div>
         </div>
+
+        <section className="contract-print-page contract-page-one rounded-[32px] border border-[var(--mithaq-border)] bg-white p-8 shadow-[var(--mithaq-shadow-sm)]">
+          <div className="mb-8 border-b border-[var(--mithaq-border)] pb-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)] print:hidden">
+                  <FileText size={28} />
+                </div>
+                <h2 className="text-3xl font-black text-[var(--mithaq-text)]">
+                  عقد تصوير
+                </h2>
+                <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
+                  صادر من منصة ميثاق لإدارة عقود المصورين
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full bg-[var(--mithaq-primary-soft)] px-4 py-2 text-sm font-black text-[var(--mithaq-primary)]">
+                  {statusLabel}
+                </span>
+                <span className="rounded-full bg-green-100 px-4 py-2 text-sm font-black text-green-700">
+                  {paymentStatusLabel}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <section className="grid gap-4 md:grid-cols-2">
+            <InfoCard label="العميل" value={contract.client_name} icon={UserRound} />
+            <InfoCard label="الجوال" value={contract.client_phone} icon={Phone} />
+            <InfoCard
+              label="نوع المناسبة"
+              value={contract.event_type}
+              icon={BadgeCheck}
+            />
+            <InfoCard
+              label="تاريخ المناسبة"
+              value={contract.event_date}
+              icon={CalendarDays}
+            />
+            <InfoCard
+              label="قيمة العقد"
+              value={`${Number(contract.contract_value || 0).toLocaleString()} ر.س`}
+              icon={Wallet}
+            />
+            <InfoCard
+              label="العربون"
+              value={`${Number(contract.deposit || 0).toLocaleString()} ر.س`}
+              icon={Wallet}
+            />
+            <InfoCard
+              label="المدفوع"
+              value={`${Number(contract.amount_paid || 0).toLocaleString()} ر.س`}
+              icon={Wallet}
+            />
+            <InfoCard
+              label="المتبقي"
+              value={`${Number(contract.remaining_amount || 0).toLocaleString()} ر.س`}
+              icon={Wallet}
+            />
+          </section>
+        </section>
+
+        <section className="contract-print-page contract-page-two rounded-[32px] border border-[var(--mithaq-border)] bg-white p-8 shadow-[var(--mithaq-shadow-sm)]">
+          <section className="rounded-[32px] border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)] print:hidden">
+                <FileText size={22} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-[var(--mithaq-text)]">
+                  بنود العقد
+                </h3>
+                <p className="mt-1 text-sm text-[var(--mithaq-muted)]">
+                  الشروط الأساسية المتفق عليها بين الطرفين.
+                </p>
+              </div>
+            </div>
+
+            <ul className="mt-5 space-y-3 leading-8 text-[var(--mithaq-muted)]">
+              {contractTerms.map((term, index) => (
+                <li
+                  key={index}
+                  className="rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3"
+                >
+                  {term}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="mt-8 grid gap-6 md:grid-cols-2">
+            <SignatureBox
+              title="توقيع العميل"
+              image={contract.signature_image}
+              alt="توقيع العميل"
+            />
+
+            <SignatureBox
+              title="توقيع المصور"
+              image={photographerSignature}
+              alt="توقيع المصور"
+            />
+          </section>
+        </section>
       </div>
 
       <style jsx global>{`
         @media print {
+          @page {
+            size: A4;
+            margin: 8mm;
+          }
+
+          html,
           body {
             background: white !important;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
           }
 
           .print\\:hidden {
@@ -339,11 +452,116 @@ if (existingInvoice) {
             padding: 0 !important;
           }
 
-          .shadow-lg {
+          .print-area > div {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+            gap: 0 !important;
+          }
+
+          .contract-print-page {
+            width: 100% !important;
+            min-height: calc(297mm - 16mm) !important;
+            box-shadow: none !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+
+          .contract-page-one {
+            page-break-after: always;
+            break-after: page;
+          }
+
+          .contract-page-two {
+            page-break-after: auto;
+            break-after: auto;
+          }
+
+          .contract-print-page section {
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+
+          .contract-page-one .grid {
+            gap: 10px !important;
+          }
+
+          .contract-page-one [class*="p-5"] {
+            padding: 12px !important;
+          }
+
+          .contract-page-two {
+            padding-top: 14mm !important;
+          }
+
+          .contract-page-two li {
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+            line-height: 1.6 !important;
+          }
+
+          img {
+            max-width: 100%;
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+
+          .shadow-sm,
+          .shadow-\\[var\\(--mithaq-shadow-sm\\)\\],
+          .shadow-\\[var\\(--mithaq-shadow-md\\)\\],
+          .shadow-\\[var\\(--mithaq-shadow-lg\\)\\] {
             box-shadow: none !important;
           }
         }
       `}</style>
     </main>
+  );
+}
+
+function InfoCard({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="rounded-2xl border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-5">
+      <div className="flex items-center gap-2 text-sm font-bold text-[var(--mithaq-muted)]">
+        <Icon size={16} className="text-[var(--mithaq-primary)] print:hidden" />
+        <span>{label}</span>
+      </div>
+      <p className="mt-2 text-lg font-black text-[var(--mithaq-text)]">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function SignatureBox({
+  title,
+  image,
+  alt,
+}: {
+  title: string;
+  image: string | null;
+  alt: string;
+}) {
+  return (
+    <div className="rounded-[28px] border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-6">
+      <p className="font-black text-[var(--mithaq-text)]">{title}</p>
+
+      {image ? (
+        <img
+          src={image}
+          alt={alt}
+          className="mt-4 max-h-28 rounded-2xl border border-[var(--mithaq-border)] bg-white p-3"
+        />
+      ) : (
+        <div className="mt-12 border-b border-[var(--mithaq-muted-soft)]"></div>
+      )}
+    </div>
   );
 }

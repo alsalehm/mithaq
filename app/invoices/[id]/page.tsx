@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import AppShell from "../../components/AppShell";
 import { supabase } from "../../lib/supabase";
 import { toast } from "react-hot-toast";
+
 type Invoice = {
   id: string;
   user_id: string | null;
@@ -73,9 +75,23 @@ export default function InvoiceDetailsPage() {
   }
 
   function getStatusColor(status: string | null) {
-    if (status === "paid") return "bg-green-100 text-green-700";
-    if (status === "partial") return "bg-yellow-100 text-yellow-700";
-    return "bg-red-100 text-red-700";
+    if (status === "paid") return "bg-emerald-100 text-emerald-800";
+    if (status === "partial") return "bg-yellow-100 text-yellow-800";
+    return "bg-red-100 text-red-800";
+  }
+
+  function formatDate(value: string | null | undefined) {
+    if (!value) return "-";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return value;
+
+    return date.toLocaleDateString("ar-SA", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
   }
 
   function sendWhatsApp() {
@@ -213,17 +229,21 @@ ${invoiceUrl}
 
   if (loading) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        جاري التحميل...
-      </main>
+      <AppShell>
+        <div className="rounded-3xl bg-white p-8 text-center text-sm font-semibold text-[#75532F] shadow-sm">
+          جاري تحميل الفاتورة...
+        </div>
+      </AppShell>
     );
   }
 
   if (!invoice) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-        الفاتورة غير موجودة
-      </main>
+      <AppShell>
+        <div className="rounded-3xl bg-white p-8 text-center text-sm font-semibold text-[#75532F] shadow-sm">
+          الفاتورة غير موجودة
+        </div>
+      </AppShell>
     );
   }
 
@@ -239,43 +259,46 @@ ${invoiceUrl}
     invoiceAmount > 0 ? Math.min((paidAmount / invoiceAmount) * 100, 100) : 0;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-      <div className="print-area mx-auto max-w-4xl rounded-3xl bg-white p-8 shadow-md">
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+    <AppShell>
+      <div className="print-area">
+        <section className="mb-8 flex flex-col gap-4 print:hidden lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">تفاصيل الفاتورة</h1>
-            <p className="mt-2 text-[#75532F]">
+            <p className="text-sm font-semibold text-[#75532F]">تفاصيل الفاتورة</p>
+            <h1 className="mt-2 text-4xl font-bold text-[#2A1A0C]">
               {invoice.invoice_number || "فاتورة بدون رقم"}
+            </h1>
+            <p className="mt-2 text-sm text-[#6B5A49]">
+              تابع حالة الدفع وسجل الدفعات لهذه الفاتورة.
             </p>
           </div>
 
           <span
-            className={`rounded-full px-5 py-2 font-bold ${getStatusColor(
+            className={`w-fit rounded-full px-5 py-2 text-sm font-bold ${getStatusColor(
               currentStatus
             )}`}
           >
             {getPaymentStatusArabic(currentStatus)}
           </span>
-        </div>
+        </section>
 
-        <div className="mb-8 flex flex-wrap gap-3 print:hidden">
+        <section className="mb-8 flex flex-wrap gap-3 print:hidden">
           <button
             onClick={() => window.history.back()}
-            className="rounded-xl bg-[#75532F] px-4 py-2 text-white"
+            className="rounded-xl bg-[#F8F1E8] px-5 py-3 text-sm font-bold text-[#75532F] transition hover:bg-[#EFE0CF]"
           >
             رجوع
           </button>
 
           <button
             onClick={() => window.print()}
-            className="rounded-xl bg-black px-4 py-2 text-white"
+            className="rounded-xl bg-[#2A1A0C] px-5 py-3 text-sm font-bold text-white transition hover:bg-black"
           >
             تحميل PDF
           </button>
 
           <button
             onClick={sendWhatsApp}
-            className="rounded-xl bg-green-600 px-4 py-2 text-white"
+            className="rounded-xl bg-[#3F7D58] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#326746]"
           >
             واتساب
           </button>
@@ -283,122 +306,186 @@ ${invoiceUrl}
           {currentStatus !== "paid" && (
             <button
               onClick={markAsPaid}
-              className="rounded-xl bg-green-700 px-4 py-2 text-white"
+              className="rounded-xl bg-[#75532F] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#5F4225]"
             >
               تحديد كمدفوعة
             </button>
           )}
-        </div>
+        </section>
 
-        <div className="mb-8 rounded-2xl bg-[#F5E9DC] p-5">
-          <h2 className="mb-4 text-xl font-bold text-[#75532F]">حالة الدفع</h2>
+        <section className="mb-8 grid gap-4 md:grid-cols-3">
+          <StatCard title="المبلغ" value={`${invoiceAmount} ر.س`} icon="💰" />
+          <StatCard title="المدفوع" value={`${paidAmount} ر.س`} icon="✅" />
+          <StatCard title="المتبقي" value={`${remainingAmount} ر.س`} icon="⏳" />
+        </section>
 
-          <div className="mb-4 grid gap-4 md:grid-cols-3">
+        <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
+          <div className="mb-5 flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-gray-500">المبلغ</p>
-              <p className="text-2xl font-bold">{invoiceAmount} ر.س</p>
+              <h2 className="text-2xl font-bold text-[#2A1A0C]">حالة الدفع</h2>
+              <p className="mt-1 text-sm text-[#6B5A49]">
+                تم دفع {Math.round(progress)}٪ من قيمة الفاتورة.
+              </p>
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">المدفوع</p>
-              <p className="text-2xl font-bold">{paidAmount} ر.س</p>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500">المتبقي</p>
-              <p className="text-2xl font-bold">{remainingAmount} ر.س</p>
-            </div>
+            <span
+              className={`rounded-full px-4 py-2 text-xs font-bold ${getStatusColor(
+                currentStatus
+              )}`}
+            >
+              {getPaymentStatusArabic(currentStatus)}
+            </span>
           </div>
 
-          <div className="h-4 overflow-hidden rounded-full bg-white">
+          <div className="h-4 overflow-hidden rounded-full bg-[#F8F1E8]">
             <div
               className="h-full rounded-full bg-[#75532F]"
               style={{ width: `${progress}%` }}
             />
           </div>
-
-          <p className="mt-2 text-sm text-gray-600">
-            تم دفع {Math.round(progress)}٪ من قيمة الفاتورة.
-          </p>
-        </div>
+        </section>
 
         {currentStatus !== "paid" && (
-          <div className="mb-8 rounded-2xl bg-[#F5E9DC] p-5 print:hidden">
-            <h2 className="mb-4 text-xl font-bold text-[#75532F]">
-              تسجيل دفعة
-            </h2>
+          <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm print:hidden">
+            <h2 className="text-2xl font-bold text-[#2A1A0C]">تسجيل دفعة</h2>
+            <p className="mt-1 text-sm text-[#6B5A49]">
+              أدخل مبلغ الدفعة وسيتم تحديث حالة الفاتورة والعقد المرتبط تلقائيًا.
+            </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <input
                 type="number"
                 value={paymentAmount}
                 onChange={(e) => setPaymentAmount(e.target.value)}
                 placeholder="مثال: 500"
-                className="min-w-[220px] flex-1 rounded-xl border p-3 outline-none"
+                className="min-w-[220px] flex-1 rounded-xl border border-[#E7D6C2] bg-[#FFFDF9] px-4 py-3 text-sm outline-none focus:border-[#75532F]"
               />
 
               <button
                 onClick={savePayment}
                 disabled={savingPayment}
-                className="rounded-xl bg-[#75532F] px-5 py-3 font-bold text-white disabled:opacity-60"
+                className="rounded-xl bg-[#75532F] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#5F4225] disabled:opacity-60"
               >
                 {savingPayment ? "جاري الحفظ..." : "حفظ الدفعة"}
               </button>
             </div>
-          </div>
+          </section>
         )}
 
-        <div className="mb-8 rounded-2xl border border-[#B59676]/30 p-5">
-          <h2 className="mb-4 text-xl font-bold text-[#75532F]">
-            سجل الدفعات
-          </h2>
+        <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-[#2A1A0C]">سجل الدفعات</h2>
+              <p className="mt-1 text-sm text-[#6B5A49]">
+                جميع الدفعات المسجلة على هذه الفاتورة.
+              </p>
+            </div>
+
+            <p className="text-sm font-semibold text-[#75532F]">
+              {payments.length} دفعة
+            </p>
+          </div>
 
           {payments.length === 0 ? (
-            <p className="text-gray-500">لا توجد دفعات مسجلة حتى الآن.</p>
+            <div className="rounded-2xl border border-dashed border-[#D8BFA3] bg-[#F8F1E8] p-8 text-center text-sm font-semibold text-[#75532F]">
+              لا توجد دفعات مسجلة حتى الآن.
+            </div>
           ) : (
             <div className="space-y-3">
               {payments.map((payment) => (
                 <div
                   key={payment.id}
-                  className="flex items-center justify-between rounded-xl bg-[#F5E9DC] p-4"
+                  className="flex items-center justify-between gap-4 rounded-2xl bg-[#F8F1E8] px-5 py-4"
                 >
-                  <p className="font-bold">{payment.amount} ر.س</p>
-                  <p className="text-sm text-gray-600">
-                    {new Date(payment.created_at).toLocaleDateString("ar-SA")}
+                  <p className="text-lg font-bold text-[#2A1A0C]">
+                    {payment.amount} ر.س
+                  </p>
+                  <p className="text-sm font-semibold text-[#6B5A49]">
+                    {formatDate(payment.created_at)}
                   </p>
                 </div>
               ))}
             </div>
           )}
+        </section>
+
+        <section className="rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
+          <h2 className="mb-6 text-2xl font-bold text-[#2A1A0C]">
+            معلومات الفاتورة
+          </h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <InfoCard label="رقم الفاتورة" value={invoice.invoice_number || "-"} />
+            <InfoCard label="العميل" value={invoice.client_name || "-"} />
+            <InfoCard label="تاريخ الاستحقاق" value={formatDate(invoice.due_date)} />
+            <InfoCard
+              label="الحالة المالية"
+              value={getPaymentStatusArabic(currentStatus)}
+            />
+
+            <div className="rounded-2xl bg-[#F8F1E8] p-5 md:col-span-2">
+              <p className="text-sm text-[#6B5A49]">الملاحظات</p>
+              <p className="mt-2 font-bold leading-7 text-[#2A1A0C]">
+                {invoice.notes || "-"}
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <style jsx global>{`
+        @media print {
+          body {
+            background: white !important;
+          }
+
+          .print\\:hidden {
+            display: none !important;
+          }
+
+          .print-area {
+            background: white !important;
+          }
+
+          .shadow-sm {
+            box-shadow: none !important;
+          }
+        }
+      `}</style>
+    </AppShell>
+  );
+}
+
+function StatCard({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: string;
+  icon: string;
+}) {
+  return (
+    <div className="rounded-3xl border border-[#E7D6C2] bg-white p-5 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm text-[#6B5A49]">{title}</p>
+          <p className="mt-2 text-3xl font-bold text-[#2A1A0C]">{value}</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <p className="text-gray-500">رقم الفاتورة</p>
-            <p className="font-bold">{invoice.invoice_number || "-"}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500">العميل</p>
-            <p className="font-bold">{invoice.client_name || "-"}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500">تاريخ الاستحقاق</p>
-            <p className="font-bold">{invoice.due_date || "-"}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500">الحالة المالية</p>
-            <p className="font-bold">{getPaymentStatusArabic(currentStatus)}</p>
-          </div>
-
-          <div className="md:col-span-2">
-            <p className="text-gray-500">الملاحظات</p>
-            <p className="font-bold">{invoice.notes || "-"}</p>
-          </div>
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EFE0CF] text-2xl">
+          {icon}
         </div>
       </div>
-    </main>
+    </div>
+  );
+}
+
+function InfoCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-[#F8F1E8] p-5">
+      <p className="text-sm text-[#6B5A49]">{label}</p>
+      <p className="mt-2 font-bold text-[#2A1A0C]">{value}</p>
+    </div>
   );
 }

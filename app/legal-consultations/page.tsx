@@ -1,7 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import AppShell from "../components/AppShell";
 import { supabase } from "../lib/supabase";
+import {
+  Clock3,
+  FileText,
+  IdCard,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Scale,
+  Send,
+  UserRound,
+} from "lucide-react";
 
 type LegalSettings = {
   lawyer_name: string;
@@ -161,7 +173,9 @@ ${preferredTime || "غير محدد"}
 
     window.open(whatsappUrl, "_blank");
 
-    setMessage("تم إرسال طلب الاستشارة بنجاح. سيتم فتح واتساب لإرسال الطلب للمحامية.");
+    setMessage(
+      "تم إرسال طلب الاستشارة بنجاح. سيتم فتح واتساب لإرسال الطلب للمحامية."
+    );
 
     setClientName("");
     setClientPhone("");
@@ -175,156 +189,175 @@ ${preferredTime || "غير محدد"}
 
   if (loading) {
     return (
-      <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-6">
-        <p className="text-[#362008]">جاري التحميل...</p>
-      </main>
+      <AppShell>
+        <div className="mithaq-card-premium rounded-[32px] p-8 text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[var(--mithaq-primary-soft)]" />
+          <p className="text-sm font-black text-[var(--mithaq-primary)]">
+            جاري تحميل صفحة الاستشارات...
+          </p>
+        </div>
+      </AppShell>
     );
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-6">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-          <h1 className="mb-2 text-3xl font-bold text-[#362008]">
-            المستشار القانوني ⚖️
-          </h1>
-
-          <p className="text-[#75532F]">
-            يمكنك من خلال هذه الصفحة طلب استشارة قانونية من المحامية المعتمدة لدى
-            ميثاق. سيتم إرسال بيانات طلبك مباشرة للمحامية عبر واتساب، ثم يتم
-            التنسيق بينكم بخصوص الموعد وطريقة التواصل والدفع.
+    <AppShell>
+      <div className="space-y-8">
+        <section className="rounded-[32px] border border-[var(--mithaq-border)] bg-white/75 p-6 shadow-[var(--mithaq-shadow-sm)] backdrop-blur">
+          <p className="text-sm font-black text-[var(--mithaq-primary)]">
+            الخدمات القانونية
           </p>
+          <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+            المستشار القانوني
+          </h1>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">
+            يمكنك من خلال هذه الصفحة طلب استشارة قانونية من المحامية المعتمدة لدى
+            ميثاق. سيتم إرسال بيانات طلبك مباشرة عبر واتساب، ثم يتم التنسيق بينكم
+            بخصوص الموعد وطريقة التواصل والدفع.
+          </p>
+        </section>
 
-          {lawyer && (
-            <div className="mt-4 rounded-xl border border-[#E0C9AD] bg-[#FDF8F1] p-4">
-              <p className="font-semibold text-[#362008]">
-                المحامية المعتمدة:
-              </p>
-              <p className="text-[#75532F]">{lawyer.lawyer_name}</p>
-            </div>
-          )}
-        </div>
+        <section className="grid gap-4 lg:grid-cols-3">
+          <div className="mithaq-card rounded-[32px] p-6 lg:col-span-2">
+            <p className="text-sm font-black text-[var(--mithaq-primary)]">
+              طلب جديد
+            </p>
+            <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+              طلب استشارة قانونية
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
+              عبّئ البيانات التالية بدقة حتى يتم إرسال الطلب للمحامية عبر واتساب.
+            </p>
+          </div>
 
-        <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-bold text-[#362008]">
-            طلب استشارة قانونية
-          </h2>
-
-          <div className="grid gap-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                الاسم الكامل *
-              </label>
-              <input
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="مثال: عبدالرحمن السالم"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                رقم الجوال *
-              </label>
-              <input
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="مثال: 05XXXXXXXX"
-              />
+          <div className="mithaq-card rounded-[32px] p-6">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+              <Scale size={28} />
             </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                رقم الهوية *
-              </label>
-              <input
-                value={clientNationalId}
-                onChange={(e) => setClientNationalId(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="رقم الهوية الوطنية أو الإقامة"
-              />
-            </div>
+            <p className="text-sm font-black text-[var(--mithaq-primary)]">
+              المحامية المعتمدة
+            </p>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                المدينة
-              </label>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="مثال: الرياض"
-              />
-            </div>
+            <h3 className="mt-2 text-xl font-black text-[var(--mithaq-text)]">
+              {lawyer?.lawyer_name || "غير محدد"}
+            </h3>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                نوع الاستشارة *
-              </label>
-              <select
-                value={consultationType}
-                onChange={(e) => setConsultationType(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-              >
-                <option value="">اختر نوع الاستشارة</option>
-                <option value="مراجعة عقد">مراجعة عقد</option>
-                <option value="نزاع مع عميل">نزاع مع عميل</option>
-                <option value="تحصيل مستحقات">تحصيل مستحقات</option>
-                <option value="استفسار قانوني عام">استفسار قانوني عام</option>
-                <option value="أخرى">أخرى</option>
-              </select>
-            </div>
+            <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
+              يتم الاتفاق على الموعد والتكلفة والدفع مباشرة بين العميل والمحامية.
+            </p>
+          </div>
+        </section>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                وصف مختصر للمشكلة *
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="min-h-32 w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="اكتب تفاصيل مختصرة تساعد المحامية على فهم الحالة"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="mithaq-card rounded-[32px] p-6">
+          <div className="mb-6">
+            <p className="text-sm font-black text-[var(--mithaq-primary)]">
+              بيانات الطلب
+            </p>
+            <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+              معلومات الاستشارة
+            </h2>
+            <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
+              الحقول التي تحتوي على علامة * مطلوبة.
+            </p>
+          </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                طريقة التواصل المفضلة *
-              </label>
-              <select
-                value={preferredContactMethod}
-                onChange={(e) => setPreferredContactMethod(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-              >
-                <option value="واتساب">واتساب</option>
-                <option value="اتصال هاتفي">اتصال هاتفي</option>
-                <option value="Zoom">Zoom</option>
-              </select>
-            </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field
+              label="الاسم الكامل *"
+              value={clientName}
+              onChange={setClientName}
+              placeholder="مثال: عبدالرحمن السالم"
+              icon={UserRound}
+            />
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-[#362008]">
-                الوقت المناسب للتواصل
+            <Field
+              label="رقم الجوال *"
+              value={clientPhone}
+              onChange={setClientPhone}
+              placeholder="مثال: 05XXXXXXXX"
+              icon={Phone}
+            />
+
+            <Field
+              label="رقم الهوية *"
+              value={clientNationalId}
+              onChange={setClientNationalId}
+              placeholder="رقم الهوية الوطنية أو الإقامة"
+              icon={IdCard}
+            />
+
+            <Field
+              label="المدينة"
+              value={city}
+              onChange={setCity}
+              placeholder="مثال: الرياض"
+              icon={MapPin}
+            />
+
+            <SelectField
+              label="نوع الاستشارة *"
+              value={consultationType}
+              onChange={setConsultationType}
+              icon={FileText}
+            >
+              <option value="">اختر نوع الاستشارة</option>
+              <option value="مراجعة عقد">مراجعة عقد</option>
+              <option value="نزاع مع عميل">نزاع مع عميل</option>
+              <option value="تحصيل مستحقات">تحصيل مستحقات</option>
+              <option value="استفسار قانوني عام">استفسار قانوني عام</option>
+              <option value="أخرى">أخرى</option>
+            </SelectField>
+
+            <SelectField
+              label="طريقة التواصل المفضلة *"
+              value={preferredContactMethod}
+              onChange={setPreferredContactMethod}
+              icon={MessageCircle}
+            >
+              <option value="واتساب">واتساب</option>
+              <option value="اتصال هاتفي">اتصال هاتفي</option>
+              <option value="Zoom">Zoom</option>
+            </SelectField>
+
+            <Field
+              label="الوقت المناسب للتواصل"
+              value={preferredTime}
+              onChange={setPreferredTime}
+              placeholder="مثال: بعد العصر / مساءً / يوم الأحد"
+              icon={Clock3}
+            />
+
+            <div className="md:col-span-2">
+              <label className="block">
+                <span className="mb-2 block text-sm font-black text-[var(--mithaq-text)]">
+                  وصف مختصر للمشكلة *
+                </span>
+
+                <div className="relative">
+                  <FileText
+                    size={19}
+                    className="pointer-events-none absolute right-4 top-4 text-[var(--mithaq-muted-soft)]"
+                  />
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="min-h-36 w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm leading-7 text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
+                    placeholder="اكتب تفاصيل مختصرة تساعد المحامية على فهم الحالة"
+                  />
+                </div>
               </label>
-              <input
-                value={preferredTime}
-                onChange={(e) => setPreferredTime(e.target.value)}
-                className="w-full rounded-xl border border-[#E0C9AD] p-3 outline-none"
-                placeholder="مثال: بعد العصر / مساءً / يوم الأحد"
-              />
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-[#E0C9AD] bg-[#FDF8F1] p-4 text-sm text-[#75532F]">
+          <div className="mt-6 rounded-[28px] border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-5 text-sm leading-7 text-[var(--mithaq-primary)]">
             ميثاق يسهّل وصولك إلى محامية مستقلة، ولا يقدم استشارات قانونية
             مباشرة. يتم الاتفاق على الموعد والتكلفة والدفع مباشرة بين العميل
             والمحامية.
           </div>
 
           {message && (
-            <p className="mt-4 rounded-xl bg-[#FDF8F1] p-3 text-sm text-[#362008]">
+            <p className="mt-4 rounded-2xl border border-[var(--mithaq-border)] bg-white p-4 text-sm font-black leading-7 text-[var(--mithaq-text)]">
               {message}
             </p>
           )}
@@ -332,12 +365,84 @@ ${preferredTime || "غير محدد"}
           <button
             type="submit"
             disabled={saving}
-            className="mt-6 w-full rounded-xl bg-[#75532F] px-5 py-3 font-semibold text-white disabled:opacity-60"
+            className="mithaq-btn-primary mt-6 flex w-full items-center justify-center gap-2 px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
+            <Send size={18} />
             {saving ? "جاري الإرسال..." : "إرسال طلب الاستشارة"}
           </button>
         </form>
       </div>
-    </main>
+    </AppShell>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm font-black text-[var(--mithaq-text)]">
+        {label}
+      </span>
+
+      <div className="relative">
+        <Icon
+          size={19}
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
+        />
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
+          placeholder={placeholder}
+        />
+      </div>
+    </label>
+  );
+}
+
+function SelectField({
+  label,
+  value,
+  onChange,
+  icon: Icon,
+  children,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm font-black text-[var(--mithaq-text)]">
+        {label}
+      </span>
+
+      <div className="relative">
+        <Icon
+          size={19}
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
+        />
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full appearance-none rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm text-[var(--mithaq-text)] outline-none transition focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
+        >
+          {children}
+        </select>
+      </div>
+    </label>
   );
 }
