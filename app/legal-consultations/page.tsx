@@ -207,7 +207,7 @@ ${preferredTime || "غير محدد"}
           <p className="text-sm font-black text-[var(--mithaq-primary)]">
             الخدمات القانونية
           </p>
-          <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+          <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
             المستشار القانوني
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">
@@ -218,7 +218,7 @@ ${preferredTime || "غير محدد"}
         </section>
 
         <section className="grid gap-4 lg:grid-cols-3">
-          <div className="mithaq-card rounded-[32px] p-6 lg:col-span-2">
+          <div className="mithaq-card rounded-[32px] p-5 sm:p-6 lg:col-span-2">
             <p className="text-sm font-black text-[var(--mithaq-primary)]">
               طلب جديد
             </p>

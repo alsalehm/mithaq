@@ -111,7 +111,7 @@ export default function ContractsPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 إدارة العقود
               </p>
-              <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+              <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
                 العقود
               </h1>
               <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
@@ -161,7 +161,7 @@ export default function ContractsPage() {
           </div>
         </section>
 
-        <section className="mithaq-card rounded-[32px] p-6">
+        <section className="mithaq-card rounded-[32px] p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-black text-[var(--mithaq-primary)]">

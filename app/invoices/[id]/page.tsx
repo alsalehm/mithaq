@@ -5,6 +5,17 @@ import { useParams } from "next/navigation";
 import AppShell from "../../components/AppShell";
 import { supabase } from "../../lib/supabase";
 import { toast } from "react-hot-toast";
+import {
+  ArrowLeft,
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  Download,
+  MessageCircle,
+  ReceiptText,
+  Save,
+  Wallet,
+} from "lucide-react";
 
 type Invoice = {
   id: string;
@@ -92,6 +103,10 @@ export default function InvoiceDetailsPage() {
       month: "numeric",
       day: "numeric",
     });
+  }
+
+  function formatMoney(value: number | null | undefined) {
+    return `${Number(value || 0).toLocaleString("ar-SA")} ر.س`;
   }
 
   function sendWhatsApp() {
@@ -230,8 +245,18 @@ ${invoiceUrl}
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-3xl bg-white p-8 text-center text-sm font-semibold text-[#75532F] shadow-sm">
-          جاري تحميل الفاتورة...
+        <div className="mithaq-card-premium rounded-[28px] p-8 text-center sm:rounded-[32px]">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+            <ReceiptText size={28} />
+          </div>
+
+          <p className="text-lg font-black text-[var(--mithaq-text)]">
+            جاري تحميل الفاتورة
+          </p>
+
+          <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
+            يتم تجهيز تفاصيل الفاتورة وسجل الدفعات.
+          </p>
         </div>
       </AppShell>
     );
@@ -240,8 +265,10 @@ ${invoiceUrl}
   if (!invoice) {
     return (
       <AppShell>
-        <div className="rounded-3xl bg-white p-8 text-center text-sm font-semibold text-[#75532F] shadow-sm">
-          الفاتورة غير موجودة
+        <div className="mithaq-card-premium rounded-[28px] p-8 text-center sm:rounded-[32px]">
+          <p className="text-lg font-black text-[var(--mithaq-text)]">
+            الفاتورة غير موجودة
+          </p>
         </div>
       </AppShell>
     );
@@ -260,76 +287,93 @@ ${invoiceUrl}
 
   return (
     <AppShell>
-      <div className="print-area">
-        <section className="mb-8 flex flex-col gap-4 print:hidden lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-[#75532F]">تفاصيل الفاتورة</p>
-            <h1 className="mt-2 text-4xl font-bold text-[#2A1A0C]">
-              {invoice.invoice_number || "فاتورة بدون رقم"}
-            </h1>
-            <p className="mt-2 text-sm text-[#6B5A49]">
-              تابع حالة الدفع وسجل الدفعات لهذه الفاتورة.
-            </p>
-          </div>
+      <div className="print-area space-y-6 sm:space-y-8">
+        <section className="print:hidden rounded-[28px] border border-[var(--mithaq-border)] bg-white/75 p-5 shadow-[var(--mithaq-shadow-sm)] backdrop-blur sm:rounded-[32px] sm:p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                تفاصيل الفاتورة
+              </p>
 
-          <span
-            className={`w-fit rounded-full px-5 py-2 text-sm font-bold ${getStatusColor(
-              currentStatus
-            )}`}
-          >
-            {getPaymentStatusArabic(currentStatus)}
-          </span>
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-[var(--mithaq-text)] sm:text-4xl">
+                {invoice.invoice_number || "فاتورة بدون رقم"}
+              </h1>
+
+              <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
+                تابع حالة الدفع وسجل الدفعات لهذه الفاتورة.
+              </p>
+            </div>
+
+            <span
+              className={`w-fit rounded-full px-5 py-2 text-sm font-black ${getStatusColor(
+                currentStatus
+              )}`}
+            >
+              {getPaymentStatusArabic(currentStatus)}
+            </span>
+          </div>
         </section>
 
-        <section className="mb-8 flex flex-wrap gap-3 print:hidden">
+        <section className="print:hidden flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <button
             onClick={() => window.history.back()}
-            className="rounded-xl bg-[#F8F1E8] px-5 py-3 text-sm font-bold text-[#75532F] transition hover:bg-[#EFE0CF]"
+            className="mithaq-btn-secondary inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
           >
+            <ArrowLeft size={17} />
             رجوع
           </button>
 
           <button
             onClick={() => window.print()}
-            className="rounded-xl bg-[#2A1A0C] px-5 py-3 text-sm font-bold text-white transition hover:bg-black"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--mithaq-text)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
           >
+            <Download size={17} />
             تحميل PDF
           </button>
 
           <button
             onClick={sendWhatsApp}
-            className="rounded-xl bg-[#3F7D58] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#326746]"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-green-700 px-5 py-3 text-sm font-black text-white transition hover:bg-green-800"
           >
+            <MessageCircle size={17} />
             واتساب
           </button>
 
           {currentStatus !== "paid" && (
             <button
               onClick={markAsPaid}
-              className="rounded-xl bg-[#75532F] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#5F4225]"
+              className="mithaq-btn-primary inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
             >
+              <CheckCircle2 size={17} />
               تحديد كمدفوعة
             </button>
           )}
         </section>
 
-        <section className="mb-8 grid gap-4 md:grid-cols-3">
-          <StatCard title="المبلغ" value={`${invoiceAmount} ر.س`} icon="💰" />
-          <StatCard title="المدفوع" value={`${paidAmount} ر.س`} icon="✅" />
-          <StatCard title="المتبقي" value={`${remainingAmount} ر.س`} icon="⏳" />
+        <section className="grid gap-4 md:grid-cols-3">
+          <StatCard title="المبلغ" value={formatMoney(invoiceAmount)} icon={Wallet} />
+          <StatCard title="المدفوع" value={formatMoney(paidAmount)} icon={CheckCircle2} />
+          <StatCard title="المتبقي" value={formatMoney(remainingAmount)} icon={Clock3} />
         </section>
 
-        <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
-          <div className="mb-5 flex items-center justify-between gap-4">
+        <section className="mithaq-card rounded-[28px] p-5 sm:rounded-[32px] sm:p-6">
+          <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-[#2A1A0C]">حالة الدفع</h2>
-              <p className="mt-1 text-sm text-[#6B5A49]">
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                حالة الدفع
+              </p>
+
+              <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+                تقدم السداد
+              </h2>
+
+              <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
                 تم دفع {Math.round(progress)}٪ من قيمة الفاتورة.
               </p>
             </div>
 
             <span
-              className={`rounded-full px-4 py-2 text-xs font-bold ${getStatusColor(
+              className={`w-fit rounded-full px-4 py-2 text-xs font-black ${getStatusColor(
                 currentStatus
               )}`}
             >
@@ -337,20 +381,29 @@ ${invoiceUrl}
             </span>
           </div>
 
-          <div className="h-4 overflow-hidden rounded-full bg-[#F8F1E8]">
+          <div className="h-4 overflow-hidden rounded-full bg-[var(--mithaq-surface-soft)]">
             <div
-              className="h-full rounded-full bg-[#75532F]"
+              className="h-full rounded-full bg-[var(--mithaq-primary)] transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
         </section>
 
         {currentStatus !== "paid" && (
-          <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm print:hidden">
-            <h2 className="text-2xl font-bold text-[#2A1A0C]">تسجيل دفعة</h2>
-            <p className="mt-1 text-sm text-[#6B5A49]">
-              أدخل مبلغ الدفعة وسيتم تحديث حالة الفاتورة والعقد المرتبط تلقائيًا.
-            </p>
+          <section className="print:hidden mithaq-card rounded-[28px] p-5 sm:rounded-[32px] sm:p-6">
+            <div>
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                تسجيل دفعة
+              </p>
+
+              <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+                إضافة دفعة جديدة
+              </h2>
+
+              <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
+                أدخل مبلغ الدفعة وسيتم تحديث حالة الفاتورة والعقد المرتبط تلقائيًا.
+              </p>
+            </div>
 
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <input
@@ -358,49 +411,64 @@ ${invoiceUrl}
                 value={paymentAmount}
                 onChange={(e) => setPaymentAmount(e.target.value)}
                 placeholder="مثال: 500"
-                className="min-w-[220px] flex-1 rounded-xl border border-[#E7D6C2] bg-[#FFFDF9] px-4 py-3 text-sm outline-none focus:border-[#75532F]"
+                className="min-w-[220px] flex-1 rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 text-sm text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
               />
 
               <button
                 onClick={savePayment}
                 disabled={savingPayment}
-                className="rounded-xl bg-[#75532F] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#5F4225] disabled:opacity-60"
+                className="mithaq-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm disabled:opacity-60"
               >
+                <Save size={17} />
                 {savingPayment ? "جاري الحفظ..." : "حفظ الدفعة"}
               </button>
             </div>
           </section>
         )}
 
-        <section className="mb-8 rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
-          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <section className="mithaq-card rounded-[28px] p-5 sm:rounded-[32px] sm:p-6">
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-[#2A1A0C]">سجل الدفعات</h2>
-              <p className="mt-1 text-sm text-[#6B5A49]">
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                سجل الدفعات
+              </p>
+
+              <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+                جميع الدفعات
+              </h2>
+
+              <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
                 جميع الدفعات المسجلة على هذه الفاتورة.
               </p>
             </div>
 
-            <p className="text-sm font-semibold text-[#75532F]">
+            <p className="w-fit rounded-2xl bg-[var(--mithaq-primary-soft)] px-4 py-2 text-sm font-black text-[var(--mithaq-primary)]">
               {payments.length} دفعة
             </p>
           </div>
 
           {payments.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[#D8BFA3] bg-[#F8F1E8] p-8 text-center text-sm font-semibold text-[#75532F]">
-              لا توجد دفعات مسجلة حتى الآن.
+            <div className="rounded-[28px] border-2 border-dashed border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-8 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+                <ReceiptText size={26} />
+              </div>
+
+              <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                لا توجد دفعات مسجلة حتى الآن.
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
               {payments.map((payment) => (
                 <div
                   key={payment.id}
-                  className="flex items-center justify-between gap-4 rounded-2xl bg-[#F8F1E8] px-5 py-4"
+                  className="flex flex-col gap-2 rounded-2xl border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <p className="text-lg font-bold text-[#2A1A0C]">
-                    {payment.amount} ر.س
+                  <p className="text-lg font-black text-[var(--mithaq-text)]">
+                    {formatMoney(payment.amount)}
                   </p>
-                  <p className="text-sm font-semibold text-[#6B5A49]">
+
+                  <p className="text-sm font-bold text-[var(--mithaq-muted)]">
                     {formatDate(payment.created_at)}
                   </p>
                 </div>
@@ -409,10 +477,16 @@ ${invoiceUrl}
           )}
         </section>
 
-        <section className="rounded-3xl border border-[#E7D6C2] bg-white p-6 shadow-sm">
-          <h2 className="mb-6 text-2xl font-bold text-[#2A1A0C]">
-            معلومات الفاتورة
-          </h2>
+        <section className="mithaq-card rounded-[28px] p-5 sm:rounded-[32px] sm:p-6">
+          <div className="mb-6">
+            <p className="text-sm font-black text-[var(--mithaq-primary)]">
+              معلومات الفاتورة
+            </p>
+
+            <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+              البيانات الأساسية
+            </h2>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <InfoCard label="رقم الفاتورة" value={invoice.invoice_number || "-"} />
@@ -423,9 +497,12 @@ ${invoiceUrl}
               value={getPaymentStatusArabic(currentStatus)}
             />
 
-            <div className="rounded-2xl bg-[#F8F1E8] p-5 md:col-span-2">
-              <p className="text-sm text-[#6B5A49]">الملاحظات</p>
-              <p className="mt-2 font-bold leading-7 text-[#2A1A0C]">
+            <div className="rounded-2xl border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-5 md:col-span-2">
+              <p className="text-sm font-bold text-[var(--mithaq-muted)]">
+                الملاحظات
+              </p>
+
+              <p className="mt-2 font-black leading-7 text-[var(--mithaq-text)]">
                 {invoice.notes || "-"}
               </p>
             </div>
@@ -447,7 +524,9 @@ ${invoiceUrl}
             background: white !important;
           }
 
-          .shadow-sm {
+          .shadow-sm,
+          .shadow-\\[var\\(--mithaq-shadow-sm\\)\\],
+          .shadow-\\[var\\(--mithaq-shadow-md\\)\\] {
             box-shadow: none !important;
           }
         }
@@ -459,22 +538,24 @@ ${invoiceUrl}
 function StatCard({
   title,
   value,
-  icon,
+  icon: Icon,
 }: {
   title: string;
   value: string;
-  icon: string;
+  icon: React.ElementType;
 }) {
   return (
-    <div className="rounded-3xl border border-[#E7D6C2] bg-white p-5 shadow-sm">
+    <div className="mithaq-card group rounded-[28px] p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--mithaq-shadow-md)]">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-[#6B5A49]">{title}</p>
-          <p className="mt-2 text-3xl font-bold text-[#2A1A0C]">{value}</p>
+          <p className="text-sm font-bold text-[var(--mithaq-muted)]">{title}</p>
+          <p className="mt-2 text-3xl font-black text-[var(--mithaq-text)]">
+            {value}
+          </p>
         </div>
 
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EFE0CF] text-2xl">
-          {icon}
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)] transition-all duration-300 group-hover:scale-105">
+          <Icon size={24} />
         </div>
       </div>
     </div>
@@ -483,9 +564,9 @@ function StatCard({
 
 function InfoCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-[#F8F1E8] p-5">
-      <p className="text-sm text-[#6B5A49]">{label}</p>
-      <p className="mt-2 font-bold text-[#2A1A0C]">{value}</p>
+    <div className="rounded-2xl border border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-5">
+      <p className="text-sm font-bold text-[var(--mithaq-muted)]">{label}</p>
+      <p className="mt-2 font-black text-[var(--mithaq-text)]">{value}</p>
     </div>
   );
 }

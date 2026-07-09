@@ -142,7 +142,7 @@ export default function SettingsPage() {
             <p className="text-sm font-black text-[var(--mithaq-primary)]">
               إعدادات المنصة
             </p>
-            <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+            <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
               إعدادات الحساب
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">

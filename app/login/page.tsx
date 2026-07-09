@@ -91,7 +91,7 @@ export default function LoginPage() {
                 تسجيل الدخول
               </p>
 
-              <h2 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
                 مرحبًا بعودتك
               </h2>
 

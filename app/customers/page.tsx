@@ -102,7 +102,7 @@ export default function CustomersPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 إدارة العملاء
               </p>
-              <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
+              <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
                 العملاء
               </h1>
               <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
@@ -126,7 +126,7 @@ export default function CustomersPage() {
           </div>
         </section>
 
-        <section className="mithaq-card rounded-[32px] p-6">
+        <section className="mithaq-card rounded-[32px] p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-2">
             <p className="text-sm font-black text-[var(--mithaq-primary)]">
               عميل جديد
