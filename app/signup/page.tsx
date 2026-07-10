@@ -18,9 +18,14 @@ export default function SignupPage() {
   async function handleSignup() {
     if (loading) return;
 
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      toast.error("يرجى تعبئة جميع الحقول");
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -30,10 +35,44 @@ export default function SignupPage() {
       },
     });
 
+    if (error) {
+      setLoading(false);
+      toast.error(error.message);
+      return;
+    }
+
+    const userId = data.user?.id;
+
+    if (!userId) {
+      setLoading(false);
+      toast.error("تم إنشاء الحساب، لكن لم نتمكن من تجهيز الاشتراك المجاني");
+      return;
+    }
+
+    const { data: freePlan, error: planError } = await supabase
+      .from("plans")
+      .select("id")
+      .eq("slug", "free")
+      .single();
+
+    if (planError || !freePlan) {
+      setLoading(false);
+      toast.error("لم يتم العثور على الباقة المجانية");
+      return;
+    }
+
+    const { error: subscriptionError } = await supabase
+      .from("subscriptions")
+      .insert({
+        user_id: userId,
+        plan_id: freePlan.id,
+        status: "free",
+      });
+
     setLoading(false);
 
-    if (error) {
-      toast.error(error.message);
+    if (subscriptionError) {
+      toast.error("تم إنشاء الحساب، لكن حدث خطأ في تجهيز الاشتراك المجاني");
       return;
     }
 
