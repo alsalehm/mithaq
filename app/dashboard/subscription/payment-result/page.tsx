@@ -1,14 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AppShell from "../../../components/AppShell";
 
 export default function PaymentResultPage() {
+  return (
+    <Suspense fallback={<PaymentResultLoading />}>
+      <PaymentResultContent />
+    </Suspense>
+  );
+}
+
+function PaymentResultContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [message, setMessage] = useState("جاري التحقق من عملية الدفع...");
+  const [message, setMessage] = useState(
+    "جاري التحقق من عملية الدفع..."
+  );
 
   useEffect(() => {
     const paymentId = searchParams.get("id");
@@ -20,15 +30,18 @@ export default function PaymentResultPage() {
 
     async function verify() {
       try {
-        const response = await fetch("/api/subscription/verify-payment", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            paymentId,
-          }),
-        });
+        const response = await fetch(
+          "/api/subscription/verify-payment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              paymentId,
+            }),
+          }
+        );
 
         const result = await response.json();
 
@@ -60,11 +73,32 @@ export default function PaymentResultPage() {
         className="flex min-h-[60vh] items-center justify-center"
       >
         <div className="mithaq-card-premium max-w-lg rounded-3xl p-8 text-center">
-          <h1 className="text-2xl font-black mb-4">
+          <h1 className="mb-4 text-2xl font-black">
             التحقق من عملية الدفع
           </h1>
 
           <p className="text-base">{message}</p>
+        </div>
+      </div>
+    </AppShell>
+  );
+}
+
+function PaymentResultLoading() {
+  return (
+    <AppShell>
+      <div
+        dir="rtl"
+        className="flex min-h-[60vh] items-center justify-center"
+      >
+        <div className="mithaq-card-premium max-w-lg rounded-3xl p-8 text-center">
+          <h1 className="mb-4 text-2xl font-black">
+            التحقق من عملية الدفع
+          </h1>
+
+          <p className="text-base">
+            جاري تحميل بيانات عملية الدفع...
+          </p>
         </div>
       </div>
     </AppShell>
