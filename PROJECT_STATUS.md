@@ -4,421 +4,177 @@ Last Updated: July 2026
 
 ---
 
-# Project Vision
-
-Build Mithaq as a premium Arabic SaaS platform for managing freelancers' businesses across the Arab world.
-
-The platform is no longer positioned specifically for photographers.
-It is designed for all freelancers including designers, developers, consultants, marketers, creators, writers, translators and other independent professionals.
-
-Core Principle:
-
-"We sell through product quality, not marketing pressure."
-
-Every page, feature and design decision should reflect a premium, calm and confident experience.
-
----
-
 # Current Stage
 
-🟢 Subscription System Foundation Completed
+🟢 PRE-LAUNCH (Final Launch Readiness)
 
-The MVP is feature complete.
-
-The Premium UI redesign is complete for the major pages.
-
-The subscription architecture has been completed.
-
-The project is now entering the Commercial Infrastructure phase before the first public launch.
+The platform is now in the final stage before the first commercial launch.
 
 ---
 
 # Completed Phases
 
-✅ Phase 1 — Core Development
+✅ Core Development
 
-Completed.
+✅ Final QA
 
-Includes:
+✅ Premium UI / UX Redesign
 
-- Authentication
-- Dashboard
-- Customers
-- Contracts
-- Contract Details
-- Contract Creation
-- WhatsApp Integration
-- Client Signature
-- Photographer Signature
-- PDF Generation
-- Invoices
-- Legal Consultations
-- Settings
-- Multi-user isolation
-- Supabase integration
+✅ Launch Polish
+
+✅ Responsive Review
+
+✅ Contract PDF Review
+
+✅ Pricing & Subscription Foundation
+
+✅ Subscription Permissions & Access Control
+
+✅ Free Plan Auto Assignment
+
+✅ Dashboard Financial Logic Verification
 
 ---
 
-✅ Phase 2 — Final QA
+# Recently Completed
 
-Completed.
+## Subscription System
 
-Verified:
-
-- Signup
-- Login
-- Logout
-- Dashboard
-- Customers
-- Contracts
-- Contract lifecycle
-- WhatsApp flow
-- Signature flow
-- PDF generation
-- Settings persistence
-- Multi-tenant isolation
+- ✅ Free plan assigned automatically to new users
+- ✅ Pro subscription activation working
+- ✅ Subscription page displays current plan correctly
+- ✅ Active / Free plan detection verified
+- ✅ New account testing completed
 
 ---
 
-✅ Phase 3 — Premium UI Redesign
+## Permissions
 
-Completed.
-
-Pages redesigned:
-
-- Dashboard
-- Customers
-- Customer Details
-- Contracts
-- Contract Details
-- Contract Creation
-- Invoices
-- Invoice Details
-- Legal Consultations
-- Settings
-- Authentication
-- Landing Page
-- Pricing Page
-
-The UI now follows Mithaq's Premium Design System.
-
----
-
-✅ Phase 4 — Subscription Foundation
-
-Completed.
-
-Implemented:
-
-- Subscription Models
-- Plan Definitions
-- Billing Types
-- Permission Layer
-- Access Helpers
-- Pricing Structure
-- Free Plan
-- Pro Plan
-- Feature Comparison
-- FAQ
-- Upgrade Architecture
-
-Business logic foundation is now ready.
-
----
-
-# Completed Features
-
-## Authentication
-
-✅ Signup
-
-✅ Login
-
-✅ Logout
+- ✅ Free users limited to 3 contracts
+- ✅ Legal consultations blocked for Free plan
+- ✅ Redirect to Subscription page verified
+- ✅ Access helper functions verified
 
 ---
 
 ## Dashboard
 
-✅ Statistics
-
-✅ Financial summary
-
-✅ Recent contracts
-
-✅ Quick actions
-
-✅ Premium UI
+- ✅ Financial totals corrected
+- ✅ Total Paid now calculated correctly
+- ✅ Remaining amount verified
+- ✅ Contract totals verified
 
 ---
 
-## Customers
+## End-to-End Testing
 
-✅ Create
+Tested successfully using a completely new account.
 
-✅ Edit
+Verified:
 
-✅ Delete
-
-✅ Customer Details
-
----
-
-## Contracts
-
-✅ Create
-
-✅ Edit
-
-✅ Status flow
-
-✅ Default Terms
-
-✅ Photographer Signature
-
-✅ Client Signature
-
-✅ WhatsApp Send
-
-✅ PDF Export
-
-✅ Two-page Premium PDF
+- ✅ Signup
+- ✅ Login
+- ✅ Dashboard
+- ✅ Customer creation
+- ✅ Contract creation
+- ✅ Invoice creation
+- ✅ Payment recording
+- ✅ WhatsApp
+- ✅ Subscription detection
+- ✅ Financial statistics
 
 ---
 
-## Invoices
+# Deferred Before Launch
 
-✅ Create
+## Invoice Printing
 
-✅ View
+Status:
 
-✅ Financial calculations
+⏳ Deferred
 
----
+Issue:
 
-## Legal Consultations
+Invoice print layout currently spans two pages.
 
-✅ Create
+Target:
 
-✅ List
-
-✅ Details
+Single-page professional invoice layout before production launch.
 
 ---
 
-## Settings
+# Remaining Launch Plan
 
-✅ Business Information
+## Phase 1
 
-✅ Photographer Signature
-
-✅ Default Contract Terms
+🔄 Fix Invoice Printing
 
 ---
 
-## Landing Page
+## Phase 2
 
-✅ Premium Hero
+🔄 Complete Moyasar Production Payment Flow
 
-✅ Premium Sections
+Including:
 
-✅ Feature Highlights
-
----
-
-## Pricing
-
-✅ Premium Pricing Page
-
-✅ Free Plan
-
-✅ Pro Plan
-
-✅ Comparison Table
-
-✅ FAQ
-
----
-
-# Subscription Architecture
-
-Completed:
-
-✅ plans.ts
-
-✅ types.ts
-
-✅ subscription.ts
-
-✅ permissions.ts
-
-✅ access.ts
-
-Future payment providers can now plug into this architecture.
-
----
-
-# Premium Design System
-
-Completed.
-
-Design principles:
-
-- Premium
-- Minimal
-- Calm
-- Arabic-first
-- SaaS quality
-
-No aggressive marketing.
-
-No fake urgency.
-
-No countdowns.
-
-No discounts.
-
-No pressure-based copy.
-
----
-
-# Product Positioning
-
-Official Position:
-
-Mithaq is:
-
-"A premium Arabic platform for managing freelancers' businesses."
-
-Not limited to photographers.
-
-Suitable for:
-
-- Designers
-- Developers
-- Consultants
-- Creators
-- Writers
-- Translators
-- Marketers
-- Coaches
-- Architects
-- Engineers
-- Photographers
-- Videographers
-- Any independent professional
-
----
-
-# Deferred To Final Polish
-
-These are intentionally postponed.
-
-Minor typography refinements
-
-Minor spacing adjustments
-
-Micro animations
-
-Small copy improvements
-
-Final button wording
-
-Accessibility polish
-
----
-
-# Next Phase
-
-🔜 Payment Gateway Integration
-
-Includes:
-
-- Payment provider selection
-- Checkout flow
-- Payment success
-- Payment failure
-- Webhooks
+- Real payment
 - Subscription activation
-- Subscription renewal
-- Subscription cancellation
+- Renewal
+- Cancellation
+- Expiration handling
 
 ---
 
-# After Payment
+## Phase 3
 
-🔜 Permission Enforcement
+🔄 Connect Production Domain
 
-Enable:
+Target domain:
 
-- Contracts Limit
-- Customer Limit
-- Invoice Limit
-- Legal Consultation Access
-- Future Pro Features
+mithaq.com
 
----
+Tasks:
 
-# Production Preparation
-
-Upcoming:
-
-🔜 mithaq.com
-
-🔜 Production Environment
-
-🔜 Email Configuration
-
-🔜 Analytics
-
-🔜 Error Monitoring
-
-🔜 Backup Strategy
+- Domain
+- SSL
+- Production verification
 
 ---
 
-# Commercial Launch Roadmap
+## Phase 4
 
-Phase 1
+🔄 Legal Pages
 
-Private Testing
-
-↓
-
-Beta Launch
-
-↓
-
-First Paying Customers
-
-↓
-
-Public Launch
-
-↓
-
-Continuous Improvements
+- Privacy Policy
+- Terms of Use
+- Refund Policy
+- Contact
+- Service Description
 
 ---
 
-# Guiding Principles
+## Phase 5
 
-Every future decision must preserve:
+🔄 Commercial Beta Testing
 
-Premium Quality
+Testing with friends and family.
 
-Simple Experience
+---
 
-Professional Design
+## Phase 6
 
-Arabic-first UX
+🚀 Public Launch
 
-No marketing pressure
+Official commercial release of Mithaq.
 
-Product quality comes first.
+---
 
-Launch early.
+# Overall Status
 
-Improve continuously.
+Project Progress:
 
-Build the best Arabic SaaS platform for freelancers.
+███████████████████████████░
+
+≈ 95%
+
+The remaining work is launch preparation rather than core development.

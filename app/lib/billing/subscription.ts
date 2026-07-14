@@ -49,13 +49,13 @@ export async function getUserSubscription(
   const isPro = plan.slug === "pro" && subscription.status === "active" && !isExpired;
 
   const isFree = plan.slug === "free" || !isPro;
-
+const isActive = subscription.status === "active" || subscription.status === "free";
   return {
     subscription,
     plan,
     isFree,
     isPro,
-    isActive: isPro,
+    isActive,
     isExpired,
   };
 }

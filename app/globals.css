@@ -1,3 +1,4 @@
+@import url("https://cdn.moyasar.com/mpf/1.15.0/moyasar.css");
 @import "tailwindcss";
 
 :root {
@@ -133,4 +134,43 @@ textarea,
 select {
   font-family: var(--font-body), sans-serif;
 }
+}
+/* Moyasar Payment Form */
+.mysr-form {
+  width: 100%;
+  direction: rtl;
+}
+
+.mysr-form .mysr-form-input,
+.mysr-form input {
+  width: 100% !important;
+  min-height: 48px !important;
+  border: 1px solid var(--mithaq-border) !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  padding: 12px 14px !important;
+  color: var(--mithaq-text) !important;
+  box-shadow: none !important;
+}
+
+.mysr-form .mysr-form-input:focus,
+.mysr-form input:focus {
+  border-color: var(--mithaq-primary) !important;
+  outline: none !important;
+}
+
+.mysr-form .mysr-form-button {
+  width: 100% !important;
+  min-height: 52px !important;
+  margin-top: 20px !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: var(--mithaq-primary) !important;
+  font-weight: 900 !important;
+}
+
+.mysr-form svg,
+.mysr-form img {
+  max-width: 32px !important;
+  max-height: 32px !important;
 }

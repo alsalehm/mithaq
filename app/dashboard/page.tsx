@@ -99,15 +99,12 @@ export default function DashboardPage() {
     0
   );
 
-  const totalPaid = contracts.reduce(
-    (sum, item) => sum + (Number(item.amount_paid) || 0),
-    0
-  );
-
   const totalRemaining = contracts.reduce(
-    (sum, item) => sum + (Number(item.remaining_amount) || 0),
-    0
-  );
+  (sum, item) => sum + (Number(item.remaining_amount) || 0),
+  0
+);
+
+const totalPaid = Math.max(totalValue - totalRemaining, 0);
 
   const latestContracts = contracts.slice(0, 5);
 

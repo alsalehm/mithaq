@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AppShell from "../components/AppShell";
 import { supabase } from "../lib/supabase";
+import { canUseLegalConsultation } from "../lib/billing/access";
 import {
   Clock3,
   FileText,
@@ -50,13 +51,19 @@ export default function LegalConsultationsPage() {
 
       setUserId(user.id);
 
-      const { data: settingsData, error: settingsError } = await supabase
-        .from("legal_settings")
-        .select("lawyer_name, lawyer_phone")
-        .eq("is_active", true)
-        .limit(1)
-        .single();
+const access = await canUseLegalConsultation(user.id);
 
+if (!access.allowed) {
+  window.location.href = "/dashboard/subscription";
+  return;
+}
+
+const { data: settingsData, error: settingsError } = await supabase
+  .from("legal_settings")
+  .select("lawyer_name, lawyer_phone")
+  .eq("is_active", true)
+  .limit(1)
+  .single();
       if (settingsError) {
         console.error(settingsError);
       } else {
