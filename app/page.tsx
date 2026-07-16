@@ -252,17 +252,59 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-[var(--mithaq-border)] bg-[#F2E9DD]/45 px-6 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-[var(--mithaq-muted)] md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 text-sm text-[var(--mithaq-muted)] md:flex-row md:items-center md:justify-between">
           <div>
             <p className="font-black text-[var(--mithaq-text)]">ميثاق</p>
-            <p className="mt-1">© ميثاق. جميع الحقوق محفوظة.</p>
+            <p className="mt-1">© 2026 ميثاق. جميع الحقوق محفوظة.</p>
           </div>
 
-          <div className="flex gap-5 font-bold">
-            <Link href="/login" className="transition hover:text-[var(--mithaq-primary)]">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-bold">
+            <Link
+              href="/service"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              وصف الخدمة
+            </Link>
+
+            <Link
+              href="/privacy"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              سياسة الخصوصية
+            </Link>
+
+            <Link
+              href="/terms"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              شروط الاستخدام
+            </Link>
+
+            <Link
+              href="/refund"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              سياسة الاسترجاع
+            </Link>
+
+            <Link
+              href="/contact"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              تواصل معنا
+            </Link>
+
+            <Link
+              href="/login"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
               تسجيل الدخول
             </Link>
-            <Link href="/signup" className="transition hover:text-[var(--mithaq-primary)]">
+
+            <Link
+              href="/signup"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
               إنشاء حساب
             </Link>
           </div>
