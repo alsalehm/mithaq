@@ -33,6 +33,7 @@ type Invoice = {
   due_date: string | null;
   notes: string | null;
   contract_id: string | null;
+  share_token: string | null;
 };
 
 type Payment = {
@@ -142,7 +143,7 @@ export default function InvoiceDetailsPage() {
   function sendWhatsApp() {
     if (!invoice) return;
 
-    const invoiceUrl = window.location.href;
+    const invoiceUrl = `${window.location.origin}/invoice/${invoice.share_token}`;
 
     const message = `مرحباً،
 
