@@ -7,15 +7,14 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden min-h-screen w-72 shrink-0 border-l border-[#E7D6C2] bg-[#FFFDF9] px-5 py-6 lg:block">
-      <div className="mb-10 text-center">
-        <h1 className="text-4xl font-bold tracking-wide text-[#75532F]">
-          ميثاق
-        </h1>
-        <p className="mt-2 text-xs tracking-[0.45em] text-[#8B6A43]">
-          MITHAQ
-        </p>
-      </div>
+    <aside className="hidden min-h-screen w-72 shrink-0 border-l border-[#EFEFEF] bg-white px-5 py-6 lg:block">
+      <div className="mb-10 flex justify-center">
+  <img
+    src="/images/mithaq-logo.png"
+    alt="شعار ميثاق"
+    className="h-auto w-full max-w-[190px] object-contain"
+  />
+</div>
 
       <nav className="space-y-2">
         <NavItem href="/dashboard" label="لوحة التحكم" icon="⌂" active={pathname === "/dashboard"} />

@@ -155,16 +155,11 @@ export default function NewContractPage() {
             إنشاء عقد جديد
           </h1>
           <p className="mt-2 text-sm text-[#6B5A49]">
-            أدخل بيانات العميل والمناسبة، ثم احفظ العقد لإرساله للعميل.
+           أدخل بيانات العميل وتفاصيل العقد، ثم احفظه لإرساله إلى العميل للتوقيع الإلكتروني
           </p>
         </div>
 
-        <button
-          onClick={handleSave}
-          className="rounded-xl bg-[#75532F] px-6 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-[#5F4225]"
-        >
-          حفظ العقد
-        </button>
+        
       </section>
 
       <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
@@ -188,7 +183,7 @@ export default function NewContractPage() {
                 onChange={(e) => handleSelectCustomer(e.target.value)}
                 className="w-full rounded-xl border border-[#D8BFA3] bg-white px-4 py-3 text-sm text-[#2A1A0C] outline-none transition focus:border-[#75532F] focus:ring-2 focus:ring-[#EFE0CF]"
               >
-                <option value="">اختر العميل من القائمة</option>
+                <option value="">اختر عميلاً محفوظًا (اختياري)</option>
 
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
@@ -214,14 +209,14 @@ export default function NewContractPage() {
               />
 
               <Field
-                label="نوع المناسبة"
+                label="نوع الخدمة"
                 value={eventType}
                 onChange={setEventType}
-                placeholder="زواج، تخرج، منتجات..."
+                placeholder="مثال: تصوير، تصميم، استشارة..."
               />
 
               <Field
-                label="تاريخ المناسبة"
+                label="تاريخ التنفيذ"
                 type="date"
                 value={eventDate}
                 onChange={setEventDate}
@@ -233,7 +228,7 @@ export default function NewContractPage() {
                 type="number"
                 value={contractValue}
                 onChange={setContractValue}
-                placeholder="0"
+                placeholder="0 ريال"
               />
 
               <Field
@@ -241,7 +236,7 @@ export default function NewContractPage() {
                 type="number"
                 value={deposit}
                 onChange={setDeposit}
-                placeholder="0"
+                placeholder="0 ريال"
               />
             </div>
           </div>
@@ -256,17 +251,23 @@ export default function NewContractPage() {
           <div className="mt-6 space-y-3">
             <Summary label="العميل" value={clientName || "-"} />
             <Summary label="رقم الجوال" value={clientPhone || "-"} />
-            <Summary label="نوع المناسبة" value={eventType || "-"} />
-            <Summary label="تاريخ المناسبة" value={eventDate || "-"} />
+            <Summary label="نوع الخدمة" value={eventType || "-"} />
+<Summary label="تاريخ التنفيذ" value={eventDate || "-"} />
             <Summary label="قيمة العقد" value={`${Number(contractValue) || 0} ر.س`} />
             <Summary label="العربون" value={`${Number(deposit) || 0} ر.س`} />
             <Summary
-              label="المتبقي"
-              value={`${Math.max(
-                (Number(contractValue) || 0) - (Number(deposit) || 0),
-                0
-              )} ر.س`}
-            />
+  label="المتبقي"
+  value={`${Math.max(
+    (Number(contractValue) || 0) - (Number(deposit) || 0),
+    0
+  )} ر.س`}
+  highlight={
+    Math.max(
+      (Number(contractValue) || 0) - (Number(deposit) || 0),
+      0
+    ) > 0
+  }
+/>
           </div>
 
           {message && (
@@ -343,11 +344,34 @@ function Field({
   );
 }
 
-function Summary({ label, value }: { label: string; value: string }) {
+function Summary({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#F8F1E8] px-4 py-3 text-sm">
-      <span className="text-[#6B5A49]">{label}</span>
-      <span className="font-bold text-[#2A1A0C]">{value}</span>
+    <div
+      className={`flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm ${
+        highlight
+          ? "bg-[#75532F] text-white"
+          : "bg-[#F8F1E8]"
+      }`}
+    >
+      <span className={highlight ? "text-white/90" : "text-[#6B5A49]"}>
+        {label}
+      </span>
+
+      <span
+        className={`font-bold ${
+          highlight ? "text-white" : "text-[#2A1A0C]"
+        }`}
+      >
+        {value}
+      </span>
     </div>
   );
 }

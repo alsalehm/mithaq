@@ -368,7 +368,7 @@ ${invoiceUrl}
 
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--mithaq-text)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
+           className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
           >
             <Download size={17} />
             تحميل PDF
@@ -376,7 +376,7 @@ ${invoiceUrl}
 
           <button
             onClick={sendWhatsApp}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-green-700 px-5 py-3 text-sm font-black text-white transition hover:bg-green-800"
+            className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
           >
             <MessageCircle size={17} />
             واتساب

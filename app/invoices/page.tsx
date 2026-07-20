@@ -22,20 +22,45 @@ type Invoice = {
   amount: number | null;
   due_date: string | null;
   status: string | null;
+  payment_status: string | null;
   created_at: string;
 };
 
-function statusArabic(status: string | null) {
-  if (status === "paid") return "مدفوعة";
-  if (status === "unpaid") return "غير مدفوعة";
-  if (status === "cancelled") return "ملغية";
+function paymentStatusArabic(
+  paymentStatus: string | null,
+  invoiceStatus: string | null
+) {
+  if (invoiceStatus === "cancelled") return "ملغية";
+  if (paymentStatus === "paid") return "مدفوعة";
+  if (paymentStatus === "partial") return "مدفوعة جزئيًا";
+  if (paymentStatus === "unpaid") return "غير مسددة";
+
+  if (invoiceStatus === "paid") return "مدفوعة";
+  if (invoiceStatus === "unpaid") return "غير مسددة";
+
   return "غير محدد";
 }
 
-function statusColor(status: string | null) {
-  if (status === "paid") return "bg-emerald-100 text-emerald-800";
-  if (status === "unpaid") return "bg-red-100 text-red-800";
-  if (status === "cancelled") return "bg-gray-100 text-gray-800";
+function paymentStatusColor(
+  paymentStatus: string | null,
+  invoiceStatus: string | null
+) {
+  if (invoiceStatus === "cancelled") {
+    return "bg-gray-100 text-gray-800";
+  }
+
+  if (paymentStatus === "paid" || invoiceStatus === "paid") {
+    return "bg-emerald-100 text-emerald-800";
+  }
+
+  if (paymentStatus === "partial") {
+    return "bg-amber-100 text-amber-800";
+  }
+
+  if (paymentStatus === "unpaid" || invoiceStatus === "unpaid") {
+    return "bg-red-100 text-red-800";
+  }
+
   return "bg-amber-100 text-amber-800";
 }
 
@@ -84,10 +109,17 @@ export default function InvoicesPage() {
     loadInvoices();
   }, []);
 
-  const paidCount = invoices.filter((invoice) => invoice.status === "paid").length;
-  const unpaidCount = invoices.filter(
-    (invoice) => invoice.status === "unpaid"
+  const paidCount = invoices.filter(
+    (invoice) =>
+      invoice.payment_status === "paid" || invoice.status === "paid"
   ).length;
+
+  const unpaidCount = invoices.filter(
+    (invoice) =>
+      invoice.payment_status === "unpaid" ||
+      (!invoice.payment_status && invoice.status === "unpaid")
+  ).length;
+
   const totalAmount = invoices.reduce(
     (sum, invoice) => sum + Number(invoice.amount || 0),
     0
@@ -102,9 +134,11 @@ export default function InvoicesPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 إدارة الفواتير
               </p>
+
               <h1 className="mt-2 text-4xl font-black text-[var(--mithaq-text)]">
                 الفواتير
               </h1>
+
               <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
                 تابع فواتيرك، حالاتها، ومبالغها من مكان واحد.
               </p>
@@ -121,9 +155,24 @@ export default function InvoicesPage() {
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard title="إجمالي الفواتير" value={invoices.length} icon={ReceiptText} />
-          <StatCard title="مدفوعة" value={paidCount} icon={CheckCircle2} />
-          <StatCard title="غير مدفوعة" value={unpaidCount} icon={Clock3} />
+          <StatCard
+            title="إجمالي الفواتير"
+            value={invoices.length}
+            icon={ReceiptText}
+          />
+
+          <StatCard
+            title="مدفوعة"
+            value={paidCount}
+            icon={CheckCircle2}
+          />
+
+          <StatCard
+            title="غير مدفوعة"
+            value={unpaidCount}
+            icon={Clock3}
+          />
+
           <StatCard
             title="إجمالي المبالغ"
             value={`${totalAmount.toLocaleString()} ر.س`}
@@ -137,9 +186,11 @@ export default function InvoicesPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 قائمة الفواتير
               </p>
+
               <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
                 جميع الفواتير
               </h2>
+
               <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
                 الفواتير المرتبطة بحسابك فقط.
               </p>
@@ -153,6 +204,7 @@ export default function InvoicesPage() {
           {loading ? (
             <div className="rounded-[28px] bg-[var(--mithaq-surface-soft)] p-8 text-center">
               <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[var(--mithaq-primary-soft)]" />
+
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 جاري تحميل الفواتير...
               </p>
@@ -162,9 +214,11 @@ export default function InvoicesPage() {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
                 <ReceiptText size={30} />
               </div>
+
               <h3 className="text-xl font-black text-[var(--mithaq-text)]">
                 لا توجد فواتير
               </h3>
+
               <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[var(--mithaq-muted)]">
                 أنشئ أول فاتورة لك أو أنشئ فاتورة مباشرة من تفاصيل العقد.
               </p>
@@ -189,17 +243,22 @@ export default function InvoicesPage() {
                       <p className="text-sm text-[var(--mithaq-muted)]">
                         رقم الفاتورة
                       </p>
+
                       <h3 className="mt-1 text-xl font-black text-[var(--mithaq-text)]">
                         {invoice.invoice_number || "بدون رقم"}
                       </h3>
                     </div>
 
                     <span
-                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-black ${statusColor(
+                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-black ${paymentStatusColor(
+                        invoice.payment_status,
                         invoice.status
                       )}`}
                     >
-                      {statusArabic(invoice.status)}
+                      {paymentStatusArabic(
+                        invoice.payment_status,
+                        invoice.status
+                      )}
                     </span>
                   </div>
 
@@ -209,16 +268,21 @@ export default function InvoicesPage() {
                       value={invoice.client_name || "-"}
                       icon={UserRound}
                     />
+
                     <Info
                       label="المبلغ"
-                      value={`${(invoice.amount || 0).toLocaleString()} ر.س`}
+                      value={`${Number(
+                        invoice.amount || 0
+                      ).toLocaleString()} ر.س`}
                       icon={Wallet}
                     />
+
                     <Info
                       label="تاريخ الاستحقاق"
                       value={formatDate(invoice.due_date)}
                       icon={CalendarDays}
                     />
+
                     <Info
                       label="تاريخ الإنشاء"
                       value={formatDate(invoice.created_at)}
@@ -256,7 +320,10 @@ function StatCard({
     <div className="mithaq-card group rounded-[28px] p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--mithaq-shadow-md)]">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-bold text-[var(--mithaq-muted)]">{title}</p>
+          <p className="text-sm font-bold text-[var(--mithaq-muted)]">
+            {title}
+          </p>
+
           <p className="mt-2 text-3xl font-black text-[var(--mithaq-text)]">
             {value}
           </p>
@@ -285,6 +352,7 @@ function Info({
         <Icon size={16} className="text-[var(--mithaq-primary)]" />
         <span>{label}</span>
       </span>
+
       <span className="font-black text-[var(--mithaq-text)]">{value}</span>
     </div>
   );

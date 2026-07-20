@@ -128,9 +128,8 @@ export default function CustomersPage() {
 
         <section className="mithaq-card rounded-[32px] p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-2">
-            <p className="text-sm font-black text-[var(--mithaq-primary)]">
-              عميل جديد
-            </p>
+            
+            
             <h2 className="text-2xl font-black text-[var(--mithaq-text)]">
               إضافة عميل جديد
             </h2>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-
+import AppShell from "../../components/AppShell";
 type Customer = {
   id: string;
   full_name: string;
@@ -114,15 +114,15 @@ export default function NewInvoicePage() {
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F5E9DC] p-8 text-[#362008]">
-      <div className="mx-auto max-w-2xl rounded-3xl bg-white p-8 shadow-md">
+  <AppShell>
+    <div className="mx-auto mt-20 max-w-3xl rounded-3xl border border-[#E7D6C2] bg-white p-8 shadow-sm">
         <h1 className="mb-3 text-3xl font-bold text-[#75532F]">
           إنشاء فاتورة جديدة
         </h1>
 
         <p className="mb-8 text-gray-600">
-          اختر العميل من القائمة أو اكتب اسم العميل يدويًا.
-        </p>
+  اختر عميلاً محفوظًا أو أدخل بيانات الفاتورة يدويًا.
+</p>
 
         <div className="space-y-4">
           <select
@@ -146,20 +146,35 @@ export default function NewInvoicePage() {
             className="w-full rounded-xl border p-4 outline-none"
           />
 
-          <input
-            placeholder="مبلغ الفاتورة"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border p-4 outline-none"
-          />
+          <div className="relative">
+  <input
+    placeholder="مبلغ الفاتورة"
+    type="number"
+    value={amount}
+    onChange={(e) => setAmount(e.target.value)}
+    className="w-full rounded-xl border p-4 pl-16 outline-none"
+  />
 
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="w-full rounded-xl border p-4 outline-none"
-          />
+  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#75532F]">
+    ريال
+  </span>
+</div>
+
+    <input
+  type={dueDate ? "date" : "text"}
+  placeholder="تاريخ الاستحقاق"
+  value={dueDate}
+  onFocus={(e) => {
+    e.target.type = "date";
+  }}
+  onBlur={(e) => {
+    if (!dueDate) {
+      e.target.type = "text";
+    }
+  }}
+  onChange={(e) => setDueDate(e.target.value)}
+  className="w-full rounded-xl border p-4 outline-none"
+/>
 
           <textarea
             placeholder="ملاحظات اختيارية"
@@ -173,14 +188,14 @@ export default function NewInvoicePage() {
             onClick={saveInvoice}
             className="w-full rounded-xl bg-[#75532F] p-4 font-bold text-white"
           >
-            حفظ الفاتورة
+           إنشاء الفاتورة
           </button>
 
           {message && (
             <p className="text-center font-bold text-[#75532F]">{message}</p>
           )}
         </div>
-      </div>
-    </main>
+         </div>
+  </AppShell>
   );
 }

@@ -58,6 +58,7 @@ type Invoice = {
   client_name: string | null;
   amount: number | null;
   due_date: string | null;
+  payment_status: string | null;
   status: string | null;
   notes: string | null;
 };
@@ -739,6 +740,21 @@ export default function CustomerDetailsPage() {
                     >
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
+                          <span
+  className={`mb-2 inline-flex rounded-full px-3 py-1 text-xs font-black ${
+    invoice.payment_status === "paid"
+      ? "bg-green-100 text-green-700"
+      : invoice.payment_status === "partial"
+        ? "bg-amber-100 text-amber-700"
+        : "bg-red-100 text-red-700"
+  }`}
+>
+  {invoice.payment_status === "paid"
+    ? "مدفوعة"
+    : invoice.payment_status === "partial"
+      ? "مدفوعة جزئيًا"
+      : "غير مدفوعة"}
+</span>
                           <h3 className="text-lg font-black text-[var(--mithaq-text)]">
                             {invoice.invoice_number || "فاتورة بدون رقم"}
                           </h3>

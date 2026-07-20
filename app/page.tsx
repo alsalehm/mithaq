@@ -21,17 +21,11 @@ export default function Home() {
       <nav className="sticky top-0 z-50 border-b border-[var(--mithaq-border)] bg-[var(--mithaq-bg)]/85 backdrop-blur-xl">
         <div className="mithaq-container flex items-center justify-between py-4">
           <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--mithaq-primary)] text-xl font-black text-white shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:bg-[var(--mithaq-primary-hover)]">
-              م
-            </div>
-            <div>
-              <span className="block text-2xl font-black tracking-tight text-[var(--mithaq-text)]">
-                ميثاق
-              </span>
-              <span className="hidden text-xs font-semibold text-[var(--mithaq-muted-soft)] sm:block">
-                عقود وفواتير للعمل الاحترافي
-              </span>
-            </div>
+           <Link href="/" className="group">
+  <span className="text-4xl font-black tracking-tight text-[var(--mithaq-text)] transition-colors duration-300 group-hover:text-[var(--mithaq-primary)]">
+    ميثاق
+  </span>
+</Link>
           </Link>
 
           <div className="hidden items-center gap-8 text-sm font-bold text-[var(--mithaq-muted)] md:flex">
@@ -64,18 +58,14 @@ export default function Home() {
 
         <div className="mithaq-container relative grid items-center gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--mithaq-border)] bg-white/70 px-4 py-2 text-sm font-black text-[var(--mithaq-primary)] shadow-sm">
-              <Sparkles size={16} />
-              للمصورين وأصحاب الأعمال الإبداعية
-            </div>
+            
 
             <h1 className="max-w-4xl text-5xl font-black leading-[1.15] tracking-tight text-[var(--mithaq-text)] md:text-7xl">
-              عقود وفواتير احترافية تحفظ حقك خلال دقائق
+             منصة عربية لإدارة أعمال المستقلين
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg font-medium leading-9 text-[var(--mithaq-muted)] md:text-xl">
-              ميثاق يساعدك على إنشاء العقود، إرسالها للعميل، توقيعها إلكترونيًا،
-              متابعة المدفوعات، وتحويلها إلى ملفات PDF جاهزة للمشاركة.
+             ميثاق يساعدك على إنشاء العقود، إرسالها للعميل، توقيعها إلكترونيًا، وإدارة الفواتير والمدفوعات في مكان واحد.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -89,10 +79,11 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
-              <Stat value="3 خطوات" label="من الاتفاق للتوقيع" />
-              <Stat value="PDF" label="جاهز للمشاركة" />
-              <Stat value="واتساب" label="إرسال سريع للعميل" />
+            <div className="mt-10 grid max-w-3xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+             <Stat value="أنشئ عقودك" label="خلال دقائق" />
+<Stat value="وقّع إلكترونيًا" label="بسهولة وأمان" />
+<Stat value="تابع مدفوعاتك" label="من مكان واحد" />
+<Stat value="استشارات قانونية" label="عند الحاجة" />
             </div>
           </div>
 
@@ -104,16 +95,16 @@ export default function Home() {
                 <div className="mb-6 flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-bold text-[var(--mithaq-muted-soft)]">
-                      نموذج من ميثاق
+                     مثال توضيحي
                     </p>
                     <h2 className="mt-2 text-2xl font-black tracking-tight text-[var(--mithaq-text)]">
                       عقد تصوير زواج
                     </h2>
                   </div>
 
-                  <span className="rounded-full bg-[var(--mithaq-info-bg)] px-3 py-1 text-xs font-black text-[var(--mithaq-info)]">
-                    بانتظار التوقيع
-                  </span>
+                  <span className="rounded-full bg-[var(--mithaq-primary-soft)] px-3 py-1 text-xs font-black text-[var(--mithaq-primary)]">
+  بانتظار التوقيع
+</span>
                 </div>
 
                 <div className="space-y-3 text-sm">
@@ -130,10 +121,10 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="font-black text-[var(--mithaq-primary)]">
-                        رابط التوقيع جاهز للإرسال
+                       جاهز للإرسال عبر واتساب
                       </p>
                       <p className="mt-1 text-sm leading-6 text-[var(--mithaq-muted)]">
-                        أرسل العقد للعميل عبر واتساب خلال ثوانٍ.
+                       شارك العقد مع العميل للتوقيع الإلكتروني.
                       </p>
                     </div>
                   </div>
@@ -153,16 +144,16 @@ export default function Home() {
       <section id="features" className="mithaq-container py-16">
         <SectionHeader
           eyebrow="المميزات"
-          title="كل ما تحتاجه لإدارة اتفاقاتك"
-          desc="ميثاق يجمع العقود، الفواتير، التوقيع الإلكتروني، والمدفوعات في تجربة واحدة بسيطة وواضحة."
+          title="كل ما تحتاجه لإدارة أعمالك"
+          desc="ميثاق يجمع العقود، الفواتير، التوقيع الإلكتروني، ومتابعة المدفوعات في تجربة واحدة بسيطة وواضحة."
         />
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {[
-            [FileText, "إنشاء عقود", "قوالب واضحة قابلة للتعديل حسب نوع العمل."],
-            [PenLine, "توقيع إلكتروني", "أرسل رابطًا للعميل ليوقع من جواله مباشرة."],
-            [ReceiptText, "إدارة الفواتير", "أنشئ فاتورة من العقد وتابع المدفوعات."],
-            [Scale, "استشارات قانونية", "اطلب استشارة من محامية معتمدة عند الحاجة."],
+            [FileText, "إنشاء عقود", "أنشئ عقودًا احترافية خلال دقائق."],
+            [PenLine, "توقيع إلكتروني", "وقّع العقود إلكترونيًا بسهولة وأمان."],
+            [ReceiptText, "إدارة الفواتير", "أنشئ الفواتير وتابع المدفوعات من مكان واحد."],
+            [Scale, "استشارات قانونية", "احصل على استشارة قانونية عند الحاجة."],
           ].map(([Icon, title, desc]) => (
             <div
               key={title as string}
@@ -185,14 +176,16 @@ export default function Home() {
         <div className="mithaq-card rounded-[36px] p-6 md:p-10">
           <SectionHeader
             eyebrow="كيف يعمل؟"
-            title="من الاتفاق إلى التوقيع في خطوات بسيطة"
+            title="إدارة أعمالك في خطوات بسيطة"
           />
 
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              [FileText, "أنشئ العقد", "أدخل بيانات العميل والمناسبة والقيمة."],
-              [Send, "أرسله للعميل", "شارك رابط التوقيع عبر واتساب مباشرة."],
-              [CheckCircle2, "تابع الدفع", "أنشئ فاتورة وتابع المدفوع والمتبقي."],
+           
+  [FileText, "أنشئ العقد", "أدخل بيانات العميل، والشروط، وقيمة العقد."],
+  [Send, "شارك العقد", "أرسل رابط العقد للعميل للتوقيع إلكترونيًا."],
+  [CheckCircle2, "تابع الفواتير والمدفوعات", "أنشئ الفواتير وتابع حالة المدفوعات بسهولة."],
+
             ].map(([Icon, title, desc], index) => (
               <div
                 key={title as string}

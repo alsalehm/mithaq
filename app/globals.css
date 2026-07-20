@@ -51,10 +51,7 @@ html {
 body {
   font-family: var(--font-body), sans-serif;
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(216, 185, 143, 0.28), transparent 34rem),
-    radial-gradient(circle at bottom right, rgba(231, 214, 194, 0.45), transparent 36rem),
-    var(--mithaq-bg);
+  background: #ffffff;
   color: var(--mithaq-text);
 }
 

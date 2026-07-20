@@ -22,6 +22,7 @@ import {
 type Contract = {
   id: string;
   user_id: string;
+  customer_id: string | null;
   client_name: string;
   client_phone: string;
   event_type: string;
@@ -157,6 +158,7 @@ ${signUrl}
       .insert({
         user_id: contract.user_id,
         contract_id: contract.id,
+        customer_id: contract.customer_id || null,
         invoice_number: invoiceNumber,
         client_name: contract.client_name,
         amount: invoiceAmount,
@@ -285,7 +287,7 @@ ${signUrl}
 
               <button
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-text)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90 disabled:opacity-60"
               >
                 <Download size={18} />
                 تحميل PDF
@@ -304,7 +306,7 @@ ${signUrl}
                 type="button"
                 onClick={createInvoiceFromContract}
                 disabled={creatingInvoice}
-                className="inline-flex items-center gap-2 rounded-2xl bg-blue-700 px-5 py-3 text-sm font-black text-white transition hover:bg-blue-800 disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-5 py-3 text-sm font-black text-white transition hover:opacity-90 disabled:opacity-60"
               >
                 <ReceiptText size={18} />
                 {creatingInvoice ? "جاري إنشاء الفاتورة..." : "إنشاء فاتورة"}

@@ -139,22 +139,18 @@ export default function SubscriptionPage() {
 
   return (
     <AppShell>
-      <div dir="rtl" className="space-y-6 sm:space-y-8">
-        <section className="rounded-[28px] border border-[var(--mithaq-border)] bg-white/75 p-5 shadow-[var(--mithaq-shadow-sm)] backdrop-blur sm:rounded-[32px] sm:p-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-sm font-black text-[var(--mithaq-primary)]">
-                الاشتراك والفوترة
-              </p>
+     <div dir="rtl" className="space-y-6 sm:space-y-8">
+  <section className="rounded-[28px] border border-[var(--mithaq-border)] bg-white/75 px-6 py-5 shadow-[var(--mithaq-shadow-sm)] backdrop-blur sm:rounded-[32px]">
+    <div className="flex items-center justify-between">
+      <div>
+        
 
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-[var(--mithaq-text)] sm:text-4xl">
-                إدارة اشتراكك
-              </h1>
+        <h1 className="mt-1 text-3xl font-black tracking-tight text-[var(--mithaq-text)]">
+          إدارة اشتراكك
+        </h1>
 
-              <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
-                تابع باقتك الحالية وتفاصيل التجديد وإمكانية الترقية.
-              </p>
-            </div>
+        
+      </div>
 
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
               <Crown size={28} />
@@ -269,7 +265,7 @@ export default function SubscriptionPage() {
               {!isPro && (
                 <Link
                   href="/dashboard/subscription/checkout"
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-6 py-4 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--mithaq-primary-dark)] sm:w-auto"
+                  className="mt-50 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--mithaq-primary)] px-6 py-4 text-base font-black text-white shadow-lg transition hover:-translate-y-0.5 ]"
                 >
                   الترقية إلى الباقة الاحترافية
                   <ArrowLeft size={17} />
@@ -299,44 +295,69 @@ export default function SubscriptionPage() {
             </div>
           </article>
 
-          <article className="rounded-[30px] border border-[var(--mithaq-border)] bg-white p-6 shadow-[var(--mithaq-shadow-sm)] sm:rounded-[34px] sm:p-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
-              <Sparkles size={24} />
-            </div>
+          <article className="relative flex min-h-[680px] flex-col overflow-hidden rounded-[36px] border border-[#75532F] bg-[#2A1A0C] p-7 text-white shadow-[0_34px_95px_rgba(42,26,12,0.42),0_12px_34px_rgba(42,26,12,0.24)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_42px_115px_rgba(42,26,12,0.50),0_16px_42px_rgba(42,26,12,0.30)] sm:p-9">
+  <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
-            <h2 className="mt-5 text-xl font-black text-[var(--mithaq-text)]">
-              الباقة الاحترافية
-            </h2>
+  <div className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-[#B59676]/30 blur-3xl" />
 
-            <div className="mt-5 flex items-end gap-2">
-              <span className="text-4xl font-black text-[var(--mithaq-text)]">
-                49
-              </span>
+  <div className="relative flex h-full flex-col">
+    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-[#F5E9DC]">
+      <Crown size={30} />
+    </div>
 
-              <span className="pb-1 text-sm font-bold text-[var(--mithaq-muted)]">
-                ريال شهريًا
-              </span>
-            </div>
+    <h2 className="mt-8 text-3xl font-black text-white">
+      الباقة الاحترافية
+    </h2>
 
-            <ul className="mt-7 space-y-4">
-              <ProFeature text="عقود غير محدودة" />
-              <ProFeature text="عملاء وفواتير غير محدودة" />
-              <ProFeature text="الاستشارات القانونية" />
-              <ProFeature text="جميع المزايا الحالية والمستقبلية" />
-            </ul>
-          </article>
+    <p className="mt-2 text-xs font-black tracking-[0.22em] text-[#D8BFA3]">
+      PRO
+    </p>
+
+    <div className="mt-8 border-b border-white/10 pb-8">
+      <div className="flex items-end gap-3">
+        <span className="text-6xl font-black leading-none sm:text-7xl">
+          49
+        </span>
+
+        <span className="pb-1 text-xl font-black text-white">
+          ريال
+        </span>
+      </div>
+
+      <p className="mt-3 text-sm text-[#F5E9DC]/65">
+        شهريًا
+      </p>
+    </div>
+
+    <p className="mt-7 min-h-[64px] text-sm leading-8 text-[#F5E9DC]/80">
+      جميع أدوات ميثاق لإدارة أعمالك، دون قيود.
+    </p>
+
+    <ul className="mt-8 flex-1 space-y-4 text-sm">
+      {[
+        "عقود غير محدودة",
+        "عملاء غير محدودين",
+        "فواتير غير محدودة",
+        "استشارات قانونية",
+        "جميع المزايا الحالية",
+        "جميع المزايا المستقبلية",
+      ].map((feature) => (
+        <li key={feature} className="flex items-center gap-3">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/15 text-[#F5E9DC]">
+            <Check size={15} />
+          </span>
+
+          <span className="text-[#F5E9DC]/90">
+            {feature}
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</article>
         </section>
 
-        <section className="rounded-[28px] border border-[var(--mithaq-border)] bg-white p-5 shadow-[var(--mithaq-shadow-sm)] sm:rounded-[32px] sm:p-6">
-          <h2 className="text-xl font-black text-[var(--mithaq-text)]">
-            معلومات الفوترة
-          </h2>
-
-          <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
-            ستظهر هنا لاحقًا تفاصيل وسيلة الدفع وسجل المدفوعات والفواتير بعد
-            إتمام أول اشتراك.
-          </p>
-        </section>
+        
       </div>
     </AppShell>
   );

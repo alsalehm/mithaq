@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Check,
   CreditCard,
+  Crown,
   LoaderCircle,
   LockKeyhole,
   ShieldCheck,
@@ -106,28 +107,26 @@ export default function SubscriptionCheckoutPage() {
 
     const callbackUrl = `${window.location.origin}/dashboard/subscription/payment-result`;
 
-
-window.Moyasar.init({
-  element: ".mysr-form",
-  amount: PRO_PRICE_IN_HALALAS,
-  currency: "SAR",
-  description: "اشتراك ميثاق الاحترافي - شهر واحد",
-  publishable_api_key: publishableKey,
-  callback_url: callbackUrl,
-  methods: ["creditcard"],
-  supported_networks: ["mada", "visa", "mastercard"],
-  language: "ar",
-  fixed_width: false,
-  metadata: {
-    user_id: userId,
-    plan: "pro",
-    billing_period: "monthly",
-  },
-  credit_card: {
-    save_card: true,
-  },
-});
-
+    window.Moyasar.init({
+      element: ".mysr-form",
+      amount: PRO_PRICE_IN_HALALAS,
+      currency: "SAR",
+      description: "اشتراك ميثاق الاحترافي - شهر واحد",
+      publishable_api_key: publishableKey,
+      callback_url: callbackUrl,
+      methods: ["creditcard"],
+      supported_networks: ["mada", "visa", "mastercard"],
+      language: "ar",
+      fixed_width: false,
+      metadata: {
+        user_id: userId,
+        plan: "pro",
+        billing_period: "monthly",
+      },
+      credit_card: {
+        save_card: true,
+      },
+    });
   }, [loading, publishableKey, scriptLoaded, userId]);
 
   if (loading) {
@@ -159,9 +158,7 @@ window.Moyasar.init({
         src="https://cdn.moyasar.com/mpf/1.15.0/moyasar.js"
         strategy="afterInteractive"
         onLoad={() => setScriptLoaded(true)}
-        onError={() =>
-          setErrorMessage("تعذر تحميل نموذج الدفع من مُيسر.")
-        }
+        onError={() => setErrorMessage("تعذر تحميل نموذج الدفع من مُيسر.")}
       />
 
       <AppShell>
@@ -182,7 +179,7 @@ window.Moyasar.init({
                 </p>
 
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-[var(--mithaq-text)] sm:text-4xl">
-                  الترقية إلى الباقة الاحترافية
+                  إتمام الاشتراك
                 </h1>
 
                 <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
@@ -216,45 +213,65 @@ window.Moyasar.init({
             </section>
           ) : (
             <section className="grid items-start gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-              <article className="rounded-[30px] border border-[var(--mithaq-border)] bg-white p-6 shadow-[var(--mithaq-shadow-sm)] sm:rounded-[34px] sm:p-8">
-                <p className="text-sm font-black text-[var(--mithaq-primary)]">
-                  ملخص الاشتراك
-                </p>
+              <article className="relative overflow-hidden rounded-[30px] border border-[#75532F] bg-[#2A1A0C] p-6 text-white shadow-[0_28px_80px_rgba(42,26,12,0.34),0_10px_28px_rgba(42,26,12,0.18)] sm:rounded-[34px] sm:p-8">
+                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
-                <h2 className="mt-3 text-2xl font-black text-[var(--mithaq-text)]">
-                  الباقة الاحترافية
-                </h2>
+                <div className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-[#B59676]/30 blur-3xl" />
 
-                <div className="mt-6 border-y border-[var(--mithaq-border)] py-6">
-                  <div className="flex items-end gap-2">
-                    <span className="text-5xl font-black text-[var(--mithaq-text)]">
-                      49
-                    </span>
-
-                    <span className="pb-1 text-sm font-bold text-[var(--mithaq-muted)]">
-                      ريال شهريًا
-                    </span>
+                <div className="relative">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#F5E9DC]">
+                    <Crown size={25} />
                   </div>
-                </div>
 
-                <ul className="mt-7 space-y-4">
-                  <CheckoutFeature text="عقود غير محدودة" />
-                  <CheckoutFeature text="عملاء وفواتير غير محدودة" />
-                  <CheckoutFeature text="الاستشارات القانونية" />
-                  <CheckoutFeature text="جميع المزايا الحالية والمستقبلية" />
-                </ul>
+                  <p className="mt-6 text-sm font-black text-[#D8BFA3]">
+                    ملخص الاشتراك
+                  </p>
 
-                <div className="mt-8 rounded-2xl bg-[var(--mithaq-surface-soft)] p-4">
-                  <div className="flex items-start gap-3">
-                    <ShieldCheck
-                      className="mt-0.5 shrink-0 text-[var(--mithaq-primary)]"
-                      size={20}
+                  <h2 className="mt-3 text-2xl font-black text-white">
+                    الباقة الاحترافية
+                  </h2>
+
+                  <p className="mt-2 text-xs font-black tracking-[0.22em] text-[#D8BFA3]">
+                    PRO
+                  </p>
+
+                  <div className="mt-6 border-y border-white/10 py-6">
+                    <div className="flex items-end gap-2">
+                      <span className="text-5xl font-black text-white">
+                        49
+                      </span>
+
+                      <span className="pb-1 text-sm font-bold text-[#F5E9DC]/75">
+                        ريال شهريًا
+                      </span>
+                    </div>
+                  </div>
+
+                  <ul className="mt-7 space-y-4">
+                    <CheckoutFeature dark text="عقود غير محدودة" />
+                    <CheckoutFeature
+                      dark
+                      text="عملاء وفواتير غير محدودة"
                     />
+                    <CheckoutFeature dark text="الاستشارات القانونية" />
+                    <CheckoutFeature
+                      dark
+                      text="جميع المزايا الحالية والمستقبلية"
+                    />
+                  </ul>
 
-                    <p className="text-sm leading-7 text-[var(--mithaq-muted)]">
-                      تتم معالجة بيانات البطاقة عبر مُيسر، ولا يقوم ميثاق
-                      بحفظ بيانات بطاقتك.
-                    </p>
+                  <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="flex items-start gap-3">
+                      <ShieldCheck
+                        className="mt-0.5 shrink-0 text-[#F5E9DC]"
+                        size={20}
+                      />
+
+                      <p className="text-sm leading-7 text-[#F5E9DC]/75">
+                        تتم معالجة بيانات البطاقة عبر مُيسر، ولا يقوم ميثاق
+                        بحفظ بيانات بطاقتك.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -295,10 +312,26 @@ window.Moyasar.init({
   );
 }
 
-function CheckoutFeature({ text }: { text: string }) {
+function CheckoutFeature({
+  text,
+  dark = false,
+}: {
+  text: string;
+  dark?: boolean;
+}) {
   return (
-    <li className="flex items-center gap-3 text-sm text-[var(--mithaq-text)]">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
+    <li
+      className={`flex items-center gap-3 text-sm ${
+        dark ? "text-[#F5E9DC]/90" : "text-[var(--mithaq-text)]"
+      }`}
+    >
+      <span
+        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+          dark
+            ? "bg-white/15 text-[#F5E9DC]"
+            : "bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]"
+        }`}
+      >
         <Check size={15} />
       </span>
 

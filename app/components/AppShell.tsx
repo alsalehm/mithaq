@@ -4,7 +4,7 @@ import Topbar from "./Topbar";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div dir="rtl" className="min-h-screen bg-[#F8F1E8] text-[#2A1A0C]">
+    <div dir="rtl" className="min-h-screen bg-white text-[#2A1A0C]">
       <div className="flex min-h-screen">
         <Sidebar />
 
