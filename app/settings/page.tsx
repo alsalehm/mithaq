@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import { toast } from "react-hot-toast";
 import {
   Building2,
   FileText,
+  IdCard,
   MapPin,
   Phone,
   Save,
@@ -22,6 +24,7 @@ export default function SettingsPage() {
   const [signature, setSignature] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState("");
   const [fullName, setFullName] = useState("");
+  const [proofNumber, setProofNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [defaultTerms, setDefaultTerms] = useState("");
@@ -47,7 +50,7 @@ export default function SettingsPage() {
     const { data, error } = await supabase
       .from("profiles")
       .select(
-        "business_name, full_name, phone, city, signature_image, default_contract_terms"
+        "business_name, full_name, proof_number, phone, city, signature_image, default_contract_terms"
       )
       .eq("id", user.id)
       .single();
@@ -61,6 +64,7 @@ export default function SettingsPage() {
     if (data) {
       setBusinessName(data.business_name || "");
       setFullName(data.full_name || "");
+      setProofNumber(data.proof_number || "");
       setPhone(data.phone || "");
       setCity(data.city || "");
       setSignature(data.signature_image || null);
@@ -87,6 +91,7 @@ export default function SettingsPage() {
       id: user.id,
       business_name: businessName,
       full_name: fullName,
+      proof_number: proofNumber,
       phone,
       city,
       signature_image: signature,
@@ -126,6 +131,7 @@ export default function SettingsPage() {
       <AppShell>
         <div className="mithaq-card-premium rounded-[32px] p-8 text-center">
           <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[var(--mithaq-primary-soft)]" />
+
           <p className="text-sm font-black text-[var(--mithaq-primary)]">
             جاري تحميل الإعدادات...
           </p>
@@ -142,9 +148,11 @@ export default function SettingsPage() {
             <p className="text-sm font-black text-[var(--mithaq-primary)]">
               إعدادات المنصة
             </p>
-            <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
+
+            <h1 className="mt-2 text-3xl font-black text-[var(--mithaq-text)] sm:text-4xl">
               إعدادات الحساب
             </h1>
+
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">
               حدّث بيانات نشاطك، توقيعك، والشروط الافتراضية التي تظهر في العقود
               الجديدة.
@@ -159,11 +167,14 @@ export default function SettingsPage() {
                 <p className="text-sm font-black text-[var(--mithaq-primary)]">
                   الملف التجاري
                 </p>
+
                 <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
                   بيانات الحساب
                 </h2>
+
                 <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
-                  هذه البيانات تساعد في تجهيز العقود والفواتير بشكل أوضح.
+                  تُستخدم هذه البيانات لتجهيز معلومات مقدم الخدمة في العقود
+                  والفواتير.
                 </p>
               </div>
 
@@ -182,6 +193,14 @@ export default function SettingsPage() {
                   value={fullName}
                   onChange={setFullName}
                   placeholder="مثال: عبدالرحمن السالم"
+                />
+
+                <Field
+                  label="رقم الإثبات"
+                  icon={IdCard}
+                  value={proofNumber}
+                  onChange={setProofNumber}
+                  placeholder="رقم الهوية أو الإقامة أو السجل التجاري"
                 />
 
                 <Field
@@ -207,9 +226,11 @@ export default function SettingsPage() {
                 <p className="text-sm font-black text-[var(--mithaq-primary)]">
                   العقود
                 </p>
+
                 <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
                   الشروط الافتراضية للعقود
                 </h2>
+
                 <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
                   سيتم استخدام هذه الشروط تلقائيًا عند إنشاء عقد جديد.
                 </p>
@@ -220,10 +241,11 @@ export default function SettingsPage() {
                   size={20}
                   className="pointer-events-none absolute right-4 top-4 text-[var(--mithaq-muted-soft)]"
                 />
+
                 <textarea
                   rows={10}
                   value={defaultTerms}
-                  onChange={(e) => setDefaultTerms(e.target.value)}
+                  onChange={(event) => setDefaultTerms(event.target.value)}
                   className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm leading-7 text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
                   placeholder="اكتب الشروط التي تريد ظهورها تلقائياً في جميع العقود الجديدة..."
                 />
@@ -238,8 +260,9 @@ export default function SettingsPage() {
               </div>
 
               <h2 className="text-2xl font-black text-[var(--mithaq-text)]">
-                توقيع المصور
+                توقيع مقدم الخدمة
               </h2>
+
               <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
                 ارفع توقيعك مرة واحدة، وسيظهر تلقائيًا في العقود الجديدة.
               </p>
@@ -247,6 +270,7 @@ export default function SettingsPage() {
               <label className="mt-5 flex cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[var(--mithaq-border)] bg-[var(--mithaq-surface-soft)] p-5 text-center text-sm font-black text-[var(--mithaq-primary)] transition hover:border-[var(--mithaq-border-strong)] hover:bg-[var(--mithaq-primary-soft)]">
                 <Upload size={18} />
                 رفع توقيع
+
                 <input
                   type="file"
                   accept="image/*"
@@ -260,9 +284,10 @@ export default function SettingsPage() {
                   <p className="mb-3 text-sm font-black text-[var(--mithaq-primary)]">
                     التوقيع الحالي
                   </p>
+
                   <img
                     src={signature}
-                    alt="توقيع المصور"
+                    alt="توقيع مقدم الخدمة"
                     className="max-h-32 rounded-xl border border-[var(--mithaq-border)] bg-white p-2"
                   />
                 </div>
@@ -277,6 +302,7 @@ export default function SettingsPage() {
               <h3 className="text-xl font-black text-[var(--mithaq-text)]">
                 جاهز للحفظ؟
               </h3>
+
               <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
                 بعد الحفظ سيتم الرجوع تلقائيًا إلى لوحة التحكم.
               </p>
@@ -288,6 +314,7 @@ export default function SettingsPage() {
                 className="mithaq-btn-primary mt-5 flex w-full items-center justify-center gap-2 px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Save size={18} />
+
                 {saving ? "جاري الحفظ..." : "حفظ البيانات"}
               </button>
             </div>
@@ -322,10 +349,11 @@ function Field({
           size={19}
           className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
         />
+
         <input
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
           placeholder={placeholder}
         />

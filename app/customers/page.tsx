@@ -7,7 +7,7 @@ import { supabase } from "../lib/supabase";
 import { toast } from "react-hot-toast";
 import {
   ArrowLeft,
-  Building2,
+  IdCard,
   Mail,
   MapPin,
   Phone,
@@ -20,9 +20,10 @@ import {
 type Customer = {
   id: string;
   full_name: string;
-  phone: string;
-  city: string;
-  email: string;
+  proof_number: string | null;
+  phone: string | null;
+  city: string | null;
+  email: string | null;
 };
 
 export default function CustomersPage() {
@@ -30,6 +31,7 @@ export default function CustomersPage() {
   const [loading, setLoading] = useState(true);
 
   const [fullName, setFullName] = useState("");
+  const [proofNumber, setProofNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
@@ -48,11 +50,19 @@ export default function CustomersPage() {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("customers")
-      .select("*")
+      .select(
+        "id, full_name, proof_number, phone, city, email"
+      )
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
+
+    if (error) {
+      toast.error("حدث خطأ أثناء تحميل العملاء");
+      setLoading(false);
+      return;
+    }
 
     setCustomers((data || []) as Customer[]);
     setLoading(false);
@@ -63,7 +73,10 @@ export default function CustomersPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) return;
+    if (!user) {
+      toast.error("يجب تسجيل الدخول أولًا");
+      return;
+    }
 
     if (!fullName.trim()) {
       toast.error("أدخل اسم العميل");
@@ -72,10 +85,11 @@ export default function CustomersPage() {
 
     const { error } = await supabase.from("customers").insert({
       user_id: user.id,
-      full_name: fullName,
-      phone,
-      city,
-      email,
+      full_name: fullName.trim(),
+      proof_number: proofNumber.trim() || null,
+      phone: phone.trim() || null,
+      city: city.trim() || null,
+      email: email.trim() || null,
     });
 
     if (error) {
@@ -85,12 +99,16 @@ export default function CustomersPage() {
 
     toast.success("تم حفظ العميل بنجاح");
 
+    clearFields();
+    await loadCustomers();
+  }
+
+  function clearFields() {
     setFullName("");
+    setProofNumber("");
     setPhone("");
     setCity("");
     setEmail("");
-
-    loadCustomers();
   }
 
   return (
@@ -102,9 +120,11 @@ export default function CustomersPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 إدارة العملاء
               </p>
-              <h1 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
+
+              <h1 className="mt-2 text-3xl font-black text-[var(--mithaq-text)] sm:text-4xl">
                 العملاء
               </h1>
+
               <p className="mt-3 text-sm leading-7 text-[var(--mithaq-muted)]">
                 أضف عملاءك وتابع بيانات التواصل الخاصة بهم من مكان واحد.
               </p>
@@ -114,10 +134,12 @@ export default function CustomersPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
                 <UsersRound size={24} />
               </div>
+
               <div>
                 <p className="text-sm font-bold text-[var(--mithaq-muted)]">
                   إجمالي العملاء
                 </p>
+
                 <p className="mt-1 text-3xl font-black text-[var(--mithaq-primary)]">
                   {customers.length}
                 </p>
@@ -128,11 +150,10 @@ export default function CustomersPage() {
 
         <section className="mithaq-card rounded-[32px] p-5 sm:p-6">
           <div className="mb-6 flex flex-col gap-2">
-            
-            
             <h2 className="text-2xl font-black text-[var(--mithaq-text)]">
               إضافة عميل جديد
             </h2>
+
             <p className="text-sm leading-7 text-[var(--mithaq-muted)]">
               احفظ بيانات العميل لاستخدامها لاحقًا في العقود والفواتير.
             </p>
@@ -145,6 +166,14 @@ export default function CustomersPage() {
               onChange={setFullName}
               placeholder="مثال: أحمد محمد"
               icon={UsersRound}
+            />
+
+            <Field
+              label="رقم الإثبات"
+              value={proofNumber}
+              onChange={setProofNumber}
+              placeholder="رقم الهوية أو الإقامة أو السجل التجاري"
+              icon={IdCard}
             />
 
             <Field
@@ -174,6 +203,7 @@ export default function CustomersPage() {
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
+              type="button"
               onClick={createCustomer}
               className="mithaq-btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
             >
@@ -183,12 +213,7 @@ export default function CustomersPage() {
 
             <button
               type="button"
-              onClick={() => {
-                setFullName("");
-                setPhone("");
-                setCity("");
-                setEmail("");
-              }}
+              onClick={clearFields}
               className="mithaq-btn-secondary inline-flex items-center justify-center gap-2 px-6 py-3 text-sm"
             >
               <RotateCcw size={18} />
@@ -203,9 +228,11 @@ export default function CustomersPage() {
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 قائمة العملاء
               </p>
+
               <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
                 جميع العملاء
               </h2>
+
               <p className="mt-2 text-sm text-[var(--mithaq-muted)]">
                 جميع العملاء المرتبطين بحسابك.
               </p>
@@ -223,6 +250,7 @@ export default function CustomersPage() {
           {loading ? (
             <div className="rounded-[28px] bg-[var(--mithaq-surface-soft)] p-8 text-center">
               <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[var(--mithaq-primary-soft)]" />
+
               <p className="text-sm font-black text-[var(--mithaq-primary)]">
                 جاري تحميل العملاء...
               </p>
@@ -232,9 +260,11 @@ export default function CustomersPage() {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--mithaq-primary-soft)] text-[var(--mithaq-primary)]">
                 <UserPlus size={30} />
               </div>
+
               <h3 className="text-xl font-black text-[var(--mithaq-text)]">
                 لا يوجد عملاء حتى الآن
               </h3>
+
               <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[var(--mithaq-muted)]">
                 أضف أول عميل لتبدأ بإدارة العقود والفواتير بسهولة داخل ميثاق.
               </p>
@@ -251,6 +281,7 @@ export default function CustomersPage() {
                       <h3 className="text-xl font-black text-[var(--mithaq-text)]">
                         {customer.full_name}
                       </h3>
+
                       <p className="mt-1 text-sm text-[var(--mithaq-muted)]">
                         عميل مسجل في ميثاق
                       </p>
@@ -262,9 +293,29 @@ export default function CustomersPage() {
                   </div>
 
                   <div className="space-y-3 text-sm text-[var(--mithaq-muted)]">
-                    <Info label="الجوال" value={customer.phone || "-"} icon={Phone} />
-                    <Info label="المدينة" value={customer.city || "-"} icon={MapPin} />
-                    <Info label="البريد" value={customer.email || "-"} icon={Mail} />
+                    <Info
+                      label="رقم الإثبات"
+                      value={customer.proof_number || "-"}
+                      icon={IdCard}
+                    />
+
+                    <Info
+                      label="الجوال"
+                      value={customer.phone || "-"}
+                      icon={Phone}
+                    />
+
+                    <Info
+                      label="المدينة"
+                      value={customer.city || "-"}
+                      icon={MapPin}
+                    />
+
+                    <Info
+                      label="البريد"
+                      value={customer.email || "-"}
+                      icon={Mail}
+                    />
                   </div>
 
                   <Link
@@ -302,14 +353,17 @@ function Field({
       <span className="mb-2 block text-sm font-black text-[var(--mithaq-text)]">
         {label}
       </span>
+
       <div className="relative">
         <Icon
           size={19}
           className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
         />
+
         <input
+          type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
         />
@@ -330,10 +384,17 @@ function Info({
   return (
     <div className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3">
       <span className="flex items-center gap-2">
-        <Icon size={16} className="text-[var(--mithaq-primary)]" />
+        <Icon
+          size={16}
+          className="text-[var(--mithaq-primary)]"
+        />
+
         <span>{label}</span>
       </span>
-      <span className="font-black text-[var(--mithaq-text)]">{value}</span>
+
+      <span className="break-all text-left font-black text-[var(--mithaq-text)]">
+        {value}
+      </span>
     </div>
   );
 }

@@ -14,6 +14,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  function getRedirectPath() {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
+
+    if (
+      redirect &&
+      redirect.startsWith("/") &&
+      !redirect.startsWith("//")
+    ) {
+      return redirect;
+    }
+
+    return "/dashboard";
+  }
+
   async function handleLogin() {
     if (loading) return;
 
@@ -33,8 +48,10 @@ export default function LoginPage() {
 
     toast.success("تم تسجيل الدخول بنجاح");
 
+    const redirectPath = getRedirectPath();
+
     setTimeout(() => {
-      router.push("/dashboard");
+      router.push(redirectPath);
     }, 500);
   }
 
@@ -60,7 +77,8 @@ export default function LoginPage() {
             </h1>
 
             <p className="mt-6 max-w-md leading-8 text-[#F5E9DC]/85">
-أنشئ العقود، وقّع إلكترونيًا، تابع الفواتير والمدفوعات، واحصل على استشارات قانونية من مكان واحد.
+              أنشئ العقود، وقّع إلكترونيًا، تابع الفواتير والمدفوعات،
+              واحصل على استشارات قانونية من مكان واحد.
             </p>
           </div>
 
@@ -90,7 +108,7 @@ export default function LoginPage() {
                 تسجيل الدخول
               </p>
 
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black text-[var(--mithaq-text)]">
+              <h2 className="mt-2 text-3xl font-black text-[var(--mithaq-text)] sm:text-4xl">
                 مرحبًا بعودتك
               </h2>
 
@@ -110,6 +128,7 @@ export default function LoginPage() {
                     size={18}
                     className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
                   />
+
                   <input
                     type="email"
                     value={email}
@@ -130,6 +149,7 @@ export default function LoginPage() {
                     size={18}
                     className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--mithaq-muted-soft)]"
                   />
+
                   <input
                     type="password"
                     value={password}

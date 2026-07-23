@@ -3,13 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import {
+  BadgeCheck,
+  Banknote,
+  Building2,
   CalendarDays,
   CheckCircle2,
   CircleAlert,
+  Clock3,
   FileSignature,
+  FileText,
+  IdCard,
   LoaderCircle,
+  Mail,
+  MapPin,
+  NotebookText,
+  PackageCheck,
+  Phone,
   RotateCcw,
   ShieldCheck,
+  UserRound,
   WalletCards,
 } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
@@ -18,36 +30,49 @@ import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
 
 type Contract = {
   id: string;
+
+  contract_type: string | null;
+
+  provider_name: string | null;
+  provider_business_name: string | null;
+  provider_proof_number: string | null;
+  provider_phone: string | null;
+  provider_email: string | null;
+  provider_city: string | null;
+
   client_name: string;
-  event_type: string;
-  event_date: string;
-  contract_value: number;
-  deposit: number;
+  client_proof_number: string | null;
+  client_phone: string | null;
+  client_email: string | null;
+  client_city: string | null;
+
+  event_type: string | null;
+  event_date: string | null;
+  service_description: string | null;
+  service_time: string | null;
+  service_location: string | null;
+  service_duration: string | null;
+
+  deliverables: string | null;
+  service_notes: string | null;
+
+  contract_value: number | null;
+  deposit: number | null;
+  amount_paid: number | null;
+  remaining_amount: number | null;
+  payment_method: string | null;
+  remaining_due_date: string | null;
+
+  review_period_days: number | null;
+  cancellation_policy: string | null;
+  postponement_policy: string | null;
+  intellectual_property_policy: string | null;
+
   status: string;
-  signature_image?: string;
-  contract_terms?: string;
+  signature_image: string | null;
+  photographer_signature_image: string | null;
+  contract_terms: string | null;
 };
-
-function formatDate(value: string) {
-  if (!value) {
-    return "غير محدد";
-  }
-
-  return new Intl.DateTimeFormat("ar-SA", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(value));
-}
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("ar-SA", {
-  style: "currency",
-  currency: "SAR",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-}).format(value || 0);
-}
 
 export default function SignPage() {
   const params = useParams();
@@ -79,8 +104,13 @@ export default function SignPage() {
         return;
       }
 
-      setContract(data);
-      setSigned(data.status === "signed" || data.status === "completed");
+      setContract(data as Contract);
+
+      setSigned(
+        data.status === "signed" ||
+          data.status === "completed"
+      );
+
       setLoading(false);
     }
 
@@ -103,7 +133,8 @@ export default function SignPage() {
     setSigning(true);
     setMessage("");
 
-    const signatureImage = sigRef.current.toDataURL("image/png");
+    const signatureImage =
+      sigRef.current.toDataURL("image/png");
 
     const { error } = await supabase
       .from("contracts")
@@ -116,7 +147,9 @@ export default function SignPage() {
     setSigning(false);
 
     if (error) {
-      setMessage("حدث خطأ أثناء توقيع العقد. حاول مرة أخرى.");
+      setMessage(
+        "حدث خطأ أثناء توقيع العقد. حاول مرة أخرى."
+      );
       return;
     }
 
@@ -138,7 +171,10 @@ export default function SignPage() {
       >
         <section className="w-full max-w-md rounded-[30px] border border-[#E7D6C2] bg-white p-8 text-center shadow-[0_24px_70px_rgba(42,26,12,0.14)]">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#F8F1E8] text-[#75532F]">
-            <LoaderCircle className="animate-spin" size={32} />
+            <LoaderCircle
+              className="animate-spin"
+              size={32}
+            />
           </div>
 
           <h1 className="mt-6 text-2xl font-black text-[#2A1A0C]">
@@ -169,24 +205,31 @@ export default function SignPage() {
           </h1>
 
           <p className="mt-3 text-sm leading-7 text-[#6B5A49]">
-            {loadError || "لم نتمكن من تحميل بيانات العقد."}
+            {loadError ||
+              "لم نتمكن من تحميل بيانات العقد."}
           </p>
         </section>
       </main>
     );
   }
 
-  const contractTerms = (
-    contract.contract_terms?.trim() || DEFAULT_CONTRACT_TERMS
-  )
-    .split("\n")
-    .filter((term) => term.trim() !== "");
+  const isPro = contract.contract_type === "pro";
+
+  const legalTerms = getLegalTerms(
+    contract.contract_terms,
+    isPro
+  );
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#F8F1E8] px-4 py-8 sm:px-6 sm:py-12">
-      <div className="mx-auto max-w-4xl">
+    <main
+      dir="rtl"
+      className="min-h-screen bg-[#F8F1E8] px-4 py-8 sm:px-6 sm:py-12"
+    >
+      <div className="mx-auto max-w-5xl">
         <header className="mb-6 text-center">
-          <p className="text-3xl font-black text-[#75532F]">ميثاق</p>
+          <p className="text-3xl font-black text-[#75532F]">
+            ميثاق
+          </p>
 
           <p className="mt-2 text-sm font-bold text-[#B59676]">
             توقيع العقود إلكترونيًا
@@ -198,7 +241,9 @@ export default function SignPage() {
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-black text-[#D8BFA3]">
-                  عقد إلكتروني
+                  {isPro
+                    ? "عقد احترافي — Pro"
+                    : "عقد إلكتروني"}
                 </p>
 
                 <h1 className="mt-2 text-3xl font-black sm:text-4xl">
@@ -206,7 +251,8 @@ export default function SignPage() {
                 </h1>
 
                 <p className="mt-3 text-sm leading-7 text-[#F5E9DC]/75">
-                  يرجى مراجعة تفاصيل العقد وبنوده قبل إضافة توقيعك.
+                  يرجى مراجعة جميع بيانات العقد وبنوده قبل
+                  إضافة توقيعك.
                 </p>
               </div>
 
@@ -216,81 +262,323 @@ export default function SignPage() {
             </div>
           </div>
 
-          <div className="p-5 sm:p-8 md:p-10">
-            <section>
-              <h2 className="text-xl font-black text-[#2A1A0C]">
-                تفاصيل العقد
-              </h2>
+          <div className="space-y-8 p-5 sm:p-8 md:p-10">
+            {isPro ? (
+              <>
+                <SignSection
+                  title="بيانات الطرف الأول — مقدم الخدمة"
+                  description="البيانات المثبتة لمقدم الخدمة في هذا العقد."
+                  icon={Building2}
+                >
+                  <ContractDetail
+                    label="الاسم"
+                    value={contract.provider_name}
+                    icon={UserRound}
+                  />
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                <ContractDetail
-                  label="اسم العميل"
-                  value={contract.client_name}
-                />
+                  <ContractDetail
+                    label="اسم النشاط"
+                    value={contract.provider_business_name}
+                    icon={Building2}
+                  />
 
-                <ContractDetail
-                  label="نوع الخدمة أو المناسبة"
-                  value={contract.event_type || "غير محدد"}
-                />
+                  <ContractDetail
+                    label="رقم الإثبات"
+                    value={contract.provider_proof_number}
+                    icon={IdCard}
+                  />
 
-                <ContractDetail
-                  icon={<CalendarDays size={19} />}
-                  label="التاريخ"
-                  value={formatDate(contract.event_date)}
-                />
+                  <ContractDetail
+                    label="رقم الجوال"
+                    value={contract.provider_phone}
+                    icon={Phone}
+                  />
 
-                <ContractDetail
-                  icon={<WalletCards size={19} />}
-                  label="قيمة العقد"
-                  value={formatCurrency(contract.contract_value)}
-                />
+                  <ContractDetail
+                    label="البريد الإلكتروني"
+                    value={contract.provider_email}
+                    icon={Mail}
+                  />
 
-                <ContractDetail
-                  icon={<WalletCards size={19} />}
-                  label="العربون"
-                  value={formatCurrency(contract.deposit)}
-                />
+                  <ContractDetail
+                    label="المدينة"
+                    value={contract.provider_city}
+                    icon={MapPin}
+                  />
+                </SignSection>
 
-                <ContractDetail
-                  label="المبلغ المتبقي"
-                  value={formatCurrency(
-                    Math.max(
-                      Number(contract.contract_value || 0) -
-                        Number(contract.deposit || 0),
-                      0
-                    )
-                  )}
-                />
+                <SignSection
+                  title="بيانات الطرف الثاني — العميل"
+                  description="بياناتك المثبتة في هذا العقد."
+                  icon={UserRound}
+                >
+                  <ContractDetail
+                    label="الاسم"
+                    value={contract.client_name}
+                    icon={UserRound}
+                  />
+
+                  <ContractDetail
+                    label="رقم الإثبات"
+                    value={contract.client_proof_number}
+                    icon={IdCard}
+                  />
+
+                  <ContractDetail
+                    label="رقم الجوال"
+                    value={contract.client_phone}
+                    icon={Phone}
+                  />
+
+                  <ContractDetail
+                    label="البريد الإلكتروني"
+                    value={contract.client_email}
+                    icon={Mail}
+                  />
+
+                  <ContractDetail
+                    label="المدينة"
+                    value={contract.client_city}
+                    icon={MapPin}
+                  />
+                </SignSection>
+
+                <SignSection
+                  title="تفاصيل الخدمة"
+                  description="طبيعة الخدمة وموعد ومكان تنفيذها."
+                  icon={BadgeCheck}
+                >
+                  <ContractDetail
+                    label="نوع الخدمة"
+                    value={contract.event_type}
+                    icon={BadgeCheck}
+                  />
+
+                  <ContractDetail
+                    label="تاريخ التنفيذ"
+                    value={formatDate(contract.event_date)}
+                    icon={CalendarDays}
+                  />
+
+                  <ContractDetail
+                    label="وقت التنفيذ"
+                    value={formatTime(contract.service_time)}
+                    icon={Clock3}
+                  />
+
+                  <ContractDetail
+                    label="مكان التنفيذ"
+                    value={contract.service_location}
+                    icon={MapPin}
+                  />
+
+                  <ContractDetail
+                    label="مدة التنفيذ"
+                    value={contract.service_duration}
+                    icon={Clock3}
+                  />
+
+                  <WideContractDetail
+                    label="وصف الخدمة"
+                    value={contract.service_description}
+                    icon={NotebookText}
+                  />
+                </SignSection>
+
+                <SignSection
+                  title="المخرجات والملاحظات"
+                  description="ما سيتم تسليمه وأي تفاصيل إضافية مرتبطة بالخدمة."
+                  icon={PackageCheck}
+                >
+                  <WideContractDetail
+                    label="المخرجات المتفق عليها"
+                    value={contract.deliverables}
+                    icon={PackageCheck}
+                  />
+
+                  <WideContractDetail
+                    label="ملاحظات الخدمة"
+                    value={contract.service_notes}
+                    icon={NotebookText}
+                  />
+                </SignSection>
+
+                <SignSection
+                  title="البيانات المالية"
+                  description="قيمة العقد والدفعات والاستحقاقات."
+                  icon={Banknote}
+                >
+                  <ContractDetail
+                    label="قيمة العقد"
+                    value={formatCurrency(
+                      contract.contract_value
+                    )}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="العربون أو المدفوع"
+                    value={formatCurrency(contract.deposit)}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="إجمالي المدفوع"
+                    value={formatCurrency(
+                      contract.amount_paid
+                    )}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="المبلغ المتبقي"
+                    value={formatCurrency(
+                      contract.remaining_amount
+                    )}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="طريقة الدفع"
+                    value={contract.payment_method}
+                    icon={Banknote}
+                  />
+
+                  <ContractDetail
+                    label="تاريخ استحقاق المتبقي"
+                    value={formatDate(
+                      contract.remaining_due_date
+                    )}
+                    icon={CalendarDays}
+                  />
+                </SignSection>
+
+                <SignSection
+                  title="السياسات الخاصة"
+                  description="الأحكام الخاصة المتفق عليها لتنفيذ العقد."
+                  icon={ShieldCheck}
+                >
+                  <ContractDetail
+                    label="مدة المراجعة"
+                    value={
+                      contract.review_period_days !== null &&
+                      contract.review_period_days !==
+                        undefined
+                        ? `${contract.review_period_days} يوم`
+                        : null
+                    }
+                    icon={CalendarDays}
+                  />
+
+                  <WideContractDetail
+                    label="سياسة الإلغاء"
+                    value={contract.cancellation_policy}
+                    icon={ShieldCheck}
+                  />
+
+                  <WideContractDetail
+                    label="سياسة التأجيل"
+                    value={contract.postponement_policy}
+                    icon={ShieldCheck}
+                  />
+
+                  <WideContractDetail
+                    label="الملكية الفكرية وحقوق الاستخدام"
+                    value={
+                      contract.intellectual_property_policy
+                    }
+                    icon={ShieldCheck}
+                  />
+                </SignSection>
+              </>
+            ) : (
+              <section>
+                <h2 className="text-xl font-black text-[#2A1A0C]">
+                  تفاصيل العقد
+                </h2>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <ContractDetail
+                    label="اسم العميل"
+                    value={contract.client_name}
+                    icon={UserRound}
+                  />
+
+                  <ContractDetail
+                    label="نوع الخدمة أو المناسبة"
+                    value={contract.event_type}
+                    icon={BadgeCheck}
+                  />
+
+                  <ContractDetail
+                    label="التاريخ"
+                    value={formatDate(contract.event_date)}
+                    icon={CalendarDays}
+                  />
+
+                  <ContractDetail
+                    label="قيمة العقد"
+                    value={formatCurrency(
+                      contract.contract_value
+                    )}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="العربون"
+                    value={formatCurrency(contract.deposit)}
+                    icon={WalletCards}
+                  />
+
+                  <ContractDetail
+                    label="المبلغ المتبقي"
+                    value={formatCurrency(
+                      Math.max(
+                        Number(
+                          contract.contract_value || 0
+                        ) -
+                          Number(contract.deposit || 0),
+                        0
+                      )
+                    )}
+                    icon={WalletCards}
+                  />
+                </div>
+              </section>
+            )}
+
+            <section className="border-t border-[#EFE4D7] pt-8">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F8F1E8] text-[#75532F]">
+                  <FileText size={22} />
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-black text-[#2A1A0C]">
+                    الشروط والأحكام القانونية
+                  </h2>
+
+                  <p className="mt-2 text-sm leading-7 text-[#6B5A49]">
+                    يرجى قراءة جميع البنود بعناية قبل
+                    التوقيع.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3">
+                {legalTerms.map((term, index) => (
+                  <div
+                    key={`${term}-${index}`}
+                    className="whitespace-pre-wrap rounded-2xl border border-[#EFE4D7] bg-[#FCF9F5] px-5 py-4 text-sm font-bold leading-8 text-[#4F4032]"
+                  >
+                    {term}
+                  </div>
+                ))}
               </div>
             </section>
 
-            <section className="mt-10 border-t border-[#EFE4D7] pt-8">
-              <h2 className="text-xl font-black text-[#2A1A0C]">
-                بنود العقد
-              </h2>
-
-              <p className="mt-2 text-sm leading-7 text-[#6B5A49]">
-                يرجى قراءة جميع البنود بعناية قبل التوقيع.
-              </p>
-
-              <ol className="mt-6 space-y-4">
-                {contractTerms.map((term, index) => (
-                  <li
-                    key={`${term}-${index}`}
-                    className="flex items-start gap-3 rounded-2xl border border-[#EFE4D7] bg-[#FCF9F5] p-4 text-sm leading-8 text-[#4F4032]"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EFE0CF] text-xs font-black text-[#75532F]">
-                      {index + 1}
-                    </span>
-
-                    <span>{term}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-
             {!signed ? (
-              <section className="mt-10 border-t border-[#EFE4D7] pt-8">
+              <section className="border-t border-[#EFE4D7] pt-8">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#F8F1E8] text-[#75532F]">
                     <FileSignature size={22} />
@@ -302,7 +590,8 @@ export default function SignPage() {
                     </h2>
 
                     <p className="mt-2 text-sm leading-7 text-[#6B5A49]">
-                      ارسم توقيعك داخل المساحة التالية، ثم اضغط على زر الموافقة.
+                      ارسم توقيعك داخل المساحة التالية، ثم
+                      اضغط على زر الموافقة.
                     </p>
                   </div>
                 </div>
@@ -312,9 +601,10 @@ export default function SignPage() {
                     ref={sigRef}
                     penColor="#2A1A0C"
                     canvasProps={{
-                      width: 760,
-                      height: 220,
-                      className: "block h-[220px] w-full touch-none bg-white",
+                      width: 900,
+                      height: 240,
+                      className:
+                        "block h-[240px] w-full touch-none bg-white",
                     }}
                   />
                 </div>
@@ -347,7 +637,10 @@ export default function SignPage() {
                   >
                     {signing ? (
                       <>
-                        <LoaderCircle className="animate-spin" size={18} />
+                        <LoaderCircle
+                          className="animate-spin"
+                          size={18}
+                        />
                         جاري حفظ التوقيع
                       </>
                     ) : (
@@ -360,12 +653,13 @@ export default function SignPage() {
                 </div>
 
                 <p className="mt-5 text-center text-xs leading-6 text-[#8A7765]">
-                  بالضغط على زر التوقيع، فإنك تقر بأنك قرأت تفاصيل العقد
-                  وبنوده ووافقت عليها.
+                  بالضغط على زر التوقيع، فإنك تقر بأنك
+                  قرأت جميع بيانات العقد وبنوده ووافقت
+                  عليها.
                 </p>
               </section>
             ) : (
-              <section className="mt-10 rounded-[28px] border border-emerald-200 bg-emerald-50 p-6 text-center sm:p-8">
+              <section className="rounded-[28px] border border-emerald-200 bg-emerald-50 p-6 text-center sm:p-8">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-emerald-600 shadow-sm">
                   <CheckCircle2 size={34} />
                 </div>
@@ -375,8 +669,23 @@ export default function SignPage() {
                 </h2>
 
                 <p className="mt-3 text-sm leading-7 text-emerald-700">
-                  تم حفظ توقيعك الإلكتروني وتحديث حالة العقد.
+                  تم حفظ توقيعك الإلكتروني وتحديث حالة
+                  العقد.
                 </p>
+
+                {contract.signature_image && (
+                  <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-emerald-200 bg-white p-4">
+                    <p className="mb-3 text-sm font-black text-emerald-800">
+                      توقيع العميل
+                    </p>
+
+                    <img
+                      src={contract.signature_image}
+                      alt="توقيع العميل"
+                      className="mx-auto max-h-28"
+                    />
+                  </div>
+                )}
               </section>
             )}
           </div>
@@ -384,7 +693,8 @@ export default function SignPage() {
 
         <footer className="mt-6 text-center">
           <p className="text-xs leading-6 text-[#8A7765]">
-            تم إنشاء هذا العقد وإرساله للتوقيع عبر منصة ميثاق.
+            تم إنشاء هذا العقد وإرساله للتوقيع عبر منصة
+            ميثاق.
           </p>
         </footer>
       </div>
@@ -392,25 +702,201 @@ export default function SignPage() {
   );
 }
 
+function SignSection({
+  title,
+  description,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-[28px] border border-[#EFE4D7] bg-[#FCF9F5] p-5 sm:p-6">
+      <div className="mb-5 flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EFE0CF] text-[#75532F]">
+          <Icon size={22} />
+        </div>
+
+        <div>
+          <h2 className="text-xl font-black text-[#2A1A0C]">
+            {title}
+          </h2>
+
+          <p className="mt-1 text-sm leading-7 text-[#6B5A49]">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {children}
+      </div>
+    </section>
+  );
+}
+
 function ContractDetail({
   label,
   value,
-  icon,
+  icon: Icon,
 }: {
   label: string;
-  value: string;
-  icon?: React.ReactNode;
+  value: string | number | null | undefined;
+  icon?: React.ElementType;
 }) {
   return (
-    <div className="rounded-2xl border border-[#EFE4D7] bg-[#FCF9F5] p-4">
+    <div className="rounded-2xl border border-[#EFE4D7] bg-white p-4">
       <div className="flex items-center gap-2 text-sm font-black text-[#75532F]">
-        {icon}
+        {Icon && <Icon size={18} />}
         {label}
       </div>
 
-      <p className="mt-3 text-base font-bold text-[#2A1A0C]">
-        {value}
+      <p className="mt-3 break-words text-base font-bold text-[#2A1A0C]">
+        {hasValue(value) ? value : "غير محدد"}
       </p>
     </div>
   );
+}
+
+function WideContractDetail({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: string | null | undefined;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#EFE4D7] bg-white p-4 sm:col-span-2">
+      <div className="flex items-center gap-2 text-sm font-black text-[#75532F]">
+        <Icon size={18} />
+        {label}
+      </div>
+
+      <p className="mt-3 whitespace-pre-wrap break-words text-sm font-bold leading-8 text-[#2A1A0C]">
+        {hasValue(value) ? value : "غير محدد"}
+      </p>
+    </div>
+  );
+}
+
+function hasValue(
+  value: string | number | null | undefined
+) {
+  if (value === null || value === undefined) {
+    return false;
+  }
+
+  if (typeof value === "string") {
+    return value.trim() !== "";
+  }
+
+  return true;
+}
+
+function formatDate(
+  value: string | null | undefined
+) {
+  if (!value) {
+    return "غير محدد";
+  }
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("ar-SA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
+function formatTime(
+  value: string | null | undefined
+) {
+  if (!value) {
+    return "غير محدد";
+  }
+
+  const [hoursText, minutesText] = value.split(":");
+  const hours = Number(hoursText);
+  const minutes = Number(minutesText || 0);
+
+  if (Number.isNaN(hours)) {
+    return value;
+  }
+
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+
+  return new Intl.DateTimeFormat("ar-SA", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function formatCurrency(
+  value: number | null | undefined
+) {
+  return new Intl.NumberFormat("ar-SA", {
+    style: "currency",
+    currency: "SAR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Number(value || 0));
+}
+
+function getLegalTerms(
+  rawTerms: string | null,
+  isPro: boolean
+) {
+  const source =
+    rawTerms?.trim() || DEFAULT_CONTRACT_TERMS;
+
+  const terms = source
+    .split("\n")
+    .map((term) => term.trim())
+    .filter(Boolean);
+
+  if (!isPro) {
+    return terms;
+  }
+
+  const excludedLines = new Set([
+    "عقد تقديم خدمات احترافية",
+    "أولاً: بيانات الطرفين",
+    "أولًا: بيانات الطرفين",
+    "الطرف الأول: مقدم الخدمة",
+    "الطرف الثاني: العميل",
+    "الاسم",
+    "الاسم:",
+    "رقم الإثبات (الهوية الوطنية / الإقامة / السجل التجاري)",
+    "رقم الإثبات (الهوية الوطنية / الإقامة / السجل التجاري):",
+    "رقم البيان (الهوية الوطنية / الإقامة / السجل التجاري)",
+    "رقم البيان (الهوية الوطنية / الإقامة / السجل التجاري):",
+    "رقم الجوال",
+    "رقم الجوال:",
+    "البريد الإلكتروني",
+    "البريد الإلكتروني:",
+    "المدينة",
+    "المدينة:",
+  ]);
+
+  return terms.filter((term) => {
+    const normalized = term
+      .replace(/[•\-]/g, "")
+      .trim();
+
+    return (
+      !excludedLines.has(term) &&
+      !excludedLines.has(normalized)
+    );
+  });
 }

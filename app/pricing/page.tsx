@@ -175,7 +175,7 @@ export default function PricingPage() {
                   </ul>
 
                   <Link
-                    href="/login"
+                    href="/login?redirect=/dashboard/subscription"
                     className="mt-9 block rounded-2xl bg-[#F5E9DC] px-6 py-4 text-center text-sm font-black text-[#2A1A0C] shadow-lg transition hover:-translate-y-0.5 hover:bg-white"
                   >
                     ابدأ مع Pro

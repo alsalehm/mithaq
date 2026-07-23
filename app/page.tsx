@@ -18,39 +18,54 @@ import Stat from "./components/landing/Stat";
 export default function Home() {
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden">
-      <nav className="sticky top-0 z-50 border-b border-[var(--mithaq-border)] bg-[var(--mithaq-bg)]/85 backdrop-blur-xl">
-        <div className="mithaq-container flex items-center justify-between py-4">
-          <Link href="/" className="group flex items-center gap-3">
-           <Link href="/" className="group">
-  <span className="text-4xl font-black tracking-tight text-[var(--mithaq-text)] transition-colors duration-300 group-hover:text-[var(--mithaq-primary)]">
-    ميثاق
-  </span>
-</Link>
-          </Link>
+<nav className="sticky top-0 z-50 border-b border-[var(--mithaq-border)] bg-[var(--mithaq-bg)]/85 backdrop-blur-xl">
+  <div className="mithaq-container flex items-center justify-between py-4">
+    <Link href="/" className="group">
+      <span className="text-4xl font-black tracking-tight text-[var(--mithaq-text)] transition-colors duration-300 group-hover:text-[var(--mithaq-primary)]">
+        ميثاق
+      </span>
+    </Link>
 
-          <div className="hidden items-center gap-8 text-sm font-bold text-[var(--mithaq-muted)] md:flex">
-            <a href="#features" className="transition hover:text-[var(--mithaq-primary)]">
-              المميزات
-            </a>
-            <a href="#how" className="transition hover:text-[var(--mithaq-primary)]">
-              كيف يعمل
-            </a>
-            <a href="#pricing" className="transition hover:text-[var(--mithaq-primary)]">
-              ابدأ الآن
-            </a>
-          </div>
+    <div className="hidden items-center gap-8 text-sm font-bold text-[var(--mithaq-muted)] md:flex">
+      <a
+        href="#features"
+        className="transition hover:text-[var(--mithaq-primary)]"
+      >
+        المميزات
+      </a>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/login" className="mithaq-btn-secondary px-4 py-2 text-sm">
-              تسجيل الدخول
-            </Link>
+      <a
+        href="#how"
+        className="transition hover:text-[var(--mithaq-primary)]"
+      >
+        كيف يعمل
+      </a>
 
-            <Link href="/signup" className="mithaq-btn-primary px-4 py-2 text-sm">
-              إنشاء حساب
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Link
+        href="/pricing"
+        className="transition hover:text-[var(--mithaq-primary)]"
+      >
+        الأسعار
+      </Link>
+    </div>
+
+    <div className="flex items-center gap-2 sm:gap-3">
+      <Link
+        href="/login"
+        className="mithaq-btn-secondary px-4 py-2 text-sm"
+      >
+        تسجيل الدخول
+      </Link>
+
+      <Link
+        href="/signup"
+        className="mithaq-btn-primary px-4 py-2 text-sm"
+      >
+        إنشاء حساب
+      </Link>
+    </div>
+  </div>
+</nav>
 
       <section className="relative">
         <div className="absolute left-[-140px] top-[-140px] h-96 w-96 rounded-full bg-[#E9D7C2]/70 blur-3xl" />
