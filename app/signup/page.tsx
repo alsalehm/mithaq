@@ -25,15 +25,16 @@ export default function SignupPage() {
 
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
-        },
-      },
-    });
+   const { error } = await supabase.auth.signUp({
+  email: email.trim(),
+  password,
+  options: {
+    emailRedirectTo: "https://mithaqplatform.com/login",
+    data: {
+      full_name: name.trim(),
+    },
+  },
+});
 
     if (error) {
       setLoading(false);
@@ -41,48 +42,16 @@ export default function SignupPage() {
       return;
     }
 
-    const userId = data.user?.id;
-
-    if (!userId) {
-      setLoading(false);
-      toast.error("تم إنشاء الحساب، لكن لم نتمكن من تجهيز الاشتراك المجاني");
-      return;
-    }
-
-    const { data: freePlan, error: planError } = await supabase
-      .from("plans")
-      .select("id")
-      .eq("slug", "free")
-      .single();
-
-    if (planError || !freePlan) {
-      setLoading(false);
-      toast.error("لم يتم العثور على الباقة المجانية");
-      return;
-    }
-
-    const { error: subscriptionError } = await supabase
-      .from("subscriptions")
-      .insert({
-        user_id: userId,
-        plan_id: freePlan.id,
-        status: "free",
-      });
-
     setLoading(false);
 
-    if (subscriptionError) {
-      toast.error("تم إنشاء الحساب، لكن حدث خطأ في تجهيز الاشتراك المجاني");
-      return;
-    }
+toast.success(
+  "تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتفعيل الحساب."
+);
 
-    toast.success("تم إنشاء الحساب بنجاح");
-
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 500);
-  }
-
+setTimeout(() => {
+  router.push("/login");
+}, 1200);
+}
   return (
     <main
       dir="rtl"
