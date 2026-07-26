@@ -34,21 +34,39 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
+    if (error || !user) {
+      setLoading(false);
+      toast.error(error?.message || "تعذر تسجيل الدخول.");
       return;
     }
 
-    toast.success("تم تسجيل الدخول بنجاح");
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
 
-    const redirectPath = getRedirectPath();
+    if (profileError) {
+      console.error("Failed to load user role:", profileError);
+    }
+
+    let redirectPath = getRedirectPath();
+
+    if (profile?.role === "lawyer") {
+  redirectPath = "/lawyer";
+}
+
+    setLoading(false);
+
+    toast.success("تم تسجيل الدخول بنجاح");
 
     setTimeout(() => {
       router.push(redirectPath);

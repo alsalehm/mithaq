@@ -1,14 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
   FileText,
+  Menu,
   PenLine,
   ReceiptText,
   Scale,
   Send,
   ShieldCheck,
-  Sparkles,
+  X,
 } from "lucide-react";
 
 import Info from "./components/landing/Info";
@@ -16,56 +20,136 @@ import SectionHeader from "./components/landing/SectionHeader";
 import Stat from "./components/landing/Stat";
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
+
   return (
     <main dir="rtl" className="min-h-screen overflow-hidden">
-<nav className="sticky top-0 z-50 border-b border-[var(--mithaq-border)] bg-[var(--mithaq-bg)]/85 backdrop-blur-xl">
-  <div className="mithaq-container flex items-center justify-between py-4">
-    <Link href="/" className="group">
-      <span className="text-4xl font-black tracking-tight text-[var(--mithaq-text)] transition-colors duration-300 group-hover:text-[var(--mithaq-primary)]">
-        ميثاق
-      </span>
-    </Link>
+      <nav className="sticky top-0 z-50 border-b border-[var(--mithaq-border)] bg-[var(--mithaq-bg)]/85 backdrop-blur-xl">
+        <div className="mithaq-container flex items-center justify-between py-4">
+          <Link href="/" className="group" onClick={closeMobileMenu}>
+            <span className="text-4xl font-black tracking-tight text-[var(--mithaq-text)] transition-colors duration-300 group-hover:text-[var(--mithaq-primary)]">
+              ميثاق
+            </span>
+          </Link>
 
-    <div className="hidden items-center gap-8 text-sm font-bold text-[var(--mithaq-muted)] md:flex">
-      <a
-        href="#features"
-        className="transition hover:text-[var(--mithaq-primary)]"
-      >
-        المميزات
-      </a>
+          {/* روابط الكمبيوتر */}
+          <div className="hidden items-center gap-8 text-sm font-bold text-[var(--mithaq-muted)] md:flex">
+            <a
+              href="#features"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              المميزات
+            </a>
 
-      <a
-        href="#how"
-        className="transition hover:text-[var(--mithaq-primary)]"
-      >
-        كيف يعمل
-      </a>
+            <a
+              href="#how"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              كيف يعمل
+            </a>
 
-      <Link
-        href="/pricing"
-        className="transition hover:text-[var(--mithaq-primary)]"
-      >
-        الأسعار
-      </Link>
-    </div>
+            <Link
+              href="/pricing"
+              className="transition hover:text-[var(--mithaq-primary)]"
+            >
+              الأسعار
+            </Link>
+          </div>
 
-    <div className="flex items-center gap-2 sm:gap-3">
-      <Link
-        href="/login"
-        className="mithaq-btn-secondary px-4 py-2 text-sm"
-      >
-        تسجيل الدخول
-      </Link>
+          {/* أزرار الكمبيوتر */}
+          <div className="hidden items-center gap-3 md:flex">
+            <Link
+              href="/login"
+              className="mithaq-btn-secondary px-4 py-2 text-sm"
+            >
+              تسجيل الدخول
+            </Link>
 
-      <Link
-        href="/signup"
-        className="mithaq-btn-primary px-4 py-2 text-sm"
-      >
-        إنشاء حساب
-      </Link>
-    </div>
-  </div>
-</nav>
+            <Link
+              href="/signup"
+              className="mithaq-btn-primary px-4 py-2 text-sm"
+            >
+              إنشاء حساب
+            </Link>
+          </div>
+
+          {/* زر قائمة الجوال */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((current) => !current)}
+            aria-label={
+              mobileMenuOpen ? "إغلاق قائمة التنقل" : "فتح قائمة التنقل"
+            }
+            aria-expanded={mobileMenuOpen}
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--mithaq-border)] bg-white text-[var(--mithaq-text)] shadow-sm transition hover:bg-[var(--mithaq-primary-soft)] md:hidden"
+          >
+            {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
+          </button>
+        </div>
+
+        {/* قائمة الجوال */}
+        {mobileMenuOpen && (
+          <div className="border-t border-[var(--mithaq-border)] bg-white md:hidden">
+            <div className="mithaq-container py-5">
+              <div className="space-y-2">
+                <Link
+                  href="/"
+                  onClick={closeMobileMenu}
+                  className="block rounded-2xl px-4 py-3 text-sm font-black text-[var(--mithaq-text)] transition hover:bg-[var(--mithaq-primary-soft)]"
+                >
+                  الرئيسية
+                </Link>
+
+                <a
+                  href="#features"
+                  onClick={closeMobileMenu}
+                  className="block rounded-2xl px-4 py-3 text-sm font-black text-[var(--mithaq-text)] transition hover:bg-[var(--mithaq-primary-soft)]"
+                >
+                  المميزات
+                </a>
+
+                <a
+                  href="#how"
+                  onClick={closeMobileMenu}
+                  className="block rounded-2xl px-4 py-3 text-sm font-black text-[var(--mithaq-text)] transition hover:bg-[var(--mithaq-primary-soft)]"
+                >
+                  كيف يعمل
+                </a>
+
+                <Link
+                  href="/pricing"
+                  onClick={closeMobileMenu}
+                  className="block rounded-2xl px-4 py-3 text-sm font-black text-[var(--mithaq-text)] transition hover:bg-[var(--mithaq-primary-soft)]"
+                >
+                  الأسعار
+                </Link>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[var(--mithaq-border)] pt-5">
+                <Link
+                  href="/login"
+                  onClick={closeMobileMenu}
+                  className="mithaq-btn-secondary flex items-center justify-center px-4 py-3 text-sm"
+                >
+                  تسجيل الدخول
+                </Link>
+
+                <Link
+                  href="/signup"
+                  onClick={closeMobileMenu}
+                  className="mithaq-btn-primary flex items-center justify-center px-4 py-3 text-sm"
+                >
+                  إنشاء حساب
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
 
       <section className="relative">
         <div className="absolute left-[-140px] top-[-140px] h-96 w-96 rounded-full bg-[#E9D7C2]/70 blur-3xl" />
@@ -73,32 +157,37 @@ export default function Home() {
 
         <div className="mithaq-container relative grid items-center gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div>
-            
-
             <h1 className="max-w-4xl text-5xl font-black leading-[1.15] tracking-tight text-[var(--mithaq-text)] md:text-7xl">
-             منصة عربية لإدارة أعمال المستقلين
+              منصة عربية لإدارة أعمال المستقلين
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg font-medium leading-9 text-[var(--mithaq-muted)] md:text-xl">
-             ميثاق يساعدك على إنشاء العقود، إرسالها للعميل، توقيعها إلكترونيًا، وإدارة الفواتير والمدفوعات في مكان واحد.
+              ميثاق يساعدك على إنشاء العقود، إرسالها للعميل، توقيعها
+              إلكترونيًا، وإدارة الفواتير والمدفوعات في مكان واحد.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/signup" className="mithaq-btn-primary flex items-center gap-2 px-8 py-4 text-sm">
+              <Link
+                href="/signup"
+                className="mithaq-btn-primary flex items-center gap-2 px-8 py-4 text-sm"
+              >
                 ابدأ الآن مجانًا
                 <ArrowLeft size={18} />
               </Link>
 
-              <a href="#how" className="mithaq-btn-secondary px-8 py-4 text-sm">
+              <a
+                href="#how"
+                className="mithaq-btn-secondary px-8 py-4 text-sm"
+              >
                 شاهد كيف يعمل
               </a>
             </div>
 
             <div className="mt-10 grid max-w-3xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
-             <Stat value="أنشئ عقودك" label="خلال دقائق" />
-<Stat value="وقّع إلكترونيًا" label="بسهولة وأمان" />
-<Stat value="تابع مدفوعاتك" label="من مكان واحد" />
-<Stat value="استشارات قانونية" label="عند الحاجة" />
+              <Stat value="أنشئ عقودك" label="خلال دقائق" />
+              <Stat value="وقّع إلكترونيًا" label="بسهولة وأمان" />
+              <Stat value="تابع مدفوعاتك" label="من مكان واحد" />
+              <Stat value="استشارات قانونية" label="عند الحاجة" />
             </div>
           </div>
 
@@ -110,16 +199,17 @@ export default function Home() {
                 <div className="mb-6 flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-bold text-[var(--mithaq-muted-soft)]">
-                     مثال توضيحي
+                      مثال توضيحي
                     </p>
+
                     <h2 className="mt-2 text-2xl font-black tracking-tight text-[var(--mithaq-text)]">
                       عقد تصوير زواج
                     </h2>
                   </div>
 
                   <span className="rounded-full bg-[var(--mithaq-primary-soft)] px-3 py-1 text-xs font-black text-[var(--mithaq-primary)]">
-  بانتظار التوقيع
-</span>
+                    بانتظار التوقيع
+                  </span>
                 </div>
 
                 <div className="space-y-3 text-sm">
@@ -134,12 +224,14 @@ export default function Home() {
                     <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[var(--mithaq-primary)] shadow-sm">
                       <PenLine size={21} />
                     </div>
+
                     <div>
                       <p className="font-black text-[var(--mithaq-primary)]">
-                       جاهز للإرسال عبر واتساب
+                        جاهز للإرسال عبر واتساب
                       </p>
+
                       <p className="mt-1 text-sm leading-6 text-[var(--mithaq-muted)]">
-                       شارك العقد مع العميل للتوقيع الإلكتروني.
+                        شارك العقد مع العميل للتوقيع الإلكتروني.
                       </p>
                     </div>
                   </div>
@@ -156,7 +248,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="mithaq-container py-16">
+      <section id="features" className="mithaq-container scroll-mt-28 py-16">
         <SectionHeader
           eyebrow="المميزات"
           title="كل ما تحتاجه لإدارة أعمالك"
@@ -167,8 +259,16 @@ export default function Home() {
           {[
             [FileText, "إنشاء عقود", "أنشئ عقودًا احترافية خلال دقائق."],
             [PenLine, "توقيع إلكتروني", "وقّع العقود إلكترونيًا بسهولة وأمان."],
-            [ReceiptText, "إدارة الفواتير", "أنشئ الفواتير وتابع المدفوعات من مكان واحد."],
-            [Scale, "استشارات قانونية", "احصل على استشارة قانونية عند الحاجة."],
+            [
+              ReceiptText,
+              "إدارة الفواتير",
+              "أنشئ الفواتير وتابع المدفوعات من مكان واحد.",
+            ],
+            [
+              Scale,
+              "استشارات قانونية",
+              "احصل على استشارة قانونية عند الحاجة.",
+            ],
           ].map(([Icon, title, desc]) => (
             <div
               key={title as string}
@@ -181,13 +281,16 @@ export default function Home() {
               <h3 className="mb-3 text-xl font-black text-[var(--mithaq-text)]">
                 {title as string}
               </h3>
-              <p className="leading-7 text-[var(--mithaq-muted)]">{desc as string}</p>
+
+              <p className="leading-7 text-[var(--mithaq-muted)]">
+                {desc as string}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="how" className="mithaq-container py-16">
+      <section id="how" className="mithaq-container scroll-mt-28 py-16">
         <div className="mithaq-card rounded-[36px] p-6 md:p-10">
           <SectionHeader
             eyebrow="كيف يعمل؟"
@@ -196,11 +299,21 @@ export default function Home() {
 
           <div className="grid gap-5 md:grid-cols-3">
             {[
-           
-  [FileText, "أنشئ العقد", "أدخل بيانات العميل، والشروط، وقيمة العقد."],
-  [Send, "شارك العقد", "أرسل رابط العقد للعميل للتوقيع إلكترونيًا."],
-  [CheckCircle2, "تابع الفواتير والمدفوعات", "أنشئ الفواتير وتابع حالة المدفوعات بسهولة."],
-
+              [
+                FileText,
+                "أنشئ العقد",
+                "أدخل بيانات العميل، والشروط، وقيمة العقد.",
+              ],
+              [
+                Send,
+                "شارك العقد",
+                "أرسل رابط العقد للعميل للتوقيع إلكترونيًا.",
+              ],
+              [
+                CheckCircle2,
+                "تابع الفواتير والمدفوعات",
+                "أنشئ الفواتير وتابع حالة المدفوعات بسهولة.",
+              ],
             ].map(([Icon, title, desc], index) => (
               <div
                 key={title as string}
@@ -213,9 +326,11 @@ export default function Home() {
                 <p className="mb-2 text-xs font-black text-[var(--mithaq-primary)]">
                   الخطوة {index + 1}
                 </p>
+
                 <h3 className="text-xl font-black text-[var(--mithaq-text)]">
                   {title as string}
                 </h3>
+
                 <p className="mt-2 leading-7 text-[var(--mithaq-muted)]">
                   {desc as string}
                 </p>
@@ -225,7 +340,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="mithaq-container py-16">
+      <section id="pricing" className="mithaq-container scroll-mt-28 py-16">
         <div className="relative overflow-hidden rounded-[36px] bg-[var(--mithaq-text)] p-8 text-center text-white shadow-[var(--mithaq-shadow-lg)] md:p-14">
           <div className="absolute left-[-80px] top-[-80px] h-64 w-64 rounded-full bg-white/10 blur-3xl" />
           <div className="absolute bottom-[-100px] right-[-100px] h-72 w-72 rounded-full bg-[#D8B98F]/20 blur-3xl" />

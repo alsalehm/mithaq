@@ -139,50 +139,11 @@ const { data: settingsData, error: settingsError } = await supabase
       return;
     }
 
-    const lawyerPhone = normalizePhone(lawyer.lawyer_phone);
-
-    const whatsappMessage = `
-طلب استشارة قانونية جديد من منصة ميثاق
-
-هذا الطلب مرسل من عميل مسجل داخل منصة ميثاق.
-
-اسم العميل:
-${clientName}
-
-رقم جوال العميل:
-${clientPhone}
-
-رقم الهوية:
-${clientNationalId}
-
-المدينة:
-${city || "غير محدد"}
-
-نوع الاستشارة:
-${consultationType}
-
-وصف المشكلة:
-${description}
-
-طريقة التواصل المفضلة:
-${preferredContactMethod}
-
-الوقت المناسب للتواصل:
-${preferredTime || "غير محدد"}
-
-ملاحظة:
-يتم الاتفاق على الموعد والتكلفة والدفع مباشرة بين العميل والمحامية.
-`;
-
-    const whatsappUrl = `https://wa.me/${lawyerPhone}?text=${encodeURIComponent(
-      whatsappMessage
-    )}`;
-
-    window.open(whatsappUrl, "_blank");
+  
 
     setMessage(
-      "تم إرسال طلب الاستشارة بنجاح. سيتم فتح واتساب لإرسال الطلب للمحامية."
-    );
+  "تم إرسال طلب الاستشارة بنجاح، وسيظهر الطلب مباشرة في لوحة المحامية."
+);
 
     setClientName("");
     setClientPhone("");
