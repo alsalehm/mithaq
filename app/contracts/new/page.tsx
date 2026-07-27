@@ -6,7 +6,11 @@ import AppShell from "../../components/AppShell";
 import { supabase } from "../../lib/supabase";
 import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
 import { PRO_CONTRACT_TERMS } from "../../lib/proContractTerms";
-import { getUserSubscription } from "../../lib/billing/subscription";
+import {
+  ensureFreeSubscription,
+  getUserSubscription,
+} from "../../lib/billing/subscription";
+import { canCreateContract } from "../../lib/billing/permissions";
 import { toast } from "react-hot-toast";
 
 type Customer = {
@@ -216,10 +220,73 @@ export default function NewContractPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      toast.error("يجب تسجيل الدخول أولًا");
-      setSaving(false);
-      return;
-    }
+  toast.error("يجب تسجيل الدخول أولًا");
+  setSaving(false);
+  return;
+}
+
+/*
+ * التحقق النهائي من الباقة وحد العقود قبل الحفظ.
+ * نستخدم ensureFreeSubscription لضمان وجود اشتراك Free
+ * للحسابات الجديدة بعد تأكيد البريد الإلكتروني.
+ */
+let currentSubscription;
+
+try {
+  currentSubscription = await ensureFreeSubscription(user.id);
+} catch (subscriptionError) {
+  console.error(
+    "Failed to load or create subscription:",
+    subscriptionError
+  );
+
+  toast.error("تعذر التحقق من باقتك. حاول مرة أخرى.");
+  setSaving(false);
+  return;
+}
+
+if (!currentSubscription) {
+  toast.error("تعذر التحقق من باقتك. حاول مرة أخرى.");
+  setSaving(false);
+  return;
+}
+
+const { count: contractsCount, error: contractsCountError } =
+  await supabase
+    .from("contracts")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+if (contractsCountError) {
+  console.error(
+    "Failed to count user contracts:",
+    contractsCountError
+  );
+
+  toast.error("تعذر التحقق من عدد العقود. حاول مرة أخرى.");
+  setSaving(false);
+  return;
+}
+
+const allowedToCreateContract = canCreateContract(
+  currentSubscription,
+  contractsCount ?? 0
+);
+
+if (!allowedToCreateContract) {
+  toast.error(
+    `لقد وصلت إلى الحد المسموح في الباقة المجانية (${currentSubscription.plan.contracts_limit} عقود).`
+  );
+
+  setSaving(false);
+
+  setTimeout(() => {
+    router.push("/dashboard/subscription");
+  }, 1200);
+
+  return;
+}
+
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
