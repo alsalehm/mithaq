@@ -22,6 +22,7 @@ export default function Sidebar() {
         <NavItem href="/contracts" label="العقود" icon="📄" active={pathname.startsWith("/contracts")} />
         <NavItem href="/invoices" label="الفواتير" icon="▦" active={pathname.startsWith("/invoices")} />
         <NavItem href="/legal-consultations" label="الاستشارات القانونية" icon="⚖" active={pathname.startsWith("/legal-consultations")} />
+        <NavItem href="/dashboard/subscription" label="الاشتراك" icon="👑" active={pathname.startsWith("/dashboard/subscription")} />
         <NavItem href="/settings" label="الإعدادات" icon="⚙" active={pathname.startsWith("/settings")} />
       </nav>
 
