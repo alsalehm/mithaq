@@ -25,7 +25,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
-import { supabase } from "../../lib/supabase";
+
 import { DEFAULT_CONTRACT_TERMS } from "../../lib/defaultContractTerms";
 
 type Contract = {
@@ -92,17 +92,21 @@ export default function SignPage() {
       setLoading(true);
       setLoadError("");
 
-      const { data, error } = await supabase
-        .from("contracts")
-        .select("*")
-        .eq("id", id)
-        .single();
+     const response = await fetch(
+  `/api/contracts/public/${id}`,
+  {
+    method: "GET",
+    cache: "no-store",
+  }
+);
 
-      if (error || !data) {
-        setLoadError("تعذر العثور على العقد المطلوب.");
-        setLoading(false);
-        return;
-      }
+if (!response.ok) {
+  setLoadError("تعذر العثور على العقد المطلوب.");
+  setLoading(false);
+  return;
+}
+
+const data = (await response.json()) as Contract;
 
       setContract(data as Contract);
 
@@ -136,22 +140,27 @@ export default function SignPage() {
     const signatureImage =
       sigRef.current.toDataURL("image/png");
 
-    const { error } = await supabase
-      .from("contracts")
-      .update({
-        status: "signed",
-        signature_image: signatureImage,
-      })
-      .eq("id", contract.id);
+   const response = await fetch(
+  `/api/contracts/public/${contract.id}`,
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      signature_image: signatureImage,
+    }),
+  }
+);
 
-    setSigning(false);
+setSigning(false);
 
-    if (error) {
-      setMessage(
-        "حدث خطأ أثناء توقيع العقد. حاول مرة أخرى."
-      );
-      return;
-    }
+if (!response.ok) {
+  setMessage(
+    "حدث خطأ أثناء توقيع العقد. حاول مرة أخرى."
+  );
+  return;
+}
 
     setContract({
       ...contract,
