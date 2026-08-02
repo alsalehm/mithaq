@@ -142,7 +142,7 @@ const { data: settingsData, error: settingsError } = await supabase
   
 
     setMessage(
-  "تم إرسال طلب الاستشارة بنجاح، وسيظهر الطلب مباشرة في لوحة المحامية."
+  "تم إرسال طلب الإستشارة للمحامي بنجاح"
 );
 
     setClientName("");
@@ -180,7 +180,7 @@ const { data: settingsData, error: settingsError } = await supabase
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">
             يمكنك من خلال هذه الصفحة طلب استشارة قانونية من المحامية المعتمدة لدى
-            ميثاق. سيتم إرسال بيانات طلبك مباشرة عبر واتساب، ثم يتم التنسيق بينكم
+            ميثاق. سيتم إرسال بيانات طلبك مباشرة إلى المحامية، ثم يتم التنسيق بينكم
             بخصوص الموعد وطريقة التواصل والدفع.
           </p>
         </section>
@@ -194,7 +194,7 @@ const { data: settingsData, error: settingsError } = await supabase
               طلب استشارة قانونية
             </h2>
             <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
-              عبّئ البيانات التالية بدقة حتى يتم إرسال الطلب للمحامية عبر واتساب.
+              عبّئ البيانات التالية بدقة حتى يتم إرسال الطلب إلى المحامية.
             </p>
           </div>
 
