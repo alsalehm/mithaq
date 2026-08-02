@@ -112,6 +112,7 @@ export default function PricingPage() {
                     ok
                     text={`حتى ${freeContractsLimit} عقود مدى الحياة`}
                   />
+                  <Feature ok text="نموذج عقد مبسّط وسهل الاستخدام" />
                   <Feature ok text="إدارة العملاء" />
                   <Feature ok text="إدارة الفواتير" />
                   <Feature ok text="التوقيع الإلكتروني" />
@@ -167,6 +168,11 @@ export default function PricingPage() {
 
                   <ul className="mt-8 flex-1 space-y-4 text-sm">
                     <Feature dark ok text="عقود غير محدودة" />
+                    <Feature
+                      dark
+                      ok
+                      text="نموذج عقد احترافي ومفصّل ببنود شاملة"
+                    />
                     <Feature dark ok text="عملاء غير محدودين" />
                     <Feature dark ok text="فواتير غير محدودة" />
                     <Feature dark ok text="استشارات قانونية" />
