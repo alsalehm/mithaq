@@ -37,8 +37,17 @@ const sections = [
   },
   {
     title: "7. التواصل",
-    body:
-      "للاستفسارات المتعلقة بهذه الشروط يمكن التواصل عبر: support@mithaq.com",
+    body: (
+      <>
+        للاستفسارات المتعلقة بهذه الشروط يمكن التواصل عبر: {" "}
+        <a
+          href="mailto:support@mithaqplatform.com"
+          className="font-bold text-[#75532F] underline-offset-4 hover:underline"
+        >
+          support@mithaqplatform.com
+        </a>
+      </>
+    ),
   },
 ];
 

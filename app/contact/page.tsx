@@ -10,10 +10,23 @@ import {
   Phone,
 } from "lucide-react";
 
+const SUPPORT_EMAIL = "support@mithaqplatform.com";
+
 const sections = [
   {
     title: "1. البريد الإلكتروني",
-    body: "يمكنكم التواصل معنا عبر البريد الإلكتروني التالي لأي استفسارات أو ملاحظات أو طلبات دعم تتعلق بمنصة ميثاق: support@mithaq.com",
+    body: (
+      <>
+        يمكنكم التواصل معنا عبر البريد الإلكتروني التالي لأي استفسارات أو ملاحظات
+        أو طلبات دعم تتعلق بمنصة ميثاق: {" "}
+        <a
+          href={`mailto:${SUPPORT_EMAIL}`}
+          className="font-bold text-[#75532F] underline-offset-4 hover:underline"
+        >
+          {SUPPORT_EMAIL}
+        </a>
+      </>
+    ),
   },
   {
     title: "2. أوقات الاستجابة",
@@ -29,7 +42,17 @@ const sections = [
   },
   {
     title: "5. معلومات التواصل",
-    body: "البريد الإلكتروني الرسمي للدعم: support@mithaq.com",
+    body: (
+      <>
+        البريد الإلكتروني الرسمي للدعم: {" "}
+        <a
+          href={`mailto:${SUPPORT_EMAIL}`}
+          className="font-bold text-[#75532F] underline-offset-4 hover:underline"
+        >
+          {SUPPORT_EMAIL}
+        </a>
+      </>
+    ),
   },
 ];
 
@@ -122,7 +145,12 @@ export default function ContactPage() {
               <div className="mt-6 space-y-3 leading-8 text-gray-700">
                 <p>
                   <strong>البريد الإلكتروني:</strong>{" "}
-                  support@mithaq.com
+                  <a
+                    href={`mailto:${SUPPORT_EMAIL}`}
+                    className="font-bold text-[#75532F] underline-offset-4 hover:underline"
+                  >
+                    {SUPPORT_EMAIL}
+                  </a>
                 </p>
 
                 <p>

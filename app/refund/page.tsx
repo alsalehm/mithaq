@@ -22,7 +22,17 @@ const sections = [
   },
   {
     title: "5. التواصل",
-    body: "للاستفسارات المتعلقة بالاسترجاع يرجى التواصل عبر: support@mithaq.com",
+    body: (
+      <>
+        للاستفسارات المتعلقة بالاسترجاع يرجى التواصل عبر: {" "}
+        <a
+          href="mailto:support@mithaqplatform.com"
+          className="font-bold text-[#75532F] underline-offset-4 hover:underline"
+        >
+          support@mithaqplatform.com
+        </a>
+      </>
+    ),
   },
 ]
 

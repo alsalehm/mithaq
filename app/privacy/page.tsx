@@ -186,10 +186,10 @@ export default function PrivacyPage() {
                   </p>
 
                   <a
-                    href="mailto:support@mithaq.com"
+                    href="mailto:support@mithaqplatform.com"
                     className="mt-3 inline-flex font-black text-[#75532F] underline underline-offset-4"
                   >
-                    support@mithaq.com
+                    support@mithaqplatform.com
                   </a>
                 </div>
               </div>
