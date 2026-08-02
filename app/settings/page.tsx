@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AppShell from "../components/AppShell";
 import { supabase } from "../lib/supabase";
+import { getUserSubscription } from "../lib/billing/subscription";
 import { toast } from "react-hot-toast";
 import {
   Building2,
@@ -28,6 +29,7 @@ export default function SettingsPage() {
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [defaultTerms, setDefaultTerms] = useState("");
+  const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -46,6 +48,9 @@ export default function SettingsPage() {
       window.location.href = "/login";
       return;
     }
+
+    const userSubscription = await getUserSubscription(user.id);
+    setIsPro(Boolean(userSubscription?.isPro));
 
     const { data, error } = await supabase
       .from("profiles")
@@ -154,8 +159,9 @@ export default function SettingsPage() {
             </h1>
 
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--mithaq-muted)]">
-              حدّث بيانات نشاطك، توقيعك، والشروط الافتراضية التي تظهر في العقود
-              الجديدة.
+              {isPro
+                ? "حدّث بيانات نشاطك وتوقيعك الذي يظهر في العقود الجديدة."
+                : "حدّث بيانات نشاطك، توقيعك، والشروط الافتراضية التي تظهر في العقود الجديدة."}
             </p>
           </div>
         </section>
@@ -221,36 +227,38 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="mithaq-card rounded-[32px] p-6">
-              <div className="mb-6">
-                <p className="text-sm font-black text-[var(--mithaq-primary)]">
-                  العقود
-                </p>
+            {!isPro && (
+              <div className="mithaq-card rounded-[32px] p-6">
+                <div className="mb-6">
+                  <p className="text-sm font-black text-[var(--mithaq-primary)]">
+                    العقود
+                  </p>
 
-                <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
-                  الشروط الافتراضية للعقود
-                </h2>
+                  <h2 className="mt-1 text-2xl font-black text-[var(--mithaq-text)]">
+                    الشروط الافتراضية للعقود
+                  </h2>
 
-                <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
-                  سيتم استخدام هذه الشروط تلقائيًا عند إنشاء عقد جديد.
-                </p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--mithaq-muted)]">
+                    سيتم استخدام هذه الشروط تلقائيًا عند إنشاء عقد جديد.
+                  </p>
+                </div>
+
+                <div className="relative">
+                  <FileText
+                    size={20}
+                    className="pointer-events-none absolute right-4 top-4 text-[var(--mithaq-muted-soft)]"
+                  />
+
+                  <textarea
+                    rows={10}
+                    value={defaultTerms}
+                    onChange={(event) => setDefaultTerms(event.target.value)}
+                    className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm leading-7 text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
+                    placeholder="اكتب الشروط التي تريد ظهورها تلقائياً في جميع العقود الجديدة..."
+                  />
+                </div>
               </div>
-
-              <div className="relative">
-                <FileText
-                  size={20}
-                  className="pointer-events-none absolute right-4 top-4 text-[var(--mithaq-muted-soft)]"
-                />
-
-                <textarea
-                  rows={10}
-                  value={defaultTerms}
-                  onChange={(event) => setDefaultTerms(event.target.value)}
-                  className="w-full rounded-2xl border border-[var(--mithaq-border)] bg-white px-4 py-3 pr-11 text-sm leading-7 text-[var(--mithaq-text)] outline-none transition placeholder:text-[var(--mithaq-muted-soft)] focus:border-[var(--mithaq-primary)] focus:ring-2 focus:ring-[var(--mithaq-primary-soft)]"
-                  placeholder="اكتب الشروط التي تريد ظهورها تلقائياً في جميع العقود الجديدة..."
-                />
-              </div>
-            </div>
+            )}
           </div>
 
           <aside className="space-y-6">
