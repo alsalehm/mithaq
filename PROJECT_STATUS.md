@@ -1,6 +1,6 @@
 # PROJECT STATUS — Mithaq
 
-Last Updated: August 2, 2026
+Last Updated: August 20, 2026
 
 ---
 
@@ -460,6 +460,25 @@ At the moment, only the following confirmed user mailbox exists:
 
 Do not claim that `support` or `noreply` exists until it is actually created.
 
+## Support Email Update — August 3, 2026
+
+The support address has now been created as a Google Workspace email alias:
+
+`support@mithaqplatform.com`
+
+Current verified behavior:
+
+- Messages sent to `support@mithaqplatform.com` arrive in the existing `admin@mithaqplatform.com` inbox.
+- Gmail `Send mail as` was configured for the support alias.
+- The public sender name is `فريق دعم ميثاق`.
+- Gmail was configured to reply from the same address that received the message.
+- A real incoming message to the support address was received successfully.
+- A real reply was sent successfully and appeared to the recipient as `فريق دعم ميثاق <support@mithaqplatform.com>`.
+- The administrative address remains the default for new administrative messages.
+- No additional paid Google Workspace user was created.
+
+The previously listed support-email task is complete. `noreply`, `legal`, and `billing` remain optional future aliases and have not been created.
+
 ---
 
 # 10. Dashboard
@@ -802,6 +821,18 @@ Pro users can access legal consultations.
 
 The owner account has access because it is configured as active Pro.
 
+## Consultation Copy Update — August 3, 2026
+
+The legal consultation request flow no longer sends requests through WhatsApp; requests are stored and displayed directly in the lawyer dashboard.
+
+The customer-facing copy was corrected accordingly:
+
+- Removed statements claiming that consultation requests are sent to the lawyer through WhatsApp.
+- Kept WhatsApp only as an optional preferred contact method.
+- Confirmed the success message is:
+  `تم إرسال طلب الإستشارة للمحامي بنجاح`
+- Submitted a production consultation request and verified that the updated success message and lawyer-dashboard flow work.
+
 ---
 
 # 16. Settings
@@ -827,6 +858,16 @@ The following were tested:
 - Provider signature remains saved.
 - New contracts use the correct profile information.
 - Each user has separate settings.
+
+## Plan-Based Settings Visibility — August 3, 2026
+
+The `الشروط الافتراضية للعقود` settings section is now conditional by plan:
+
+- Free users continue to see and edit their default contract terms.
+- Pro users no longer see the default contract terms settings section because the professional Pro contract template is provided automatically and can be edited per contract.
+- Existing saved terms were not deleted.
+- Contract creation business logic was not changed.
+- Production verification succeeded using both a Pro account and a Free account.
 
 ---
 
@@ -872,6 +913,20 @@ Features:
 - Professional contract template
 - Current Pro features
 - Future Pro features
+
+## Pricing Contract-Type Clarification — August 3, 2026
+
+The pricing page now explains the contract-template difference between the plans.
+
+Free plan copy added:
+
+`نموذج عقد مبسّط وسهل الاستخدام`
+
+Pro plan copy added:
+
+`نموذج عقد احترافي ومفصّل ببنود شاملة`
+
+The updated pricing cards were deployed and visually verified in production.
 
 ## Subscription Tables
 
@@ -961,6 +1016,37 @@ A test account successfully:
 - Live commercial activation has not yet been completed.
 - Live Keys have not yet replaced Test Keys.
 
+## Commercial Activation Request Submitted — August 3, 2026
+
+The Moyasar commercial activation/contact-sales form was completed and submitted successfully.
+
+Submitted information included:
+
+- Existing Moyasar account contact email: `alsaleh.raw@gmail.com`
+- Business sector: `Freelance`
+- Business name: `Mithaq Platform`
+- Website: `https://mithaqplatform.com`
+- Website status: existing website/app
+- Technical implementation: built in-house using Next.js and hosted on Vercel
+- Pro subscription ticket size: `49 SAR`
+- Current monthly processed value: `0` because live payments are not active yet
+- Freelancer ID from the applicable freelance certificate
+- Description of Mithaq as an Arabic SaaS platform for freelancers
+- Confirmation that the Moyasar sandbox integration, 3D Secure, and server-side verification are complete
+- Request for the required commercial activation documents and Live API Keys
+
+Moyasar displayed the following successful submission result:
+
+`Thank you for contacting us, your information has been submitted successfully. Our sales team will be in contact with you soon.`
+
+Current state:
+
+- Commercial activation request: submitted
+- Moyasar sales/compliance response: pending
+- Documentation request: pending
+- Live Keys: not yet issued
+- Production keys must not replace Test Keys until Moyasar approval is received
+
 ## Current Public Launch Blocker
 
 Before Public Launch:
@@ -1018,6 +1104,95 @@ Reason:
 - They may request additional documents.
 - This can be handled while beta users continue testing.
 - Public Launch remains blocked until live payment is verified.
+
+### Status Update — August 3, 2026
+
+The submission step above is complete.
+
+The next action is to monitor `alsaleh.raw@gmail.com` and the submitted mobile number for Moyasar’s response, then answer any document or compliance request before connecting Live Keys.
+
+## Commercial Review Update — August 20, 2026
+
+Moyasar responded to the commercial activation request and provided the onboarding agreement and documentation requirements.
+
+Requested documents and information included:
+
+- A valid colored commercial registration or freelance certificate.
+- VAT certificate if the business is subject to VAT.
+- A bank certificate confirming the commercial bank account and IBAN.
+- Owner and partner identity information, including national ID and date of birth.
+- Articles of association for companies only.
+- Any activity-specific licenses, if applicable.
+- The production website or application, or a video showing how it works.
+- Clearly published terms and conditions, privacy policy, refund policy where applicable, services, and prices.
+- Electronic completion of Appendix A.
+- Final approval of the agreement through Nafath after compliance acceptance.
+- Payment of the setup fee through the link issued by Moyasar.
+
+The agreement and supporting documents were prepared and emailed to Moyasar. The submitted package included the electronically completed agreement/Appendix A, the colored freelance certificate, the bank IBAN certificate without its original PDF password, identity information, and the live website link.
+
+The operational email entered for dashboard access, financial reports, and financial claims was:
+
+`admin@mithaqplatform.com`
+
+### Confirmed Moyasar Fees and Services
+
+- One-time setup fee: `450 SAR`.
+- The setup fee includes Mada, Visa, Mastercard, Apple Pay, Samsung Pay, and UnionPay.
+- Mada transaction fee: `1% + 1 SAR` per transaction.
+- Visa and Mastercard transaction fee: `2.75% + 1 SAR` per transaction.
+- Apple Pay and Samsung Pay transaction fees follow the underlying Mada or Visa/Mastercard card rail.
+- STC Pay setup fee: `250 SAR` as an optional additional service.
+- American Express setup fee: `250 SAR` as an optional additional service.
+- A settlement request must exceed `100 SAR`.
+- Settlements on Monday and Thursday are free.
+- Daily settlement fee: `4 SAR`.
+- On-demand settlement fee: `10 SAR`.
+
+### Confirmed Recurring Payment Capability
+
+Moyasar confirmed support for saved-card recurring payments through Tokenization.
+
+The technical model is:
+
+- The first payment is created with `save_card: true`.
+- After a successful payment, Moyasar returns a Token.
+- Mithaq stores the Token securely.
+- Future monthly charges can use that Token without asking the customer to enter the card details again.
+
+Moyasar confirmed that recurring subscriptions currently include:
+
+- Mada
+- Visa
+- Mastercard
+- Apple Pay
+- Samsung Pay
+
+This capability is not yet implemented in Mithaq production. It must be implemented and tested after commercial approval and receipt of Live Keys.
+
+### Commercial Review Outcome
+
+After reviewing the live website, Moyasar stated that:
+
+- The activity on the current freelance certificate does not match the activity provided through Mithaq.
+- The activity provided by Mithaq falls outside the scope of freelance work for their direct onboarding route.
+- Their suggested alternative was to obtain Moyasar payment gateway services through Al Rajhi Bank, Saudi National Bank, or Arab National Bank under those banks’ approved procedures.
+
+The owner did not proceed immediately through a bank because a bank is also likely to require a matching commercial registration or accepted activity license.
+
+The owner sent Moyasar a clarification request asking:
+
+1. If a matching commercial registration is obtained, can Mithaq continue direct commercial activation with Moyasar, or must it still proceed through one of the listed banks?
+2. Which accepted commercial activity name or ISIC code should cover Mithaq as a subscription-based SaaS platform for freelancers to manage customers, contracts, and invoices?
+
+Current state:
+
+- Moyasar direct activation under the current freelance certificate: rejected.
+- Matching commercial registration/activity requirement: under clarification.
+- Bank gateway route: available as a stated alternative, but not started.
+- Live Keys: not issued.
+- Recurring billing implementation: deferred until commercial approval and Live Keys.
+- Current exact action: wait for Moyasar’s written reply to the two commercial-registration questions before opening a new bank route or changing the legal activity.
 
 ---
 
@@ -1156,6 +1331,27 @@ A future support address may be created:
 `support@mithaqplatform.com`
 
 But it does not yet exist and must not be shown until created.
+
+## Contact Email Completion — August 3, 2026
+
+The planned support address has now been created and verified:
+
+`support@mithaqplatform.com`
+
+The old placeholder:
+
+`support@mithaq.com`
+
+was removed from the full `app` directory.
+
+The official support address is now displayed and linked with `mailto:` on:
+
+- Contact page
+- Privacy Policy
+- Terms of Use
+- Refund Policy
+
+Production verification confirmed that the Contact page displays the new address and opens a new email addressed to it.
 
 ## Legal Supervision Footer Idea — Deferred
 
@@ -1426,8 +1622,20 @@ Remaining from the launch-readiness side:
 - Moyasar commercial approval
 - Moyasar Live Keys
 - One real payment verification
-- Final contact email consistency review
 - Any critical Commercial Beta fixes
+
+Completed after the original remaining list was written:
+
+- Moyasar commercial activation request submitted successfully on August 3, 2026.
+- Final contact email consistency review completed.
+- Official support alias created, configured, and tested.
+- Moyasar onboarding agreement and requested supporting documents prepared and submitted.
+- Moyasar pricing, settlement fees, Tokenization flow, and supported recurring payment methods clarified in writing.
+
+New commercial blocker identified:
+
+- Moyasar rejected direct activation under the current freelance certificate because its activity does not match Mithaq and the platform activity was considered outside the scope of freelance work.
+- Clarification is pending on whether a matching commercial registration will permit direct Moyasar activation and which accepted commercial activity/ISIC code should be used.
 
 ## Phase 9 — Commercial Beta
 
@@ -1576,6 +1784,28 @@ Supabase and Vercel upgrades can be reviewed based on:
 
 Do not upgrade only because the platform launched; upgrade when limits or growth justify it.
 
+## Customer-Controlled Deletion and Archiving
+
+The owner approved the following product direction for later implementation:
+
+- Give users control to remove records they no longer need.
+- Use permanent deletion only for records that are safe to delete.
+- Use archiving for records that should remain available for financial, contractual, or historical reference.
+
+Approved future behavior:
+
+- Customers can be permanently deleted only when no linked records exist; otherwise they can be archived.
+- Draft or cancelled contracts can be permanently deleted.
+- Signed or completed contracts can be archived instead of permanently deleted.
+- Draft or unpaid invoices can be permanently deleted.
+- Paid or partially paid invoices can be archived instead of permanently deleted.
+- Legal consultation requests can be deleted after explicit confirmation.
+- Individual payment records must not be independently deletable from the customer-facing UI.
+- Every destructive action must include a clear confirmation message.
+- When linked records prevent deletion, the UI must explain the dependency and offer archiving where appropriate.
+
+This feature is approved as a future enhancement but is not implemented during the current payment-activation work.
+
 ---
 
 # 27. Social Media and Video Content Policy
@@ -1655,6 +1885,13 @@ Not yet active.
 
 Review website content for any old placeholder email.
 
+Status update — August 3, 2026:
+
+- Review completed.
+- The old `support@mithaq.com` placeholder was removed from the full `app` directory.
+- `support@mithaqplatform.com` is now the approved public support address.
+- The new address is active and tested for both receiving and replying.
+
 ## SMTP Limits
 
 Custom SMTP is working, but usage limits must be monitored as user volume grows.
@@ -1695,25 +1932,43 @@ Real users are currently testing the platform.
 
 ## Current Primary Goal
 
-Complete Commercial Beta successfully while submitting the Moyasar commercial activation request.
+Complete Commercial Beta successfully while awaiting and responding to Moyasar’s commercial activation review.
 
 ## Immediate Priority Order
 
-1. Submit the Moyasar commercial activation/application.
+1. Monitor the submitted email and mobile number for Moyasar’s response.
 2. Continue receiving Commercial Beta feedback.
 3. Fix any critical bugs immediately.
 4. Record non-critical feature requests without implementing them impulsively.
-5. Receive Moyasar approval.
-6. Connect Live Keys.
-7. Perform one real payment test.
-8. Complete final launch verification.
-9. Begin Public Launch.
+5. Respond to any Moyasar documentation or compliance request.
+6. Receive Moyasar approval.
+7. Connect Live Keys.
+8. Perform one real payment test.
+9. Complete final launch verification.
+10. Begin Public Launch.
 
 ## Next Exact Step
 
-Open the Moyasar Dashboard and begin the commercial activation/application process.
+Monitor `alsaleh.raw@gmail.com` for Moyasar’s sales or compliance response and send the received message for review before replying or changing any payment keys.
 
 Provide one instruction at a time and wait for user confirmation after every step.
+
+## Current Stage Update — August 20, 2026
+
+Commercial Beta remains active and the sandbox payment flow remains technically complete.
+
+Moyasar has reviewed the production website and rejected direct activation under the current freelance certificate because the certificate activity does not match Mithaq’s platform activity.
+
+The immediate commercial objective is now to obtain Moyasar’s written confirmation of:
+
+1. Whether a matching commercial registration allows direct onboarding with Moyasar.
+2. Which commercial activity name or ISIC code they will accept for Mithaq.
+
+Do not start a new bank payment-gateway application, replace Test Keys, implement recurring production charges, or select a commercial activity based only on assumptions before this written clarification is received.
+
+## Next Exact Step — Updated August 20, 2026
+
+Wait for Moyasar’s reply to the commercial-registration and accepted-activity questions, then review their exact wording before taking any registration, banking, payment-key, or recurring-billing action.
 
 ---
 
@@ -1989,6 +2244,214 @@ Mithaq now has a professional email system and production account confirmation e
 ## Next Exact Step
 
 Begin the Moyasar commercial activation/application process.
+
+---
+
+# SESSION UPDATE — 2026-08-02 / 2026-08-03
+
+## Objective
+
+Complete targeted Commercial Beta refinements, establish the official public support email workflow, update public contact information, and submit the Moyasar commercial activation request.
+
+## Completed
+
+- Hid the default contract terms settings section for Pro users only.
+- Confirmed the default contract terms section remains available to Free users.
+- Preserved all existing saved default contract terms and contract business logic.
+- Added clear contract-template differentiation to the public pricing page.
+- Removed outdated WhatsApp submission wording from the legal consultation page.
+- Verified the legal consultation success message and lawyer-dashboard delivery flow.
+- Created `support@mithaqplatform.com` as a Google Workspace alias attached to the admin inbox.
+- Configured Gmail to send and reply as `فريق دعم ميثاق <support@mithaqplatform.com>`.
+- Tested receiving mail through the support alias.
+- Tested replying through the support alias without exposing the admin address.
+- Replaced the old support placeholder across all public pages.
+- Verified no `support@mithaq.com` reference remains in the full `app` directory.
+- Submitted the Moyasar commercial activation/contact-sales request successfully.
+- Received the on-screen Moyasar submission confirmation.
+
+## Database Changes
+
+None.
+
+## Code Changes
+
+### `app/settings/page.tsx`
+
+- Added subscription-plan detection using `getUserSubscription`.
+- Hid the default contract terms settings section for Pro accounts.
+- Preserved the Free settings experience.
+- Updated the settings-page description based on the active plan.
+- Production test: Pro section hidden; Free section visible.
+
+### `app/pricing/page.tsx`
+
+- Added `نموذج عقد مبسّط وسهل الاستخدام` to the Free plan.
+- Added `نموذج عقد احترافي ومفصّل ببنود شاملة` to the Pro plan.
+- Production visual verification completed.
+
+### `app/legal-consultations/page.tsx`
+
+- Removed claims that consultation requests are sent through WhatsApp.
+- Preserved WhatsApp as a preferred contact method option.
+- Updated the success message to `تم إرسال طلب الإستشارة للمحامي بنجاح`.
+- Production submission verification completed.
+
+### Public legal/contact pages
+
+Files:
+
+- `app/contact/page.tsx`
+- `app/privacy/page.tsx`
+- `app/terms/page.tsx`
+- `app/refund/page.tsx`
+
+Changes:
+
+- Replaced `support@mithaq.com` with `support@mithaqplatform.com`.
+- Added clickable `mailto:` links.
+- Verified the old address no longer exists anywhere under `app`.
+
+## External Service Changes
+
+### Google Workspace and Gmail
+
+- Created `support@mithaqplatform.com` as a no-extra-cost alias for `admin@mithaqplatform.com`.
+- Added the support alias under Gmail `Send mail as`.
+- Set the public sender name to `فريق دعم ميثاق`.
+- Enabled reply-from-the-same-address behavior.
+- Verified inbound and outbound support email behavior using a real external email test.
+
+### Moyasar
+
+- Completed and submitted the commercial activation/contact-sales form.
+- Selected `Freelance` as the business sector.
+- Submitted the production website and technical integration details.
+- Declared the current monthly live processed value as zero and the subscription ticket size as 49 SAR.
+- Requested commercial activation requirements and Live API Keys.
+- Submission confirmation received successfully.
+
+### Vercel
+
+- All code changes deployed automatically from `main`.
+
+## Production Verification
+
+- Pro settings URL tested: default contract terms section hidden.
+- Free settings URL tested: default contract terms section remains visible.
+- Pricing page tested: both contract-template descriptions display correctly.
+- Legal consultation request tested: updated wording and success message work.
+- Contact page tested: official support email displays and opens correctly.
+- Support inbox tested: incoming message delivered to admin inbox.
+- Support reply tested: recipient sees the support alias and `فريق دعم ميثاق` sender name.
+- Moyasar form tested: submission accepted and success confirmation displayed.
+
+## GitHub
+
+Commits pushed to `origin/main`:
+
+- `54d87c6` — `Hide default contract terms for Pro users`
+- `bc35313` — `Clarify contract types on pricing plans`
+- `ab150e0` — `Update legal consultation submission copy`
+- `ef90049` — `Update support email across public pages`
+
+Branch:
+
+`main`
+
+## Current Result
+
+Mithaq’s targeted Commercial Beta refinements are live, the official support email workflow is operational, all public contact references are consistent, and the Moyasar commercial activation request has been submitted successfully. The project is now waiting for Moyasar’s response before connecting Live Keys.
+
+## Next Exact Step
+
+Monitor `alsaleh.raw@gmail.com` for Moyasar’s response and review any requested documents or compliance questions before replying or changing production payment keys.
+
+---
+
+# SESSION UPDATE — 2026-08-03 / 2026-08-20
+
+## Objective
+
+Advance Moyasar commercial onboarding, clarify recurring-payment support and commercial requirements, clean the owner’s production test data, and approve a safe future deletion/archiving policy.
+
+## Completed
+
+- Followed up with Moyasar after the commercial activation form submission.
+- Clarified the history of the earlier July sales contact and confirmed that the production website had since been completed.
+- Received Moyasar’s agreement and full document-request list.
+- Reviewed the Moyasar commercial offer and recorded the setup, transaction, optional-service, and settlement fees.
+- Confirmed that Moyasar supports saved-card recurring payments through Tokenization.
+- Confirmed that recurring subscriptions currently support Mada, Visa, Mastercard, Apple Pay, and Samsung Pay.
+- Completed Appendix A and the agreement’s operational authority information electronically.
+- Used `admin@mithaqplatform.com` for dashboard, financial-report, and financial-claims access.
+- Prepared and emailed the requested onboarding documents.
+- Removed the password from the bank IBAN certificate by creating a new printable PDF before attachment.
+- Received Moyasar’s compliance review of the live website.
+- Confirmed that the current freelance certificate was rejected because its activity does not match Mithaq and the platform activity was considered outside the freelance-work scope.
+- Received Moyasar’s alternative recommendation to use Al Rajhi Bank, Saudi National Bank, or Arab National Bank.
+- Sent Moyasar a final clarification asking whether a matching commercial registration permits direct activation and which accepted activity name/ISIC code applies to Mithaq.
+- Removed the owner’s production test invoice, invoice payment, contract, customer timeline event, customer, and legal consultation.
+- Verified that the owner dashboard returned to zero customers, zero contracts, zero invoices, and zero consultations.
+- Approved a future two-stage deletion and archiving policy while deferring implementation.
+
+## Database Changes
+
+Production test data was manually removed from Supabase for the owner account.
+
+Deleted records included:
+
+- Invoice payment for invoice ID `f7bf82b8-24ab-4553-bbd3-f0e67456aaae`, amount `4500 SAR`.
+- The linked paid invoice.
+- The linked completed contract for customer `رنا فهد`, contract value `5000 SAR`, deposit `500 SAR`.
+- The linked `customer_timeline` payment event for `4500 SAR`.
+- The customer record for `رنا فهد` with email `rana@test.com`.
+- One legal consultation test record.
+
+The deletion order preserved referential integrity by removing dependent payment and timeline records before their parent invoice, contract, and customer records.
+
+## Code Changes
+
+None.
+
+The customer-controlled deletion and archiving feature was approved as a future product decision only and was not implemented in this session.
+
+## External Service Changes
+
+### Moyasar
+
+- Commercial documents submitted.
+- Fees and settlement terms clarified.
+- Tokenization and supported recurring methods clarified.
+- Direct activation under the current freelance certificate rejected after website review.
+- Bank route suggested as an alternative.
+- Written clarification requested for the matching commercial registration and accepted activity/ISIC code.
+
+### Banking Documents
+
+- Bank IBAN certificate prepared as an unlocked PDF for compliance review.
+
+## Production Verification
+
+- Production website remained live and available for Moyasar review.
+- Sandbox payment integration remained unchanged.
+- Owner dashboard verified after data cleanup.
+- Expected result: owner test counts return to zero.
+- Actual result: customers, contracts, invoices, and consultations all displayed zero.
+
+## GitHub
+
+Not required because no source code changed.
+
+A documentation commit is required only after this `PROJECT_STATUS.md` update is saved in the project repository.
+
+## Current Result
+
+Mithaq’s sandbox payment integration is still complete, recurring-payment support is commercially and technically confirmed in principle, and the owner’s production test data has been cleaned. Public paid launch remains blocked because Moyasar rejected the current freelance certificate and has not issued Live Keys. The project is waiting for Moyasar’s written answer about direct activation with a matching commercial registration and the accepted activity/ISIC code.
+
+## Next Exact Step
+
+Wait for Moyasar’s written reply to the commercial-registration and accepted-activity questions, then review the exact response before applying for a commercial registration, starting a bank gateway route, changing payment keys, or implementing recurring production billing.
 
 ---
 
