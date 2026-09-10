@@ -1,6 +1,6 @@
 # PROJECT STATUS — Mithaq
 
-Last Updated: August 20, 2026
+Last Updated: September 10, 2026
 
 ---
 
@@ -1631,6 +1631,7 @@ Completed after the original remaining list was written:
 - Official support alias created, configured, and tested.
 - Moyasar onboarding agreement and requested supporting documents prepared and submitted.
 - Moyasar pricing, settlement fees, Tokenization flow, and supported recurring payment methods clarified in writing.
+- Supabase production infrastructure upgraded from Free/Nano to Pro/Micro after a real Disk I/O Budget warning; production verified and the warning cleared.
 
 New commercial blocker identified:
 
@@ -1784,6 +1785,31 @@ Supabase and Vercel upgrades can be reviewed based on:
 
 Do not upgrade only because the platform launched; upgrade when limits or growth justify it.
 
+### Status Update — September 10, 2026
+
+A real Supabase infrastructure limit was reached during Commercial Beta monitoring, so an upgrade was justified by observed production metrics rather than by speculation.
+
+- Supabase sent a production warning that `mithaq-production` was about to deplete its Disk I/O Budget.
+- Observability review showed the database itself remained very small and database connections were low.
+- Query Performance showed a `99.96%` cache hit rate and no evidence that Mithaq application queries were the dominant source of Disk I/O consumption.
+- The project was still on the Supabase Free plan using `t4g.nano` compute with up to `0.5 GB` memory.
+- Infrastructure monitoring showed high memory pressure on Nano, reaching approximately `79–89%` during review.
+- The Supabase organization was upgraded from Free to Pro at the displayed base price of `$25/month`.
+- The production database compute was upgraded from `t4g.nano` to `t4g.micro` using the available `Free Upgrade`, with no increase to the displayed compute charge (`$9.68/month` before and after).
+- The compute resize restarted the database automatically and completed successfully.
+- The production Mithaq dashboard was opened successfully after restart and worked normally.
+- After the upgrade, memory usage dropped to approximately `52%`, CPU was approximately `8%`, Disk I/O approximately `9%`, Disk Usage approximately `14%`, and connections were `7/60`.
+- The previous Disk I/O Budget warning disappeared from Supabase Observability.
+
+Current infrastructure result:
+
+- Supabase plan: **Pro**.
+- Production compute: **t4g.micro**.
+- No Small/Medium/Large compute upgrade is currently required.
+- No Read Replica is currently required.
+- No application code or database schema change was required to resolve this infrastructure alert.
+- Continue monitoring real production metrics during Commercial Beta before making any further infrastructure upgrade.
+
 ## Customer-Controlled Deletion and Archiving
 
 The owner approved the following product direction for later implementation:
@@ -1902,6 +1928,17 @@ If the Google password changes, security configuration changes, or App Password 
 
 Never expose or commit the App Password.
 
+## Supabase Disk I/O Budget
+
+Status update — September 10, 2026:
+
+- Supabase warned that `mithaq-production` was about to deplete its Disk I/O Budget while the project was on Free/Nano.
+- Production metrics were reviewed before changing infrastructure.
+- The organization was upgraded to Pro and database compute was upgraded from `t4g.nano` to `t4g.micro` using the available free compute upgrade.
+- Production was verified after the automatic database restart.
+- The Disk I/O Budget warning disappeared.
+- Current status: resolved; continue monitoring during Commercial Beta.
+
 ## Beta Feedback
 
 Feedback has not yet been fully collected or analyzed.
@@ -1969,6 +2006,27 @@ Do not start a new bank payment-gateway application, replace Test Keys, implemen
 ## Next Exact Step — Updated August 20, 2026
 
 Wait for Moyasar’s reply to the commercial-registration and accepted-activity questions, then review their exact wording before taking any registration, banking, payment-key, or recurring-billing action.
+
+## Current Stage Update — September 10, 2026
+
+Commercial Beta remains active. Mithaq’s production infrastructure is now stronger after the Supabase Pro/Micro upgrade, and the Disk I/O Budget warning has been resolved without changing application business logic.
+
+Commercial/legal activation remains the primary launch blocker. Since the August 20 update:
+
+- Moyasar followed up by phone and email asking for clearer explanations of electronic signing, payment tracking/funds flow, and legal consultations.
+- Moyasar also requested a bank certificate linked to the freelance document, with the freelance document number beginning with `FL` shown on the certificate.
+- Bank Albilad did not complete the required linked-account/certificate process despite repeated follow-up.
+- A parallel application was submitted to Riyad Bank for a business account; the bank indicated that, subject to approval, the remaining branch step would be signing.
+- The lawyer preparing the cooperation agreement raised a licensing question regarding the legal-consultation service and whether licensing may be required for the lawyer, Mithaq, or both.
+- The lawyer planned to contact the Saudi Bar Association / relevant authority to confirm the exact licensing requirement.
+- No legal-services agreement should be signed and no public legal-licensing representation should be changed until that clarification is received.
+- The final detailed Moyasar reply about electronic signing, payment tracking, and legal consultations remains intentionally pending until the banking certificate and legal-service structure are sufficiently clear.
+- Moyasar Test Keys and sandbox payment behavior remain unchanged.
+- Live Keys and production recurring billing remain deferred until commercial approval.
+
+## Next Exact Step — Updated September 10, 2026
+
+Wait for the lawyer’s licensing clarification from the Saudi Bar Association / relevant authority and review the exact response before signing the legal-consultation cooperation agreement or changing Mithaq’s legal-consultation service representation.
 
 ---
 
@@ -2452,6 +2510,97 @@ Mithaq’s sandbox payment integration is still complete, recurring-payment supp
 ## Next Exact Step
 
 Wait for Moyasar’s written reply to the commercial-registration and accepted-activity questions, then review the exact response before applying for a commercial registration, starting a bank gateway route, changing payment keys, or implementing recurring production billing.
+
+---
+
+# SESSION UPDATE — 2026-08-30 / 2026-09-10
+
+## Objective
+
+Continue commercial-launch readiness by progressing the bank requirement for Moyasar, clarifying licensing risk around Mithaq’s legal-consultation service, and resolving a real Supabase production infrastructure warning discovered during Commercial Beta.
+
+## Completed
+
+- Continued the banking path required for Moyasar’s commercial review.
+- Kept the delayed Bank Albilad process open while pursuing a parallel option rather than cancelling it prematurely.
+- Submitted a business-account application to Riyad Bank and received an indication that, if approved, the next branch step would be signing.
+- Reviewed the legal-consultation cooperation model after the lawyer raised a possible licensing requirement.
+- Deferred signing the lawyer cooperation agreement until the Saudi Bar Association / relevant authority clarifies whether a platform-side license is required and what applies to the lawyer.
+- Received and investigated a Supabase warning that `mithaq-production` was about to deplete its Disk I/O Budget.
+- Reviewed Supabase Observability, Query Performance, Database Connections, database metrics, and Infrastructure before changing any plan or compute setting.
+- Confirmed that the database was small, connections were low, cache hit rate was high, and Mithaq application queries were not shown as the dominant Disk I/O consumers.
+- Identified the project as running on Supabase Free with `t4g.nano` compute and high memory pressure.
+- Upgraded the Supabase organization to Pro at the displayed base price of `$25/month`.
+- Upgraded production compute from `t4g.nano` to `t4g.micro` using the available `Free Upgrade`.
+- Confirmed the compute price shown by Supabase remained `$9.68/month` before and after the Nano-to-Micro change.
+- Allowed Supabase to restart the production database automatically to apply the compute resize.
+- Verified `https://mithaqplatform.com/dashboard` loaded successfully after restart.
+- Rechecked Supabase Observability and confirmed the Disk I/O Budget warning had disappeared.
+- Confirmed post-upgrade metrics were materially healthier, including memory around `52%`, CPU around `8%`, Disk I/O around `9%`, Disk Usage around `14%`, and database connections around `7/60` at verification time.
+
+## Database Changes
+
+None.
+
+No tables, columns, policies, records, or database schema were changed as part of the infrastructure upgrade.
+
+## Code Changes
+
+None.
+
+No Mithaq source code or business logic was changed.
+
+## External Service Changes
+
+### Supabase
+
+- Organization subscription upgraded from Free to Pro.
+- Production database compute upgraded from `t4g.nano` to `t4g.micro`.
+- Database restart completed automatically during resize.
+- Disk I/O Budget warning cleared after the upgrade.
+- No further compute tier increase is currently required.
+
+### Banking
+
+- Bank Albilad process remains unresolved/delayed.
+- Riyad Bank business-account application submitted as a parallel path.
+- Do not cancel the existing Albilad path solely because Riyad Bank is pending; use the first bank that completes the required compliant account/certificate successfully.
+
+### Legal / Lawyer Cooperation
+
+- Lawyer raised a licensing question for the legal-consultation cooperation model.
+- Lawyer planned to verify the requirement with the Saudi Bar Association / relevant authority.
+- Cooperation agreement remains pending clarification.
+
+### Moyasar
+
+- Moyasar requested detailed clarification of electronic signing, payment tracking/funds flow, and legal consultations.
+- Moyasar requested a bank certificate linked to the freelance document and showing its `FL` number.
+- Final response remains pending until the bank certificate and legal-consultation licensing/relationship are sufficiently clear.
+- Test integration remains unchanged.
+- Live Keys remain pending.
+
+## Production Verification
+
+- URL tested: `https://mithaqplatform.com/dashboard`
+- Expected result: Production returns normally after Supabase compute restart.
+- Actual result: Dashboard opened successfully and Mithaq functioned normally.
+- Supabase Observability expected result: Disk I/O Budget warning no longer displayed after upgrade.
+- Actual result: Warning disappeared.
+
+## GitHub
+
+Not required for the Supabase plan/compute change itself because no source code changed.
+
+A documentation commit/push is required after this updated `PROJECT_STATUS.md` is saved in the project repository.
+
+## Current Result
+
+Mithaq remains in Commercial Beta with production operating normally on Supabase Pro and `t4g.micro`. The Disk I/O Budget infrastructure warning is resolved. The main remaining launch blockers are commercial payment activation and legal/regulatory clarification for the legal-consultation service. Moyasar Live Keys and production recurring billing are still not active.
+
+## Next Exact Step
+
+Wait for the lawyer’s licensing clarification from the Saudi Bar Association / relevant authority and review the exact response before signing the legal-consultation cooperation agreement or changing the legal-consultation service representation in Mithaq.
 
 ---
 
