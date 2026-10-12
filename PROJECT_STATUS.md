@@ -2605,3 +2605,49 @@ Wait for the lawyer’s licensing clarification from the Saudi Bar Association /
 ---
 
 # END OF MASTER STATUS
+---
+
+# Session Update — October 12, 2026
+
+## Password Recovery & Reset — Production Verified
+
+**Status: COMPLETED ✅**
+
+### Implementation
+- Implemented `/forgot-password` page.
+- Implemented `/reset-password` page.
+- Added password recovery link to the login page.
+- Integrated Supabase Auth password recovery using `resetPasswordForEmail`.
+- Implemented secure password update using `supabase.auth.updateUser`.
+- Added password confirmation and validation.
+- Deployed password recovery functionality to Vercel Production.
+
+### Supabase Configuration
+- Reviewed the Reset Password email template.
+- Verified the production Site URL.
+- Verified and updated the allowed Redirect URLs.
+- Added explicit support for `https://www.mithaqplatform.com/reset-password`.
+- Confirmed that password recovery requests reach Supabase successfully.
+
+### Production Testing
+- ✅ Password recovery request submitted successfully.
+- ✅ Recovery email received.
+- ✅ Recovery link opened the correct password reset page.
+- ✅ New password successfully saved.
+- ✅ Login with the new password completed successfully.
+
+### Final Result
+Password recovery and reset functionality is fully operational and verified on the official Mithaq production website.
+
+**Production Status: VERIFIED ✅**
+
+### Notes
+- Initial recovery tests encountered redirect issues and expired recovery tokens.
+- Redirect configuration was reviewed and corrected.
+- Final end-to-end production test completed successfully.
+- No changes to existing business logic were required.
+
+### Next Step
+Continue remaining launch preparation tasks and maintain the existing commercial beta readiness requirements.
+
+---
