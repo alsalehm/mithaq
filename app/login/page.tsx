@@ -158,10 +158,18 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-black text-[var(--mithaq-text)]">
-                  كلمة المرور
-                </label>
+  <div className="mb-2 flex items-center justify-between gap-3">
+    <label className="block text-sm font-black text-[var(--mithaq-text)]">
+      كلمة المرور
+    </label>
 
+    <Link
+      href="/forgot-password"
+      className="text-xs font-bold text-[var(--mithaq-primary)] transition hover:underline"
+    >
+      نسيت كلمة المرور؟
+    </Link>
+  </div>
                 <div className="relative">
                   <LockKeyhole
                     size={18}
